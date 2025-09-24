@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Tutorials and resources for Grist, to help you organize your data, your way.">
+      <meta property="og:description" content="Tutorials and resources for Grist, to help you organize your data, your way.">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/self-managed/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Self-managed Grist - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="../FAQ/" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../lightweight-crm/" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../investment-research/" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../afterschool-program/" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-types/" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../references-lookups/" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-cheat-sheet/" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              description: Les éléments essentiels pour créer et maintenir une installation Grist autogérée.
+            </a>
+          </li>
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#grist-autogere">
+              Grist Autogéré
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#les-essentiels">
+                Les essentiels
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#personnalisation">
+                Personnalisation
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#operations">
+                Opérations
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../install/saml/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../install/saml/" class="btn btn-xs btn-link">
+        SAML
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../code/modules/grist_plugin_api/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../code/modules/grist_plugin_api/" class="btn btn-xs btn-link">
+        grist-plugin-api
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<hr />
+<h2 id="description-les-elements-essentiels-pour-creer-et-maintenir-une-installation-grist-autogeree">description: Les éléments essentiels pour créer et maintenir une installation Grist autogérée.<a class="headerlink" href="#description-les-elements-essentiels-pour-creer-et-maintenir-une-installation-grist-autogeree" title="Permanent link">#</a></h2>
+<h1 id="grist-autogere">Grist Autogéré<a class="headerlink" href="#grist-autogere" title="Permanent link">#</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#description-les-elements-essentiels-pour-creer-et-maintenir-une-installation-grist-autogeree">description: Les éléments essentiels pour créer et maintenir une installation Grist autogérée.</a></li>
+<li><a href="#grist-autogere">Grist Autogéré</a><ul>
+<li><a href="#les-essentiels">Les essentiels</a><ul>
+<li><a href="#quest-ce-que-grist-autogere">Qu&rsquo;est-ce que Grist Autogéré ?</a></li>
+<li><a href="#comment-installer-grist">Comment installer Grist ?</a><ul>
+<li><a href="#grist-sur-aws">Grist sur AWS</a></li>
+</ul>
+</li>
+<li><a href="#comment-sandboxer-des-documents">Comment sandboxer des documents ?</a><ul>
+<li><a href="#xsave-non-disponible">XSAVE non disponible</a></li>
+<li><a href="#ptrace-non-disponible">PTRACE non disponible</a></li>
+</ul>
+</li>
+<li><a href="#comment-executer-grist-sur-un-serveur">Comment exécuter Grist sur un serveur ?</a></li>
+<li><a href="#comment-configurer-une-equipe">Comment configurer une équipe ?</a></li>
+<li><a href="#comment-configurer-lauthentification">Comment configurer l&rsquo;authentification ?</a></li>
+<li><a href="#existe-t-il-dautres-methodes-dauthentification">Existe-t-il d&rsquo;autres méthodes d&rsquo;authentification ?</a></li>
+<li><a href="#comment-activer-grist-entreprise">Comment activer Grist Entreprise ?</a></li>
+</ul>
+</li>
+<li><a href="#personnalisation">Personnalisation</a><ul>
+<li><a href="#comment-personnaliser-le-style">Comment personnaliser le style ?</a></li>
+<li><a href="#comment-lister-des-widgets-personnalises">Comment lister des widgets personnalisés ?</a></li>
+<li><a href="#comment-configurer-des-notifications-par-e-mail">Comment configurer des notifications par e-mail ?</a></li>
+<li><a href="#comment-ajouter-plus-de-packages-python">Comment ajouter plus de packages python ?</a></li>
+<li><a href="#comment-configurer-des-webhooks">Comment configurer des webhooks ?</a></li>
+</ul>
+</li>
+<li><a href="#operations">Opérations</a><ul>
+<li><a href="#quelles-sont-les-exigences-materielles-pour-heberger-grist">Quelles sont les exigences matérielles pour héberger Grist ?</a></li>
+<li><a href="#quels-fichiers-grist-stocke-t-il">Quels fichiers Grist stocke-t-il ?</a></li>
+<li><a href="#quest-ce-quune-base-de-donnees-principale">Qu&rsquo;est-ce qu&rsquo;une base de données &ldquo;principale&rdquo; ?</a></li>
+<li><a href="#quest-ce-quun-magasin-detat">Qu&rsquo;est-ce qu&rsquo;un magasin d&rsquo;état ?</a></li>
+<li><a href="#comment-configurer-des-snapshots">Comment configurer des snapshots ?</a></li>
+<li><a href="#comment-controler-la-telemetrie">Comment contrôler la télémétrie ?</a></li>
+<li><a href="#comment-mettre-a-jour-mon-installation">Comment mettre à jour mon installation ?</a></li>
+<li><a href="#que-faire-si-jai-besoin-dune-haute-disponibilite">Que faire si j&rsquo;ai besoin d&rsquo;une haute disponibilité ?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="les-essentiels">Les essentiels<a class="headerlink" href="#les-essentiels" title="Permanent link">#</a></h2>
+<h3 id="quest-ce-que-grist-autogere">Qu&rsquo;est-ce que Grist Autogéré ?<a class="headerlink" href="#quest-ce-que-grist-autogere" title="Permanent link">#</a></h3>
+<p>Il existe quatre variantes de Grist :</p>
+<ul>
+<li><strong>SaaS</strong> (Software as a Service) : Grist est disponible en tant que service hébergé
+    sur <a href="https://docs.getgrist.com">docs.getgrist.com</a>.
+    Aucune installation nécessaire. Plans gratuits et payants, avec des limites d&rsquo;utilisation.</li>
+<li><strong>Application de bureau</strong> : Grist est disponible en tant qu&rsquo;application de bureau, construite avec Electron.
+    Elle est disponible en téléchargement sur <a href="https://github.com/gristlabs/grist-desktop/releases">https://github.com/gristlabs/grist-desktop/releases</a>.
+    Cette application de bureau n&rsquo;a pas besoin d&rsquo;internet et n&rsquo;est liée à aucun compte ou service en ligne.</li>
+<li><strong>Entreprise Autogérée</strong> : Grist est disponible en tant qu&rsquo;application sous licence
+    installée par des entreprises sur leur propre infrastructure
+    avec notre support et assistance. Contient des fonctionnalités propriétaires
+    développées pour des entreprises avec des besoins particuliers.</li>
+<li><strong>Noyau Autogéré</strong> : Grist est disponible en tant qu&rsquo;application gratuite installée
+    par des développeurs citoyens sur leur propre infrastructure avec le soutien de la communauté.
+    Les documents Grist créés avec nos offres SaaS et Entreprise
+    peuvent être ouverts et modifiés avec le Noyau, et vice versa. Cela établit
+    les documents Grist comme un format fiable pour l&rsquo;archivage et l&rsquo;échange.</li>
+</ul>
+<p class="tag-core tag-ee">Grist Autogéré, qu&rsquo;il s&rsquo;agisse de l&rsquo;Entreprise ou du Noyau, est installé et configuré de
+la même manière, comme décrit dans les sections suivantes. Pour plus de clarté, les sections sont étiquetées
+avec la variante à laquelle elles s&rsquo;appliquent, par exemple :</p>
+<p>Le code source complet de Grist Noyau est toujours disponible sur
+<a href="https://github.com/gristlabs/grist-core/">github.com/gristlabs/grist-core</a>
+et est sous une licence Apache-2.0. Vous pouvez utiliser et redistribuer le Noyau
+librement, selon les termes de la licence de logiciel libre.
+Le code source complet de Grist Entreprise
+est également disponible, sur
+<a href="https://github.com/gristlabs/grist-ee/">github.com/gristlabs/grist-ee</a>,
+sous une licence propriétaire qui ne confère aucun droit automatique
+d&rsquo;utiliser ou de redistribuer le logiciel. Vous pouvez évaluer l&rsquo;Entreprise
+pendant 30 jours en utilisant les instructions dans les sections suivantes,
+ou <a href="https://www.getgrist.com/pricing">vous inscrire à notre plan Grist Entreprise</a>
+et obtenir du support.</p>
+<h3 class="tag-core tag-ee" id="comment-installer-grist">Comment installer Grist ?<a class="headerlink" href="#comment-installer-grist" title="Permanent link">#</a></h3>
+<p>Le moyen le plus simple d&rsquo;installer Grist est en tant que conteneur. Nous allons
+décrire comment faire en utilisant <a href="https://www.docker.com/">Docker</a>,
+mais il existe de nombreux autres outils et services pour exécuter
+des conteneurs.</p>
+<p>Pour essayer Grist avec Docker, créez un répertoire vide pour que Grist y stocke des données (par exemple <code>~/grist</code>) et ensuite vous pouvez faire :</p>
+<pre><code>docker run -p 8484:8484 \
+  -v ~/grist:/persist \
+  -e GRIST_SESSION_SECRET=inventez-un-secret-ici \
+  -it gristlabs/grist
+</code></pre>
+<p>Vous devriez alors pouvoir visiter <code>http://localhost:8484</code> dans
+votre navigateur. Vous pourrez déjà créer et modifier des documents Grist,
+et ouvrir et modifier des documents téléchargés depuis une autre
+installation Grist (comme notre SaaS).</p>
+<p>Si vous utilisez un autre outil ou service, voici les points importants :</p>
+<ul>
+<li>Le nom de l&rsquo;image principale est <code>gristlabs/grist</code>, qui est notre image Docker combinée Noyau et Entreprise.
+   L&rsquo;image <code>gristlabs/grist-oss</code> existe également, qui utilise uniquement du code libre et open source. Cette image utilise uniquement Grist
+   Noyau, et n&rsquo;a pas de fonctionnalités d&rsquo;entreprise disponibles.
+   (Pour certains outils comme Podman, vous devrez peut-être préfixer ces noms d&rsquo;image avec <code>docker.io/</code>.)</li>
+<li>Un volume (ou montage, ou répertoire) doit être disponible à l&rsquo;emplacement
+   <code>/persist</code> dans le conteneur. Il peut être initialement vide - Grist
+   le remplira. Sans ce volume, rien de ce que vous faites ne sera stocké à long terme.</li>
+<li>Le port <code>8484</code> sur le conteneur doit être exposé. Cela peut être changé
+   si vous définissez également la variable d&rsquo;environnement <code>PORT</code> pour le conteneur.</li>
+<li>La variable d&rsquo;environnement <code>GRIST_SESSION_SECRET</code> doit être définie
+   sur quelque chose de secret pour le conteneur.</li>
+</ul>
+<p>Installé de cette manière, Grist est accessible uniquement par vous. En général, vous voudrez
+prendre au moins les étapes suivantes :</p>
+<ul>
+<li><a href="./#how-do-i-sandbox-documents">Configurer le sandboxing</a> - cela est important pour
+    limiter ce que les formules peuvent faire.</li>
+<li><a href="./#how-do-i-run-grist-on-a-server">Servir depuis un hôte public</a>
+    afin de pouvoir collaborer en direct avec d&rsquo;autres.</li>
+<li>Activer une méthode d&rsquo;authentification afin que les utilisateurs puissent se connecter. Souvent, vous voudrez
+    connecter Grist à un service &ldquo;SSO&rdquo; (Single Sign-On) que vous utilisez déjà.
+    Nous supportons certaines méthodes d&rsquo;authentification très
+    <a href="./#how-do-i-set-up-authentication">générales</a> qui couvrent de nombreux cas,
+    et une <a href="./#are-there-other-authentication-methods">méthode d&rsquo;authentification spéciale</a> pour des cas personnalisés.</li>
+<li>Envisager d&rsquo;activer le <a href="./#how-do-i-set-up-snapshots">support des snapshots</a> si vous souhaitez que Grist gère les sauvegardes de documents.</li>
+</ul>
+<h4 id="grist-sur-aws">Grist sur AWS<a class="headerlink" href="#grist-sur-aws" title="Permanent link">#</a></h4>
+<p>Vous pouvez également héberger Grist sur AWS. Des instructions complètes sur cette méthode d&rsquo;hébergement sont disponibles sur la page Grist <a href="../install/aws-marketplace/">AWS Marketplace</a>.</p>
+<h3 class="tag-core tag-ee" id="comment-sandboxer-des-documents">Comment sandboxer des documents ?<a class="headerlink" href="#comment-sandboxer-des-documents" title="Permanent link">#</a></h3>
+<p>Grist permet des formules très puissantes, utilisant Python. Nous recommandons
+de définir la variable d&rsquo;environnement <code>GRIST_SANDBOX_FLAVOR</code> sur <code>gvisor</code> si
+votre matériel le prend en charge (la plupart le feront), pour exécuter des formules dans chaque
+document dans un sandbox isolé des autres documents et isolé
+du réseau.</p>
+<pre><code>docker run ...
+  -e GRIST_SANDBOX_FLAVOR=gvisor \
+  ...
+</code></pre>
+<p>Pour vérifier que les formules sont évaluées dans un sandbox,
+vous pouvez créer un document et ensuite vérifier que cette formule
+donne un résultat vide :</p>
+<pre><code>import glob
+glob.glob('/etc/*')
+</code></pre>
+<p>Voici quelques raisons pour lesquelles le sandboxing <code>gvisor</code>, tel que configuré pour
+Grist, peut échouer, et ce que vous pouvez faire pour diagnostiquer le problème.</p>
+<h4 id="xsave-non-disponible">XSAVE non disponible<a class="headerlink" href="#xsave-non-disponible" title="Permanent link">#</a></h4>
+<p>Votre processeur peut ne pas être pris en charge. Sur <code>x86_64</code>, Sandy Bridge
+ou plus récent est nécessaire. Vérifiez que le drapeau processeur <code>XSAVE</code> est défini.
+Voici un moyen rapide de tester cela :</p>
+<pre><code class="language-sh">grep -q '\bxsave\b' /proc/cpuinfo &amp;&amp; echo &quot;XSAVE activé&quot; || echo &quot;XSAVE manquant&quot;
+</code></pre>
+<h4 id="ptrace-non-disponible">PTRACE non disponible<a class="headerlink" href="#ptrace-non-disponible" title="Permanent link">#</a></h4>
+<p>La capacité <code>SYS_PTRACE</code> peut ne pas être disponible. Si vous exécutez
+dans docker, vous pourriez essayer de l&rsquo;accorder explicitement, si vous êtes
+à l&rsquo;aise avec sa mise à disposition :</p>
+<pre><code>docker run ...
+  --cap-add=SYS_PTRACE
+  ...
+</code></pre>
+<p>Dans certains environnements cloud tels que AWS ECS, vous devrez peut-être
+énumérer explicitement cette capacité dans votre configuration de conteneur.</p>
+<h3 class="tag-core tag-ee" id="comment-executer-grist-sur-un-serveur">Comment exécuter Grist sur un serveur ?<a class="headerlink" href="#comment-executer-grist-sur-un-serveur" title="Permanent link">#</a></h3>
+<p>Nous vous suggérons de vous familiariser avec tous les autres aspects de
+l&rsquo;autogestion sur cette page avant de servir Grist depuis un hôte public
+(surtout <a href="./#how-do-i-sandbox-documents">Sandboxing</a>).
+Lorsque vous le ferez, il est important de dire à Grist d&rsquo;où il sera servi,
+en utilisant la variable <code>APP_HOME_URL</code>. Par exemple, si vous allez
+servir depuis <code>https://grist.example.com</code>, faites savoir à Grist comme ceci :</p>
+<pre><code>docker run ...
+  -e APP_HOME_URL=&quot;https://grist.example.com&quot; \
+  ...
+</code></pre>
+<p>Vous devrez placer un &ldquo;proxy inverse&rdquo; devant Grist pour
+gérer la &ldquo;terminaison SSL&rdquo; (décryptage du trafic chiffré) en utilisant
+un certificat qui établit la propriété du site. Si vous ne savez pas
+ce que cela signifie, vous pourriez essayer d&rsquo;utiliser le
+<a href="https://github.com/gristlabs/grist-omnibus">Grist Omnibus</a> qui
+emballe Grist avec un proxy inverse qui utilisera <a href="https://letsencrypt.org/">Let&rsquo;s Encrypt</a> pour obtenir un certificat
+pour vous automatiquement.</p>
+<p>Un travail important d&rsquo;un tel proxy est de rediriger correctement
+les connexions <a href="https://en.wikipedia.org/wiki/WebSocket">websocket</a>. Cela
+représente deux exigences :</p>
+<ol>
+<li>Assurez-vous que le proxy utilise HTTP 1.1</li>
+<li>Passez les en-têtes HTTP nécessaires Upgrade, Connection et Host afin
+     qu&rsquo;une connexion HTTP puisse être mise à niveau vers une connexion websocket.</li>
+</ol>
+<p>Par exemple, voici une configuration minimale pour
+<a href="https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/">nginx</a>,
+un choix possible pour un proxy inverse.</p>
+<pre><code>server {
+    server_name grist.example.com;
+
+    location / {
+        proxy_pass http://localhost:8484;
+        proxy_redirect     off;
+        proxy_set_header   Host             $host;
+        proxy_set_header   X-Real-IP        $remote_addr;
+        proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;
+
+        # Support WebSocket
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection &quot;upgrade&quot;;
+
+    }
+}
+</code></pre>
+<p>Cette configuration gérera le trafic HTTP de base et les websockets. Elle
+nécessite encore une configuration SSL/TLS supplémentaire. Une option simple pour
+l&rsquo;auto-hébergement à petite échelle est d&rsquo;utiliser <a href="https://certbot.eff.org/"><code>certbot</code> par l&rsquo;EFF</a>.</p>
+<h3 class="tag-core tag-ee" id="comment-configurer-une-equipe">Comment configurer une équipe ?<a class="headerlink" href="#comment-configurer-une-equipe" title="Permanent link">#</a></h3>
+<p>Grist a un concept de &ldquo;sites d&rsquo;équipe&rdquo; qui sont des zones indépendamment gérées et
+nommées contenant leurs propres espaces de travail et documents. Les sites d&rsquo;équipe
+peuvent avoir des sous-domaines distincts (comme sur les <a href="../teams/">sites d&rsquo;équipe hébergés</a> de notre SaaS),
+ou être distingués par
+un préfixe de chemin spécial. Cela n&rsquo;a souvent pas de sens pour les installations autogérées, où il y a une seule équipe. Avec un seul domaine et
+une seule équipe, le préfixe de chemin spécial (qui ressemble à <code>/o/&lt;team-name&gt;</code>)
+est un gaspillage d&rsquo;espace peu élégant dans les URL. Vous pouvez donc indiquer à Grist d&rsquo;utiliser une seule équipe en définissant <code>GRIST_SINGLE_ORG</code> (&ldquo;org&rdquo; ou &ldquo;organisation&rdquo; est un synonyme pour équipe) :</p>
+<pre><code>docker run ...
+  -e GRIST_SINGLE_ORG=cool-beans
+</code></pre>
+<p>Le nom de l&rsquo;équipe ne doit utiliser que des caractères minuscules a-z, des chiffres
+0-9, et le tiret (<code>-</code>). Vous voudrez également peut-être vous pencher sur
+<a href="./#how-do-i-customize-styling">Personnalisation du style</a> pour cacher les éléments d&rsquo;interface utilisateur
+dont vous n&rsquo;avez pas besoin.</p>
+<h3 class="tag-core tag-ee" id="comment-configurer-lauthentification">Comment configurer l&rsquo;authentification ?<a class="headerlink" href="#comment-configurer-lauthentification" title="Permanent link">#</a></h3>
+<p>L&rsquo;authentification peut être configurée de plusieurs manières pour Grist Noyau et Entreprise, en utilisant
+SAML, OpenID Connect ou des en-têtes transférés. Entre les deux, de nombreux SSO populaires peuvent être connectés
+comme les connexions Google ou Microsoft.</p>
+<ul>
+<li><a href="../install/saml/">SAML</a>.</li>
+<li><a href="../install/oidc/">OpenID Connect</a></li>
+<li><a href="../install/forwarded-headers/">En-têtes transférés</a>.</li>
+</ul>
+<p>Pour toute méthode d&rsquo;authentification, vous voudrez également envisager de définir
+les variables suivantes :</p>
+<ul>
+<li><code>COOKIE_MAX_AGE</code> : (optionnel) date d&rsquo;expiration pour le cookie de session Grist,
+    lorsqu&rsquo;il est défini sur <code>none</code>, le cookie de session sera en mode <code>Session</code> - il doit être supprimé après la fermeture d&rsquo;un navigateur. S&rsquo;il est défini sur un
+    nombre, les unités de ce nombre sont des millisecondes.</li>
+<li><code>GRIST_FORCE_LOGIN</code> : (optionnel) lorsqu&rsquo;il est défini sur <code>true</code>, cela
+    indiquera à Grist de rediriger les utilisateurs anonymes vers une page de connexion.</li>
+</ul>
+<p>Pour notre SaaS, nous utilisons un système d&rsquo;authentification personnalisé basé sur AWS
+Cognito. Actuellement, nous n&rsquo;avons pas de plans pour le publier dans le Noyau
+ou l&rsquo;Entreprise.</p>
+<h3 class="tag-ee" id="existe-t-il-dautres-methodes-dauthentification">Existe-t-il d&rsquo;autres méthodes d&rsquo;authentification ?<a class="headerlink" href="#existe-t-il-dautres-methodes-dauthentification" title="Permanent link">#</a></h3>
+<p>Si les utilisateurs de votre site se connectent via WordPress, ou via un mécanisme personnalisé
+que vous avez développé, vous voudrez peut-être envisager
+<a href="../install/grist-connect/">GristConnect</a>, disponible pour Grist Entreprise.</p>
+<h3 class="tag-ee" id="comment-activer-grist-entreprise">Comment activer Grist Entreprise ?<a class="headerlink" href="#comment-activer-grist-entreprise" title="Permanent link">#</a></h3>
+<p>Grist Entreprise peut être activé en visitant le panneau d&rsquo;administration et en cliquant sur le bouton &lsquo;Activer les fonctionnalités Grist Entreprise&rsquo;.
+Cela fera redémarrer Grist automatiquement.</p>
+<p><img alt="Bouton d'activation Entreprise sur le panneau d'administration" src="../images/admin-panel/enterprise-toggle.png" /></p>
+<p>Vous devriez maintenant avoir une version non activée de Grist Entreprise, avec une période d&rsquo;essai de 30 jours.</p>
+<p>Les clés d&rsquo;activation sont utilisées pour exécuter Grist Entreprise après une période d&rsquo;essai
+de 30 jours écoulée.
+Obtenez une clé d&rsquo;activation en <a href="https://www.getgrist.com/pricing">vous inscrivant à Grist Entreprise</a>.
+Vous n&rsquo;avez pas besoin d&rsquo;une clé d&rsquo;activation pour exécuter Grist Noyau, et pouvez revenir au Noyau à tout moment en utilisant le bouton dans le panneau d&rsquo;administration.</p>
+<p>Placez le contenu de votre clé d&rsquo;activation dans une variable d&rsquo;environnement appelée
+<code>GRIST_ACTIVATION</code>, ou placez-la dans un répertoire accessible à Grist et
+fournissez le chemin complet vers le fichier avec la variable d&rsquo;environnement
+<code>GRIST_ACTIVATION_FILE</code>. Sans la clé d&rsquo;activation, il y aura une
+bannière indiquant que Grist est en mode d&rsquo;essai. Une fois la clé d&rsquo;activation détectée,
+cette bannière disparaîtra. Le remplacement de la clé d&rsquo;activation nécessitera
+un redémarrage de Grist.</p>
+<pre><code>docker run ...
+  -e GRIST_ACTIVATION=&lt;la-clé-d'activation-ici&gt; \
+  -it gristlabs/grist
+</code></pre>
+<hr />
+<h2 id="personnalisation">Personnalisation<a class="headerlink" href="#personnalisation" title="Permanent link">#</a></h2>
+<h3 class="tag-core tag-ee" id="comment-personnaliser-le-style">Comment personnaliser le style ?<a class="headerlink" href="#comment-personnaliser-le-style" title="Permanent link">#</a></h3>
+<p>L&rsquo;interface utilisateur de Grist a de nombreux éléments, dont certains peuvent ne pas être pertinents pour vous.
+Pour les installations autogérées de Grist,
+vous pouvez désactiver de nombreux éléments en utilisant <code>GRIST_HIDE_UI_ELEMENTS</code>.
+Ceci est une liste séparée par des virgules des parties de l&rsquo;interface utilisateur à cacher.
+Les noms autorisés des parties sont :
+<code>helpCenter,billing,templates,multiSite,multiAccounts</code>.
+Les éléments de l&rsquo;interface utilisateur présents sont également affectés par le fait que <code>GRIST_SINGLE_ORG</code> soit défini.</p>
+<pre><code>docker run
+  ...
+  -e GRIST_HIDE_UI_ELEMENTS=helpCenter,billing,templates,multiSite,multiAccounts \
+  ...
+</code></pre>
+<p>Par défaut, les pages de l&rsquo;interface utilisateur de Grist ont <code>- Grist</code> ajouté à leur titre. Vous pouvez
+changer cela en définissant <code>GRIST_PAGE_TITLE_SUFFIX</code> :</p>
+<pre><code>docker run
+  ...
+  -e GRIST_PAGE_TITLE_SUFFIX=&quot; - Cool Beans&quot; \
+  ...
+</code></pre>
+<p>Vous pouvez définir le suffixe sur <code>"_blank"</code> pour le supprimer complètement.</p>
+<p>Vous pouvez également remplacer le style CSS du site si vous définissez
+<code>APP_STATIC_INCLUDE_CUSTOM_CSS</code> sur <code>true</code>.</p>
+<pre><code>docker run
+  ...
+  -e APP_STATIC_INCLUDE_CUSTOM_CSS=true \
+  ...
+</code></pre>
+<p>Cela chargera un fichier <code>custom.css</code> supplémentaire. Vous pouvez trouver
+un exemple de tel fichier dans le
+<a href="https://github.com/gristlabs/grist-core/blob/main/static/custom.css">dépôt Grist Noyau</a>.</p>
+<p>Le fichier inclut la plupart de nos variables CSS globales pour les couleurs, et quelques
+variables pour le logo affiché dans le coin supérieur gauche. Il n&rsquo;y a
+vraiment aucune limite à ce qui peut figurer dans le fichier, donc la spécification de styles arbitraires est possible. Notez que toutes les règles CSS doivent utiliser
+<code>!important</code> pour s&rsquo;assurer qu&rsquo;elles ont la plus haute priorité. Sinon,
+il est possible que des règles plus spécifiques incluses par notre framework prennent
+le pas.</p>
+<p>Pour remplacer <code>custom.css</code>, vous pouvez faire votre propre copie et vous assurer que Grist l&rsquo;utilise. Si le fichier CSS est dans votre répertoire actuel, alors
+faites :</p>
+<pre><code>docker run
+  ...
+  -v $PWD/custom.css:/grist/static/custom.css
+  ...
+</code></pre>
+<p>Il est possible de diriger Grist pour charger des ressources statiques depuis un CDN en
+définissant <code>APP_STATIC_URL</code>. Si vous le faites, et que vous utilisez du CSS personnalisé,
+vous devrez vous assurer que le CSS personnalisé est disponible depuis cette URL de base.</p>
+<h3 class="tag-core tag-ee" id="comment-lister-des-widgets-personnalises">Comment lister des widgets personnalisés ?<a class="headerlink" href="#comment-lister-des-widgets-personnalises" title="Permanent link">#</a></h3>
+<p>Dans notre SaaS, Grist a une <a href="https://support.getgrist.com/newsletters/2022-02/#custom-widgets-menu">liste de widgets personnalisés préconstruits</a> disponibles dans l&rsquo;interface utilisateur.
+Vous pouvez faire en sorte que votre installation autogérée propose la même liste en
+définissant ce qui suit :</p>
+<pre><code>docker run
+  ...
+  -e GRIST_WIDGET_LIST_URL=&quot;https://github.com/gristlabs/grist-widget/releases/download/latest/manifest.json&quot; \
+  ...
+</code></pre>
+<p>C&rsquo;est optionnel. Si vous laissez la variable non définie, les documents avec
+des widgets personnalisés fonctionneront toujours bien, mais vous devrez entrer une URL complète lorsque vous ajoutez des widgets personnalisés plutôt que de choisir une option dans un
+menu déroulant.</p>
+<p>Vous pouvez rendre votre propre liste de widgets disponible en forkant
+<a href="https://github.com/gristlabs/grist-widget">github.com/gristlabs/grist-widget</a>
+ou en préparant manuellement un fichier <code>.json</code> sur un serveur public dans le même
+format que notre <code>manifest.json</code>.</p>
+<h3 class="tag-ee" id="comment-configurer-des-notifications-par-e-mail">Comment configurer des notifications par e-mail ?<a class="headerlink" href="#comment-configurer-des-notifications-par-e-mail" title="Permanent link">#</a></h3>
+<p>Dans Grist SaaS, nous envoyons des e-mails tels que des invitations à partager un
+document en utilisant <a href="https://sendgrid.com/">SendGrid</a>.
+Le même mécanisme est disponible dans Grist Entreprise. Il n&rsquo;y a pas encore d&rsquo;équivalent dans Grist Noyau.</p>
+<p>Vous devrez définir une clé API SendGrid :</p>
+<pre><code>docker run
+  ...
+  -e SENDGRID_API_KEY=SG.XXXXXXX.XXXXX \
+  ...
+</code></pre>
+<p>Vous devrez rendre un fichier <code>config.json</code> disponible à la
+racine du volume mappé à <code>/persist</code>. Son contenu doit être
+le suivant :</p>
+<pre><code>{
+  &quot;sendgrid&quot;: {
+    &quot;api&quot;: {
+      &quot;prefix&quot;: &quot;https://api.sendgrid.com/v3&quot;,
+      &quot;enroll&quot;: &quot;/marketing/contacts&quot;,
+      &quot;search&quot;: &quot;/marketing/contacts/search&quot;,
+      &quot;searchByEmail&quot;: &quot;/marketing/contacts/search/emails&quot;,
+      &quot;listRemove&quot;: &quot;/marketing/lists/{{id}}/contacts&quot;,
+      &quot;send&quot;: &quot;/mail/send&quot;
+    },
+    &quot;address&quot;: {
+      &quot;from&quot;: {
+        &quot;email&quot;: &quot;&lt;l'adresse-e-mail@doit-venir-de&gt;&quot;,
+        &quot;name&quot;: &quot;le nom à afficher avec l'e-mail&quot;
+      }
+    },
+    &quot;template&quot;: {
+      &quot;invite&quot;: &quot;d-f9.....&quot;,
+      &quot;billingManagerInvite&quot;: &quot;d-f9.....&quot;,
+      &quot;memberChange&quot;: &quot;d-b3.....&quot;
+    },
+    &quot;list&quot;: {
+      &quot;singleUserOnboarding&quot;: &quot;b22...&quot;
+    },
+    &quot;unsubscribeGroup&quot;: {
+      &quot;invites&quot;: 19...,
+      &quot;billingManagers&quot;: 19....
+    }
+  }
+}
+</code></pre>
+<p>Voici la signification des clés dans ce fichier :</p>
+<ul>
+<li><code>sendgrid.api</code> - Les valeurs doivent rester inchangées par rapport à ce qui est
+    défini dans l&rsquo;exemple. Cela contrôle la version de l&rsquo;API et
+    les points de terminaison. Grist cible actuellement la v3 de l&rsquo;API web de SendGrid.</li>
+<li><code>sendgrid.address</code> - Doit être défini sur une adresse e-mail vérifiée et
+    le nom d&rsquo;un expéditeur SendGrid. Cela contrôle l&rsquo;adresse &ldquo;De&rdquo; de tous
+    les e-mails envoyés via SendGrid (par exemple, les invitations envoyées au nom des utilisateurs Grist).</li>
+<li><code>sendgrid.template</code> - Mappe les actions Grist aux identifiants de modèles d&rsquo;e-mail SendGrid.
+    Ceux-ci sont pour les e-mails transactionnels qui sont envoyés à la suite
+    d&rsquo;une action se produisant dans Grist.</li>
+<li><code>sendgrid.template.invite</code> - Ceci est pour les e-mails envoyés aux utilisateurs qui
+    sont invités à des documents, des espaces de travail ou des sites.</li>
+<li><code>sendgrid.template.memberChange</code> - Ceci est pour les e-mails envoyés aux
+    responsables de la facturation lorsque des utilisateurs sont ajoutés/retirés des sites.</li>
+<li><code>sendgrid.list</code> - Mappe les actions Grist aux identifiants de listes de marketing SendGrid.
+    Ceux-ci sont pour des e-mails automatisés en cours qui sont envoyés à tous
+    les utilisateurs qui sont inscrits dans une liste particulière.</li>
+<li><code>sendgrid.list.singleUserOnboarding</code> - Les nouveaux utilisateurs Grist sont
+    automatiquement ajoutés à cette liste lors de leur première connexion. Cela est adapté
+    pour envoyer des e-mails d&rsquo;intégration réguliers aux utilisateurs.</li>
+<li><code>sendgrid.unsubscribeGroup</code> - Mappe les types d&rsquo;e-mails aux identifiants de groupes de désinscription SendGrid.
+    Ceux-ci permettent aux utilisateurs de se désinscrire de la réception de certains types d&rsquo;e-mails (via le lien dans l&rsquo;e-mail).</li>
+<li><code>sendgrid.unsubscribeGrist.invites</code> - Si défini, les e-mails d&rsquo;invitation peuvent être
+    supprimés via le lien de désinscription dans les e-mails.</li>
+<li><code>sendgrid.unsubscribeGrist.billingManagers</code> - Si défini, les e-mails envoyés
+    spécifiquement aux responsables de la facturation (par exemple, changements d&rsquo;adhésion) peuvent être
+    supprimés via le lien de désinscription dans les e-mails.</li>
+</ul>
+<p>Pour référence, il existe des exemples de modèles SendGrid dans
+<a href="./install/example-sendgrid-templates.zip">example-sendgrid-templates.zip</a>
+basés sur une exportation des modèles SendGrid pour notre SaaS.</p>
+<h3 class="tag-core tag-ee" id="comment-ajouter-plus-de-packages-python">Comment ajouter plus de packages python ?<a class="headerlink" href="#comment-ajouter-plus-de-packages-python" title="Permanent link">#</a></h3>
+<p>L&rsquo;ensemble des packages python disponibles pour une utilisation dans les formules n&rsquo;est actuellement
+pas configurable. Vous pouvez ajouter des packages de toute façon si vous êtes prêt à
+construire et installer votre propre version de Grist.</p>
+<div class="admonition avertissement">
+<p class="admonition-title">Avertissement</p>
+<p><strong>Les documents Grist créés sur une installation avec des packages python personnalisés 
+ne ramèneront pas ces packages s&rsquo;ils sont copiés vers une autre installation. 
+Les formules utilisant des packages python personnalisés donneront des erreurs lorsque ces packages ne seront pas disponibles.</strong></p>
+</div>
+<p>Créez un répertoire vide et ajoutez ce qui suit, dans un fichier appelé
+<code>Dockerfile</code> :</p>
+<pre><code>FROM gristlabs/grist  # ou grist-oss ou grist-omnibus
+
+RUN \
+  apt update &amp;&amp; apt install -y openssl &amp;&amp; \
+  python3 -m pip install phonenumbers
+</code></pre>
+<p>Remplacez <code>phonenumbers</code> par le package python ou les packages que vous souhaitez
+installer. Vous pouvez maintenant construire votre image Grist personnalisée en exécutant un
+<code>docker build</code> dans le répertoire contenant le <code>Dockerfile</code> :</p>
+<pre><code class="language-sh"># remplacez &quot;custom&quot; par un nom d'utilisateur ou de l'organisation.
+docker build -t custom/grist .
+</code></pre>
+<p>Une fois terminé, vous pouvez utiliser <code>custom/grist</code> à la place de <code>gristlabs/grist(-ee)</code> dans
+<a href="./#how-do-i-install-grist">Comment installer Grist</a>,
+et votre bibliothèque python sera désormais disponible à l&rsquo;importation dans les formules.</p>
+<p>Si vous souhaitez que l&rsquo;importation soit effectuée automatiquement, afin de ne pas avoir à le faire dans
+les formules, cela nécessite actuellement un changement de code dans
+<a href="https://github.com/gristlabs/grist-core/blob/e95b2154051d5a8393bb005af49565d08117106a/sandbox/grist/gencode.py#L173">sandbox/grist/gencode.py</a>.
+Si vous êtes à l&rsquo;aise avec les modifications de code, alors les instructions de construction
+du dépôt <a href="https://github.com/gristlabs/grist-core/">grist-core</a> sont l&rsquo;endroit où commencer.</p>
+<h3 class="tag-core tag-ee" id="comment-configurer-des-webhooks">Comment configurer des webhooks ?<a class="headerlink" href="#comment-configurer-des-webhooks" title="Permanent link">#</a></h3>
+<p>Il est possible d&rsquo;utiliser des webhooks pour activer des intégrations avec des services externes. La <a href="../webhooks/">documentation des webhooks</a> contient plus de détails.</p>
+<p>Notez que lors de l&rsquo;auto-hébergement, seuls les services externes autorisés par la
+<a href="https://github.com/gristlabs/grist-core?tab=readme-ov-file#environment-variables">variable d&rsquo;environnement <code>ALLOWED_WEBHOOK_DOMAINS</code></a>
+sont autorisés. <a href="../webhooks/#security">Il y a des préoccupations de sécurité</a> avec
+l&rsquo;autorisation de tout domaine, car les services internes de Grist peuvent devenir vulnérables
+à la manipulation.</p>
+<hr />
+<h2 id="operations">Opérations<a class="headerlink" href="#operations" title="Permanent link">#</a></h2>
+<h3 class="tag-core tag-ee" id="quelles-sont-les-exigences-materielles-pour-heberger-grist">Quelles sont les exigences matérielles pour héberger Grist ?<a class="headerlink" href="#quelles-sont-les-exigences-materielles-pour-heberger-grist" title="Permanent link">#</a></h3>
+<p>Pour héberger Grist en tant que conteneur Linux, voici une configuration connue
+pour une variété de charges de travail modérées :</p>
+<ul>
+<li>8 Go de RAM</li>
+<li>2 CPU</li>
+<li>20 Go de disque</li>
+</ul>
+<p>Grist est emballé pour les architectures CPU suivantes :</p>
+<ul>
+<li>x86_64 (Sandy Bridge ou plus récent si le sandboxing est activé)</li>
+<li>ARM64</li>
+</ul>
+<p>Chaque document Grist est une base de données séparée, donc il est difficile de
+déclarer des exigences minimales absolues sans savoir quels documents seront utilisés. Dans les tests, le <a href="https://templates.getgrist.com/doc/investment-research">modèle de recherche d&rsquo;investissement</a>
+fonctionne confortablement servi depuis un conteneur Grist avec :</p>
+<ul>
+<li>100 Mo de RAM sans sandboxing activé.</li>
+<li>200 Mo de RAM avec sandboxing activé.</li>
+<li>1 CPU.</li>
+</ul>
+<p>Les exigences en mémoire et en CPU évolueront avec le nombre de documents
+utilisés simultanément par votre équipe.</p>
+<p><a href="./#how-do-i-sandbox-documents">Le sandboxing</a> est un problème important pour servir
+Grist. Il est réalisé en utilisant <a href="https://gvisor.dev/">gvisor</a>. Le sandboxing dépend de
+la disponibilité de certaines capacités, et peut être indisponible dans
+des environnements qui n&rsquo;autorisent pas ou manquent ces capacités. Le sandboxing de Grist est connu
+pour fonctionner dans les environnements suivants :</p>
+<ul>
+<li>Conteneurs docker réguliers non privilégiés avec les paramètres de sécurité par défaut.</li>
+<li>Instances AWS EC2.</li>
+<li>Conteneurs AWS Fargate, avec <code>SYS_PTRACE</code> défini dans <code>linuxParameters.capabilities</code>.</li>
+</ul>
+<p>Le sandboxing de Grist a été signalé comme échouant à s&rsquo;initialiser sur des processeurs Intel plus anciens qui ne prennent pas en charge la fonctionnalité <code>XSAVE</code> (prise en charge par
+Sandy Bridge et ultérieur).</p>
+<h3 class="tag-core tag-ee" id="quels-fichiers-grist-stocke-t-il">Quels fichiers Grist stocke-t-il ?<a class="headerlink" href="#quels-fichiers-grist-stocke-t-il" title="Permanent link">#</a></h3>
+<p>Lorsqu&rsquo;il est installé en tant que conteneur, Grist s&rsquo;attend à avoir accès à un
+volume persistant, ou à un répertoire partagé avec l&rsquo;hôte, dans lequel il
+stocke tout ce qui doit durer au-delà d&rsquo;un redémarrage de conteneur.
+Concrètement, si vous avez démarré Grist exactement comme décrit dans
+<a href="./#how-do-i-install-grist">Comment installer Grist</a>,
+ce répertoire serait <code>~/grist</code>. Voici ce que vous y trouveriez :</p>
+<ul>
+<li>
+<p>Un sous-répertoire appelé <code>docs</code>, contenant des fichiers <code>*.grist</code>.
+   Ce sont des documents Grist. Les documents Grist sont des bases de données SQLite,
+   donc vous pouvez inspecter ces fichiers avec l&rsquo;utilitaire standard <code>sqlite3</code>.
+   Vous pouvez également les télécharger sur une autre installation de
+   Grist (comme notre service hébergé) et les visualiser/éditer là-bas.
+   Si vous déplacez ou renommez ces fichiers, Grist ne les reconnaîtra plus.
+   Si le <a href="./#how-do-i-set-up-snapshots">support des snapshots</a>
+   est configuré, il y aura des fichiers supplémentaires à côté de chaque fichier <code>.grist</code>
+   pour suivre son état de stockage.</p>
+</li>
+<li>
+<p>Un fichier appelé <code>grist-sessions.db</code>. Cela contient des informations
+   pour prendre en charge les sessions de navigateur avec Grist. C&rsquo;est une base de données SQLite.
+   Si <a href="./#what-is-a-state-store">redis est configuré</a>,
+   cela est utilisé à la place de ce fichier.</p>
+</li>
+<li>
+<p>Un fichier appelé <code>home.sqlite3</code>. Cela contient des informations sur
+   les équipes, les espaces de travail et les documents (métadonnées uniquement, telles que les noms,
+   plutôt que le contenu des documents tels que les tables et les cellules). C&rsquo;est une
+   base de données SQLite. Elle est appelée la
+   <a href="./#what-is-a-home-database">base de données principale</a>
+   et si PostgreSQL est configuré, cela est utilisé à la place de ce fichier.</p>
+</li>
+<li>
+<p>Si vous utilisez Grist Omnibus, il y a d&rsquo;autres fichiers, y compris :</p>
+<ul>
+<li>Un répertoire <code>auth</code>, avec une base de données SQLite pour suivre l&rsquo;état de connexion,
+   et un stockage de tous les certificats créés.</li>
+<li>Un répertoire <code>param</code>, avec des secrets inventés pour l&rsquo;installation.</li>
+</ul>
+</li>
+</ul>
+<h3 class="tag-core tag-ee" id="quest-ce-quune-base-de-donnees-principale">Qu&rsquo;est-ce qu&rsquo;une base de données &ldquo;principale&rdquo; ?<a class="headerlink" href="#quest-ce-quune-base-de-donnees-principale" title="Permanent link">#</a></h3>
+<p>Grist stocke des métadonnées sur les utilisateurs, les documents, les espaces de travail, etc. dans une
+base de données appelée la &ldquo;base de données principale&rdquo;. Cela ne contient pas le
+matériel à l&rsquo;intérieur des documents tels que les tables et les colonnes, mais contient des noms de documents et des heures de création, par exemple. Par défaut, Grist
+créera une base de données principale dans un fichier Sqlite dans le répertoire <code>/persist</code>.
+Pour utiliser à la place une base de données PostgreSQL, créez la
+base de données ainsi qu&rsquo;un utilisateur ayant un accès suffisant pour créer des tables,
+et définissez les variables suivantes :</p>
+<ul>
+<li>TYPEORM_TYPE - défini sur postgres</li>
+<li>TYPEORM_DATABASE - défini sur le nom de la base de données, par exemple home</li>
+<li>TYPEORM_USERNAME - défini sur le nom d&rsquo;utilisateur postgres ayant des droits sur la base de données</li>
+<li>TYPEORM_PASSWORD - défini sur le mot de passe postgres ayant des droits sur la base de données</li>
+<li>TYPEORM_HOST - défini sur le nom d&rsquo;hôte de la base de données, par exemple grist.mumble.rds.amazonaws.com</li>
+<li>TYPEORM_PORT - défini sur le numéro de port de la base de données si ce n&rsquo;est pas le défaut pour PostgreSQL</li>
+</ul>
+<p>Grist est connu pour fonctionner avec PostgreSQL des versions 10 à 14 (les versions ultérieures
+devraient également fonctionner, mais n&rsquo;ont pas été spécifiquement testées au moment de la rédaction).</p>
+<h3 class="tag-core tag-ee" id="quest-ce-quun-magasin-detat">Qu&rsquo;est-ce qu&rsquo;un magasin d&rsquo;état ?<a class="headerlink" href="#quest-ce-quun-magasin-detat" title="Permanent link">#</a></h3>
+<p>Grist peut être configuré pour utiliser Redis comme cache d&rsquo;état externe. Pour
+la plupart des fonctionnalités de Grist, cela est optionnel. Il est requis pour le support des webhooks, et recommandé pour le support des snapshots. Pour l&rsquo;utiliser, il suffit de définir <code>REDIS_URL</code> sur quelque chose comme
+<code>redis://hostname/N</code> où <code>N</code> est un numéro de base de données redis.</p>
+<pre><code>docker run
+  ...
+  -e REDIS_URL=&quot;redis://hostname/N&quot;
+  ...
+</code></pre>
+<h3 class="tag-core tag-ee" id="comment-configurer-des-snapshots">Comment configurer des snapshots ?<a class="headerlink" href="#comment-configurer-des-snapshots" title="Permanent link">#</a></h3>
+<p>La fonctionnalité de stockage cloud de Grist permet la synchronisation automatique des documents Grist
+et des versions de documents vers un bucket compatible S3
+(disponible pour toutes les versions de Grist) ou vers un stockage Azure (dans Grist Entreprise).</p>
+<p>Voici un exemple d&rsquo;exécution de Grist localement, avec des snapshots stockés
+dans une instance MinIO de test :</p>
+<pre><code class="language-sh"># Créer un réseau
+docker network create grist
+
+# Démarrer Redis dans notre réseau (recommandé pour les snapshots)
+docker run --rm --network grist --name redis redis
+
+# Démarrer MinIO dans notre réseau
+docker run --rm --network grist --name minio \
+  -v /tmp/minio:/data \
+  -p 9000:9000 -p 9001:9001 \
+  -e MINIO_ROOT_USER=grist -e MINIO_ROOT_PASSWORD=admingrist \
+   -it minio/minio server /data -console-address &quot;:9001&quot;
+
+# Visitez http://localhost:9000 et configurez un bucket appelé grist-docs.
+# Assurez-vous d'activer la versioning sur le bucket.
+
+# Connectez Grist à Redis et MinIO
+docker run --rm --network grist \
+  -e GRIST_DOCS_MINIO_ACCESS_KEY=grist \
+  -e GRIST_DOCS_MINIO_SECRET_KEY=admingrist \
+  -e GRIST_DOCS_MINIO_USE_SSL=0 \
+  -e GRIST_DOCS_MINIO_BUCKET=grist-docs \
+  -e GRIST_DOCS_MINIO_ENDPOINT=minio \
+  -e GRIST_DOCS_MINIO_PORT=9000 \
+  -e REDIS_URL=redis://redis \
+  -v /tmp/grist:/persist -p 8484:8484 -it gristlabs/grist
+</code></pre>
+<p>Voici des drapeaux pour faire parler Grist à un bucket AWS S3 en utilisant le client MinIO :</p>
+<pre><code>  ...
+  -e GRIST_DOCS_MINIO_ACCESS_KEY=$AWS_ACCESS_KEY_ID \
+  -e GRIST_DOCS_MINIO_SECRET_KEY=$AWS_SECRET_ACCESS_KEY \
+  -e GRIST_DOCS_MINIO_ENDPOINT=s3.amazonaws.com \
+  -e GRIST_DOCS_MINIO_BUCKET=grist-docs \
+  ...
+</code></pre>
+<p>Selon les <a href="https://min.io/docs/minio/linux/developers/go/API.html#:~:text=Default%20value%20is%20us-east,us-east-1">spécifications de MinIO</a>, la région par défaut du bucket est <code>us-east-1</code>. Cette région par défaut peut être remplacée en utilisant le drapeau <code>GRIST_DOCS_MINIO_BUCKET_REGION</code>.</p>
+<p>Pour plus de détails, et d&rsquo;autres options, voir <a href="../install/cloud-storage/">Stockage Cloud</a>.</p>
+<h3 class="tag-core" id="comment-controler-la-telemetrie">Comment contrôler la télémétrie ?<a class="headerlink" href="#comment-controler-la-telemetrie" title="Permanent link">#</a></h3>
+<p>Par défaut, les installations Grist ne &ldquo;téléphonent pas&rdquo; à un service central.
+Il est utile de leur permettre de le faire, pour donner à Grist Labs un aperçu limité de votre utilisation, à travers des mesures appelées
+télémétrie. Cela aidera à guider le développement et à attirer l&rsquo;attention sur
+les utilisateurs autogérés en tant que groupe.</p>
+<p>Le moyen le plus simple pour un propriétaire d&rsquo;une installation Grist de choisir d&rsquo;envoyer
+la télémétrie à Grist Labs est de cliquer sur le bouton &ldquo;Opter pour la télémétrie&rdquo; sur la bannière &ldquo;Support Grist&rdquo; sur la page principale de l&rsquo;installation.
+Si vous ne souhaitez pas opter pour cela, vous pouvez ignorer la bannière.
+La bannière est affichée uniquement au propriétaire de l&rsquo;installation.
+Le propriétaire de l&rsquo;installation est l&rsquo;utilisateur dont l&rsquo;adresse e-mail
+correspond à la variable d&rsquo;environnement <code>GRIST_DEFAULT_EMAIL</code> (si définie).</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="Télémétrie auto-hébergée" src="../images/newsletters/2023-07/core-telemetry-opt-in.png" /></em></span></p>
+<p>Vous pouvez contrôler la télémétrie à tout moment en utilisant la page &ldquo;Support Grist&rdquo;,
+si vous êtes le propriétaire de l&rsquo;installation.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="Contrôler la télémétrie" src="../images/support-page-link.png" /></em></span></p>
+<p>Plutôt que d&rsquo;utiliser des boutons pour opter pour la télémétrie,
+vous pouvez définir la variable d&rsquo;environnement <code>GRIST_TELEMETRY_LEVEL</code> sur
+<code>limited</code>. Cela a le même effet que le bouton &ldquo;Opter pour la télémétrie&rdquo;.
+La variable d&rsquo;environnement <code>GRIST_TELEMETRY_LEVEL</code>,
+si définie, prend la priorité sur tout paramètre effectué de manière interactive.
+Les valeurs recommandées sont <code>limited</code> ou <code>off</code>.</p>
+<p>Dans tous les cas, lisez <a href="../telemetry-limited/">télémétrie limitée</a> pour des détails exacts
+sur les données envoyées, et <a href="../telemetry/">aperçu de la télémétrie</a> pour plus d&rsquo;explications.
+Une méthode interactive pour contrôler la télémétrie n&rsquo;est actuellement disponible que pour les versions Grist Noyau. Dans tous les cas,
+le défaut est de ne pas envoyer de télémétrie.</p>
+<h3 class="tag-core tag-ee" id="comment-mettre-a-jour-mon-installation">Comment mettre à jour mon installation ?<a class="headerlink" href="#comment-mettre-a-jour-mon-installation" title="Permanent link">#</a></h3>
+<p>Nous publions actuellement de nouvelles images Grist Noyau et Entreprise à
+environ des intervalles hebdomadaires. Grist gère toutes les migrations qui
+peuvent être nécessaires pour les documents ou les bases de données qu&rsquo;il utilise.
+Des utilitaires tels que <a href="https://containrrr.dev/watchtower/">Watchtower</a> peuvent
+maintenir votre version de Grist à jour pour vous.</p>
+<h3 class="tag-ee" id="que-faire-si-jai-besoin-dune-haute-disponibilite">Que faire si j&rsquo;ai besoin d&rsquo;une haute disponibilité ?<a class="headerlink" href="#que-faire-si-jai-besoin-dune-haute-disponibilite" title="Permanent link">#</a></h3>
+<p>Nous avons développé une expertise dans l&rsquo;hébergement d&rsquo;installations Grist très occupées,
+avec de nombreux utilisateurs, y compris comment mettre à jour avec un minimum de perturbation,
+et comment évoluer pour gérer une charge lourde. Nous serions heureux d&rsquo;aider
+les clients Entreprise ayant des besoins de cette nature.</p>
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/self-managed.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

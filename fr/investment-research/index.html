@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Grist offre plusieurs moyens puissants d’analyser et de visualiser des données. Dans ce tutoriel, vous apprendrez à :">
+      <meta property="og:description" content="Grist offre plusieurs moyens puissants d’analyser et de visualiser des données. Dans ce tutoriel, vous apprendrez à :">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/investment-research/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Analyze and visualize - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="../FAQ/" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../lightweight-crm/" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#explorer-lexemple">
+                Explorer l&rsquo;exemple
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#comment-puis-je-faire-cela">
+                
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#obtenir-les-donnees">
+                Obtenir les données
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#rendre-cela-relationnel">
+                Rendre cela relationnel
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#resumer">
+                Résumer
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#graphique-diagramme-trace">
+                Graphique, diagramme, tracé
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#graphiques-dynamiques">
+                Graphiques dynamiques
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#prochaines-etapes">
+                Prochaines étapes
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../afterschool-program/" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-types/" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../references-lookups/" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-cheat-sheet/" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../self-managed/" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../afterschool-program/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../afterschool-program/" class="btn btn-xs btn-link">
+        Manage business data
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../lightweight-crm/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../lightweight-crm/" class="btn btn-xs btn-link">
+        Create your own CRM
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<h1 id="comment-analyser-et-visualiser-des-donnees">Comment analyser et visualiser des données<a class="headerlink" href="#comment-analyser-et-visualiser-des-donnees" title="Permanent link">#</a></h1>
+<p>Grist offre plusieurs moyens puissants d&rsquo;analyser et de visualiser des données. Dans ce tutoriel, vous apprendrez à :</p>
+<ul>
+<li>Créer des tables de synthèse</li>
+<li>Créer et configurer des graphiques</li>
+<li>Lier des graphiques de manière dynamique</li>
+</ul>
+<p>Pour expliquer ces fonctionnalités, nous utiliserons le document d&rsquo;exemple “Recherche d&rsquo;Investissement”<sup id="fnref:doc_desc"><a class="footnote-ref" href="#fn:doc_desc">1</a></sup> qui inclut des entreprises et les investissements dans celles-ci jusqu&rsquo;en 2013. Jetons un coup d&rsquo;œil au document d&rsquo;exemple, puis nous parlerons de la manière de le construire afin que vous puissiez appliquer ces outils à vos propres données.</p>
+<h2 id="explorer-lexemple">Explorer l&rsquo;exemple<a class="headerlink" href="#explorer-lexemple" title="Permanent link">#</a></h2>
+<p>Ouvrez le document “<a href="https://templates.getgrist.com/doc/investment-research" target="_blank">Recherche d&rsquo;Investissement</a>”, trouvé dans Exemples &amp; Modèles sur votre page d&rsquo;accueil Grist. La première chose que vous verrez est “Aperçu”. Cette page contient deux graphiques à côté de deux tables.</p>
+<p><img alt="1-overview-page" src="../images/investment-research/1-overview-page.png" /></p>
+<ul>
+<li>En haut à gauche, il y a un graphique circulaire montrant la répartition des investissements par catégorie. La table à côté contient les mêmes données sous forme tabulaire.</li>
+<li>En dessous du graphique circulaire se trouve un graphique à barres montrant le total des investissements levés par année. Il est également accompagné des mêmes données dans la table à côté sous forme tabulaire.</li>
+</ul>
+<p>Tous ces graphiques et tables sont des exemples de “tables de synthèse”, que nous décrirons ci-dessous.</p>
+<p>La page suivante, “Répartitions”, contient également deux tables et deux graphiques, mais ceux-ci sont liés de manière dynamique et offrent des informations beaucoup plus détaillées sur les données.</p>
+<p><img alt="2-breakdowns-page" src="../images/investment-research/2-breakdowns-page.png" /></p>
+<ul>
+<li>
+<p>En haut à gauche se trouve une table montrant le financement total par année (la même table que nous avons vue sur la page précédente). Cette table sert de moteur pour le graphique à côté. Lorsque vous cliquez sur une année dans la table, le graphique circulaire se met à jour pour montrer la répartition des investissements cette année-là.</p>
+</li>
+<li>
+<p>De même, la table du bas montre les investissements par catégorie. Lorsque vous cliquez sur une catégorie, le graphique linéaire à côté se met à jour pour montrer l&rsquo;historique du financement dans cette catégorie au fil des ans.</p>
+</li>
+</ul>
+<p>Notez à quel point cela est puissant et combien d&rsquo;informations vous pouvez en tirer. Par exemple, vous pouvez voir que la catégorie Publicité a reçu beaucoup d&rsquo;investissements à New York depuis 2007, mais a été dépassée par le E-commerce en 2013, tandis que la catégorie Mode a connu un pic majeur en 2011.</p>
+<p>Sur la page suivante, “Détails de l&rsquo;Entreprise”, nous pouvons voir les données granulaires de cet ensemble de données.</p>
+<p><img alt="3-company-details" src="../images/investment-research/3-company-details.png" /></p>
+<p>Ici, nous voyons une liste d&rsquo;entreprises et les catégories auxquelles elles appartiennent. Chaque entreprise affichée a un lien pointant vers son inscription sur le site Crunchbase. Sélectionner une entreprise affiche une fiche avec ses détails, ainsi qu&rsquo;une liste de tous les investissements qu&rsquo;elle a reçus.</p>
+<p>C&rsquo;est ici que nous commençons à voir la puissance de Grist. L&rsquo;ensemble de données original est une feuille de calcul plate d&rsquo;entreprises, et une feuille de calcul encore plus grande d&rsquo;investissements. En affichant les données graphiquement, les données prennent vie, les rendant puissantes et utiles.</p>
+<h2 id="comment-puis-je-faire-cela">Comment puis-je faire cela ?<a class="headerlink" href="#comment-puis-je-faire-cela" title="Permanent link">#</a></h2>
+<p>Avec Grist, présenter vos propres données sous forme graphique est à quelques étapes faciles. Commençons par la première étape.</p>
+<h2 id="obtenir-les-donnees">Obtenir les données<a class="headerlink" href="#obtenir-les-donnees" title="Permanent link">#</a></h2>
+<p>Importons les données sources. Nous allons importer deux fichiers CSV, chacun devenant sa propre table. Pour suivre, enregistrez d&rsquo;abord les fichiers de <a href="./unlocalized-assets/investment-research/crunchbase-companies-ny.csv">crunchbase_companies_ny.csv</a> et <a href="./unlocalized-assets/investment-research/crunchbase-investments-ny.csv">crunchbase_investments_ny.csv</a> sur votre ordinateur. Ensuite, créez un document Grist en important le premier fichier depuis la page d&rsquo;accueil.</p>
+<p><img alt="4-first-import" src="../images/investment-research/4-first-import.png" /></p>
+<p>Ensuite, importez la deuxième table en utilisant le bouton “Ajouter Nouveau” et l&rsquo;option “Importer depuis un fichier”.</p>
+<p><img alt="5-second-import" src="../images/investment-research/5-second-import.png" /></p>
+<p>Dans la boîte de dialogue d&rsquo;importation, terminez en cliquant sur “Importer” en bas à gauche.</p>
+<p>Les tables que vous avez importées seront nommées “crunchbase_companies_ny” et “crunchbase_investments_ny”. Cliquez sur le nom en haut de la table pour ouvrir la boîte de dialogue et renommer chacune des tables en “Entreprises” et “Investissements”.</p>
+<p><img alt="6-rename-page" src="../images/investment-research/6-rename-page.png" /></p>
+<h2 id="rendre-cela-relationnel">Rendre cela relationnel<a class="headerlink" href="#rendre-cela-relationnel" title="Permanent link">#</a></h2>
+<p>La puissance de Grist provient de la structuration des données.</p>
+<p>Regardez la table “Investissements”. Triez par la première colonne et vous remarquerez combien il y a de répétitions : chaque ligne contient les informations complètes de l&rsquo;entreprise, ce qui duplique les données dans la table “Entreprises” et est répété plusieurs fois lorsque plusieurs investissements s&rsquo;appliquent à la même entreprise.<sup id="fnref:denormalized"><a class="footnote-ref" href="#fn:denormalized">2</a></sup></p>
+<p>La réalité est que chaque investissement s&rsquo;applique à une seule entreprise. Chaque ligne d&rsquo;investissement n&rsquo;a besoin de contenir qu&rsquo;une référence à une entreprise, et les données spécifiques à cet investissement.</p>
+<p>Pour ce faire, trouvez une colonne qui identifie une entreprise de manière unique. Dans cet ensemble de données, la première colonne, “company_permalink”, le fait le mieux<sup id="fnref:unique_id"><a class="footnote-ref" href="#fn:unique_id">3</a></sup>. Cliquez sur la flèche dans l&rsquo;en-tête de la colonne et cliquez sur “Options de colonne”. Cliquez sur la flèche à côté de “Texte” sous le “Type de colonne” dans la boîte de dialogue à droite de l&rsquo;écran et sélectionnez “Référence” dans la liste.</p>
+<p class="screenshot-half"><em><img alt="7-set-reference" src="../images/investment-research/7-set-reference.png" /></em></p>
+<p>Grist suggérera automatiquement de le faire une “Référence” à la table “Entreprises”, et d&rsquo;afficher le “permalink” de l&rsquo;entreprise référencée. Cliquez sur “Appliquer” pour enregistrer cette conversion.</p>
+<p><img alt="8-preview-reference" src="../images/investment-research/8-preview-reference.png" /></p>
+<p>Renommons également cette colonne en “Entreprise”.</p>
+<p>Dans Grist, les données dupliquées ne sont pas nécessaires et nous recommandons de les supprimer. Utiliser le raccourci <code>Option-Minus</code> (Mac) ou <code>Alt-Minus</code> (Windows) est un moyen rapide de supprimer des colonnes. Après avoir supprimé les colonnes de “company_name” à “company_city”, voici ce qui reste :</p>
+<p><span class="screenshot-large"><em><img alt="9-remove-columns" src="../images/investment-research/9-remove-columns.png" /></em></span></p>
+<p>Les données que vous avez supprimées ne sont pas perdues puisqu&rsquo;elles étaient dupliquées – elles sont toujours disponibles dans la table “Entreprises” et peuvent être utilisées dans la formule d&rsquo;un enregistrement d&rsquo;Investissement comme, par exemple, <code>$Company.company_xxx</code>.</p>
+<p>En fait, il existe un moyen pratique de créer ce type de formule. Créons-en une dont nous aurons besoin plus tard. Cliquez sur l&rsquo;en-tête de la colonne “Entreprise”. Dans l&rsquo;onglet Colonne du panneau de droite, vous verrez une section ‘Ajouter des colonnes référencées’. Cliquez sur ‘Ajouter une colonne’ pour ajouter la colonne “category_code”.</p>
+<p><img alt="10-add-referenced1" src="../images/investment-research/10-add-referenced1.png" /></p>
+<p>Une nouvelle colonne sera ajoutée à la table avec la formule <code>$Company.category_code</code>. Pour chaque investissement, elle affiche le “category_code” de l&rsquo;entreprise liée à son enregistrement d&rsquo;investissement.</p>
+<p><img alt="11-add-referenced2" src="../images/investment-research/11-add-referenced2.png" /></p>
+<h2 id="resumer">Résumer<a class="headerlink" href="#resumer" title="Permanent link">#</a></h2>
+<p>La fonctionnalité puissante que vous attendiez est celle qui résume les données. <a href="../summary-tables/">Les tables de synthèse</a> résument chaque colonne numérique dans une table de données. Nous voulons trouver la somme pour la colonne <code>funding_total_usd</code> dans la table Entreprises. Vérifiez que le type de colonne est défini sur &lsquo;Numérique&rsquo; et formaté avec <code>$</code>.</p>
+<p><img alt="11.5-set-numeric" src="../images/investment-research/11.5-set-numeric.png" /></p>
+<p>Pour utiliser cela, ajoutons une table montrant les entreprises regroupées par “category_code”.</p>
+<p>Dans le menu “Ajouter Nouveau” en haut à gauche, sélectionnez “Ajouter une Page”. Dans la boîte de dialogue, sélectionnez “Table” et “Entreprises”, puis utilisez l&rsquo;icône de sommation (<span class="grist-icon" style="--icon: var(--icon-Pivot)"></span>) pour sélectionner les colonnes “Grouper par” &ndash; c&rsquo;est-à-dire les colonnes par lesquelles résumer.</p>
+<p><img alt="12-start-summary" src="../images/investment-research/12-start-summary.png" /></p>
+<p>Si vous ne sélectionnez aucune colonne, vous obtiendrez simplement une seule ligne de totaux. Si vous résumez par “category_code”, vous obtiendrez une ligne pour chaque valeur distincte de “category_code”. Faisons cela puis cliquons sur “Ajouter Page”.</p>
+<p><img alt="13-summary-added" src="../images/investment-research/13-summary-added.png" /></p>
+<p>Ceci est similaire aux tableaux croisés dynamiques d&rsquo;Excel. Chaque ligne représente le groupe d&rsquo;enregistrements de la table source (“Entreprises”) qui ont une valeur particulière de “category_code”. Il y a un rappel de cela dans le titre de la table (“ENTREPRISES [par category_code]”).</p>
+<p>De telles tables de synthèse peuvent (et doivent !) utiliser des formules. Les colonnes que vous choisissez lors de la création de la table sont les identifiants des groupes. Toutes les autres colonnes sont des colonnes de formule &ndash; elles sont calculées. Dans les formules, le groupe d&rsquo;enregistrements source résumé par une ligne est disponible sous la valeur “$group”.</p>
+<p>Par exemple, vous verrez une colonne créée automatiquement appelée “count”. Si vous appuyez sur “Entrée”, vous verrez la formule qui s&rsquo;y trouve &ndash; <code>len($group)</code> &ndash; qui est juste le nombre d&rsquo;enregistrements dans ce groupe d&rsquo;enregistrements, c&rsquo;est-à-dire le nombre d&rsquo;entreprises dans cette catégorie.</p>
+<p><img alt="14-summary-count-formula" src="../images/investment-research/14-summary-count-formula.png" /></p>
+<p>Pour les colonnes numériques dans la table source, les tables de synthèse obtiennent automatiquement une colonne numérique du même nom contenant une somme, avec une formule telle que <code>SUM($group.funding_total_usd)</code>.</p>
+<p><img alt="15-summary-sum-formula" src="../images/investment-research/15-summary-sum-formula.png" /></p>
+<div class="admonition note">
+<p class="admonition-title">Une note pour les fans de Python</p>
+<p><code>$group</code> est un objet Python spécial. C&rsquo;est une collection itérable d&rsquo;enregistrements. Utiliser un attribut comme <code>$group.A</code> est un raccourci pour la liste des valeurs dans la colonne <code>A</code> de tous les enregistrements du groupe, c&rsquo;est-à-dire que c&rsquo;est à peu près équivalent à <code>[r.A for r in $group]</code>.</p>
+</div>
+<p>Parfois, ajouter les valeurs n&rsquo;a pas de sens. Par exemple, la somme de “founded_year” est dénuée de sens. Il est préférable de supprimer cela et toute autre colonne dont nous n&rsquo;avons pas besoin, ce qui nous laisse avec la colonne &ldquo;funding_total_usd&rdquo;.</p>
+<p>Puisque cette colonne contient de grands nombres, il est temps de regarder la section &ldquo;Format de Nombre&rdquo; de sa configuration, et de cliquer sur <code>,</code> (ou peut-être <code>$</code>) pour formater les nombres afin qu&rsquo;ils soient plus lisibles.</p>
+<p><img alt="16-summary-remove-columns" src="../images/investment-research/16-summary-remove-columns.png" /></p>
+<p>Ajoutons une deuxième table de synthèse. Sélectionnez à nouveau “Ajouter Nouveau” pour “Ajouter un Widget à la Page”. Pour obtenir un résumé par année, sélectionnez la table “Investissements” sous “Sélectionner les Données”, et utilisez à nouveau son symbole de somme (∑) pour sélectionner la colonne par laquelle résumer : “funded_year” puis cliquez sur “Ajouter à la page”.</p>
+<p><img alt="17-add-summary2" src="../images/investment-research/17-add-summary2.png" /></p>
+<p>Cela produit une deuxième table de synthèse qui montre un enregistrement pour chaque année, chacun représentant un groupe de lignes “Investissements” pour cette année. La colonne la plus utile est “raised_amount_usd”, ajoutant tous les investissements réalisés cette année-là. Supprimons les colonnes non nécessaires.</p>
+<p>Vous remarquerez des valeurs roses dans “raised_amount_usd”. C&rsquo;est parce que Grist devine que le type de colonne est un entier. Les sommes roses sont des instances où les nombres dépassent la capacité de Javascript à gérer de grands entiers. Pour corriger cela, le type de la colonne doit être changé en “Numérique” (ce qui échange la précision contre la capacité à représenter des nombres très grands et très petits). Changez le type en “Numérique“ sous “Options de colonne”.</p>
+<p>C&rsquo;est encore un bon moment pour choisir un format de nombre plus convivial pour la colonne, et pour l&rsquo;élargir afin d&rsquo;adapter les nombres plus longs.</p>
+<p><img alt="18-change-int-to-numeric" src="../images/investment-research/18-change-int-to-numeric.png" /></p>
+<h2 id="graphique-diagramme-trace">Graphique, diagramme, tracé<a class="headerlink" href="#graphique-diagramme-trace" title="Permanent link">#</a></h2>
+<p>Vous pouvez créer un graphique à partir de n&rsquo;importe quelles données. Pour cette page, nous voulons ajouter une version graphique de chaque table de synthèse. Sélectionnez à nouveau le bouton “Ajouter Nouveau”, choisissez “Ajouter un Widget à la Page”, sélectionnez “Graphique” comme widget, et la même table (Entreprises) et colonne de synthèse (category_code) qu&rsquo;auparavant. Puis cliquez sur &ldquo;Ajouter à la Page&rdquo;.</p>
+<p><img alt="19-add-chart1" src="../images/investment-research/19-add-chart1.png" /></p>
+<p>Pour un graphique, vous devrez toujours le personnaliser par la suite.</p>
+<p>Ouvrez le panneau de droite, et sélectionnez l&rsquo;onglet “Graphique” / sous-onglet “Widget”.</p>
+<p>Pour ce premier graphique, sous “Type de Graphique&rdquo;, sélectionnez “Graphique Circulaire”. Pour construire ce graphique, sélectionnez d&rsquo;abord une étiquette, puis sélectionnez une série à résumer dans le graphique circulaire. Puisque nous voulons que le graphique montre “category_code” comme étiquettes, sélectionnez cette série dans le menu déroulant &ldquo;Étiquette&rdquo;. Nous voulons utiliser “funding_total_usd” comme valeurs, donc cela devrait être listé en haut de la liste “séries” dans le panneau de configuration. Lorsque vous déplacez votre souris sur les éléments de cette liste, utilisez les doubles barres verticales qui apparaissent pour faire glisser et déposer une série en haut de la liste. Alternativement, vous pouvez masquer les autres séries de la liste en cliquant sur l&rsquo;icône de corbeille.</p>
+<p><img alt="20-chart-vis-fields" src="../images/investment-research/20-chart-vis-fields.png" /></p>
+<p>Ajoutons maintenant un graphique montrant une tendance par année. Ajoutez un autre “Widget à la page”, sélectionnez “Graphique” sous “Widget”, sélectionnez “Investissements” sous “Sélectionner les Données”, cliquez sur la sommation (<span class="grist-icon" style="--icon: var(--icon-Pivot)"></span>) pour grouper par “funded_year”, et cliquez sur “Ajouter à la Page”.</p>
+<p>Pour personnaliser ce graphique, restez avec le type de graphique “Graphique à Barres”. Dans le menu déroulant &ldquo;Axe X&rdquo;, sélectionnez la colonne à utiliser pour les valeurs de l&rsquo;axe X (horizontal). Sous &lsquo;Séries&rsquo;, sélectionnez une deuxième (et éventuellement d&rsquo;autres) colonne pour être les valeurs de l&rsquo;axe Y (vertical).</p>
+<p><img alt="21-add-chart2" src="../images/investment-research/21-add-chart2.png" /></p>
+<p>Vous pouvez réorganiser les sections à l&rsquo;écran dans une configuration que vous aimeriez voir pour un tableau de bord. Déplacez votre souris vers le coin supérieur gauche de chaque section jusqu&rsquo;à ce que vous voyiez une icône &ldquo;poignée de tirage&rdquo;. Utilisez cette icône pour faire glisser chaque section à l&rsquo;endroit souhaité par rapport aux autres sections. Une fois que vous avez terminé, renommez la page en survolant le nom de la page, puis en cliquant sur l&rsquo;icône à trois points pour ouvrir le menu. Sélectionnez &ldquo;Renommer&rdquo; et renommez en “Aperçu”.</p>
+<p><img alt="22-rearrange-widgets" src="../images/investment-research/22-rearrange-widgets.png" /></p>
+<h2 id="graphiques-dynamiques">Graphiques dynamiques<a class="headerlink" href="#graphiques-dynamiques" title="Permanent link">#</a></h2>
+<p>Si vous avez lu nos autres tutoriels sur le lien des données, cela viendra naturellement. Les graphiques sont simplement une autre façon de montrer des données, et ils peuvent être liés de la même manière que les tables.</p>
+<p>Pour notre exemple, nous allons ajouter une nouvelle page avec une table de synthèse : sélectionnez le widget “Table”, les données “Investissements”, groupez par “funded_year”, cliquez sur &ldquo;Ajouter Page&rdquo;.</p>
+<p><img alt="23-dynamic-start" src="../images/investment-research/23-dynamic-start.png" /></p>
+<p>Renommons cette nouvelle page “Répartitions”.</p>
+<p>Ensuite, ajoutez un widget à cette page, en sélectionnant le widget “Graphique”, les données “Investissements”. Pour “Grouper par”, nous choisissons <em>deux</em> colonnes : “Company_category_code” et “funded_year”. C&rsquo;est pourquoi nous avons ajouté la colonne “Company_category_code” plus tôt. Nous ne pouvons grouper les enregistrements d&rsquo;investissement par le code de catégorie que si nous avons ce code pour chaque investissement.</p>
+<p>Le menu déroulant “Sélectionner par” en bas à gauche de la boîte de dialogue répertorie les widgets déjà à l&rsquo;écran qui peuvent contrôler la sélection des données dans le graphique que nous ajoutons. Dans “Sélectionner par”, choisissez “INVESTISSEMENTS [par funded_year]”, et cliquez sur “Ajouter à la Page”.</p>
+<p><img alt="24-dynamic-chart-start" src="../images/investment-research/24-dynamic-chart-start.png" /></p>
+<div class="admonition astuce">
+<p><strong>Remarque :</strong> Si vous devez apporter des modifications à un widget que vous avez déjà ajouté, comme changer son type, ses paramètres “Grouper par” ou “Sélectionner par”, vous pouvez toujours le faire depuis l&rsquo;onglet “Données” dans les paramètres du widget, en utilisant le bouton “Modifier la Sélection de Données”.</p>
+</div>
+<p>Nous voulons pouvoir sélectionner une année, puis afficher un graphique circulaire pour cette année qui affiche le total pour chaque code de catégorie. L&rsquo;option “Sélectionner par” que nous avons choisie garantit que seules les données de l&rsquo;année sélectionnée sont utilisées. Tout ce qui reste est de changer le type de graphique en “Graphique Circulaire”, et de définir “Étiquette” sur “Company_category_code” et &ldquo;Série&rdquo; sur “raised_amount_usd”.</p>
+<p><img alt="25-dynamic-vis-fields" src="../images/investment-research/25-dynamic-vis-fields.png" /></p>
+<p>Remarque : Les graphiques ont besoin de plus d&rsquo;espace à l&rsquo;écran, donc nos petites captures d&rsquo;écran auront meilleure allure si nous fermons les panneaux latéraux en cliquant sur les icônes d&rsquo;ouverture (<span class="grist-icon" style="--icon: var(--icon-PanelLeft)"></span>, <span class="grist-icon" style="--icon: var(--icon-PanelRight)"></span>).</p>
+<p>Ajoutons également un tri de la table par “funded_year”.</p>
+<p><img alt="26-dynamic-table-sort" src="../images/investment-research/26-dynamic-table-sort.png" /></p>
+<p>En ce qui concerne le tri, le bouton mis en surbrillance au-dessus de la table vous rappelle que les paramètres de tri ne sont pas enregistrés automatiquement. Cliquez sur le bouton vert et sélectionnez “Enregistrer” pour le faire.</p>
+<p><img alt="27-dynamic-table-sort-save" src="../images/investment-research/27-dynamic-table-sort-save.png" /></p>
+<p>Quel est le résultat ? Nous pouvons cliquer à travers les années (ou utiliser les touches fléchées), et voir la répartition par catégorie changer.</p>
+<div class="admonition astuce">
+<p><strong>Remarque :</strong> Si cliquer à travers les années n&rsquo;affecte pas le graphique, le graphique ne doit pas être lié. Vous pouvez vérifier et corriger cela en utilisant le menu &ldquo;trois points&rdquo; en haut à droite du graphique, en cliquant sur &ldquo;Sélection de données&rdquo;, et en vous assurant que le menu déroulant &ldquo;Sélectionner par&rdquo; affiche &ldquo;INVESTISSEMENTS [par funded_year]&rdquo;.</p>
+</div>
+<p>Pour compléter l&rsquo;exemple, nous allons ajouter deux sections supplémentaires à cette page “Répartitions”. L&rsquo;une sera une table répertoriant les catégories d&rsquo;entreprises, et liée à cela sera un graphique montrant le montant de l&rsquo;investissement dans cette catégorie au fil des ans.</p>
+<p>Pour ajouter la table des catégories, utilisez &ldquo;Ajouter un Widget à la Page&rdquo;, et sélectionnez le widget &ldquo;Table&rdquo;, les données &ldquo;Investissements&rdquo;, regroupées par &ldquo;Company_category_code&rdquo;.</p>
+<p><img alt="28-dynamic-table2" src="../images/investment-research/28-dynamic-table2.png" /></p>
+<p>La colonne “funded_year” dans la table résultante est dénuée de sens et doit être supprimée.</p>
+<p>Pour la dernière étape, ajoutons un autre graphique. Nous devons nous rappeler de grouper par à la fois “Company_category_code” et “funded_year”, et de définir un widget “Sélectionner par” approprié pour cela. Puisqu&rsquo;il y a deux tables sur cette page, vous avez le choix de laquelle contrôlera les données dans ce graphique. Dans ce cas, choisissez le widget que nous venons d&rsquo;ajouter : “INVESTISSEMENTS [par Company_category_code]”.</p>
+<p><img alt="29-dynamic-chart2" src="../images/investment-research/29-dynamic-chart2.png" /></p>
+<p>Comme dans la section précédente, nous configurons le graphique en sélectionnant “Type de Graphique” comme “Graphique à Barres”, et dans le menu déroulant “Axe X”, en sélectionnant “funded_year” et sous &ldquo;Série&rdquo;, en sélectionnant “raised_amount_usd” et en masquant le reste.</p>
+<p><img alt="30-breakdowns-page-done" src="../images/investment-research/30-breakdowns-page-done.png" /></p>
+<p>Nous pouvons maintenant cliquer à travers les catégories, et voir l&rsquo;historique des investissements dans chacune.</p>
+<h2 id="prochaines-etapes">Prochaines étapes<a class="headerlink" href="#prochaines-etapes" title="Permanent link">#</a></h2>
+<p>Si vous n&rsquo;êtes pas familier avec la manière dont nous avons créé la page “Détails de l&rsquo;Entreprise” qui est présente dans l&rsquo;exemple, visitez l&rsquo;un de ces tutoriels précédents pour apprendre comment : ‘Comment construire un CRM léger’, ou ‘Gérer votre entreprise dans Grist’.</p>
+<p>C&rsquo;est tout ! Maintenant, allez analyser des données !</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:doc_desc">
+<p>Téléchargez <a href="./unlocalized-assets/investment-research/crunchbase-companies-ny.csv">crunchbase_companies_ny.csv</a> et <a href="./unlocalized-assets/investment-research/crunchbase-investments-ny.csv">crunchbase_investments_ny.csv</a>. Les données d&rsquo;exemple incluent uniquement les données sur les “entreprises” et les “investissements”, et incluent uniquement des entreprises de New York pour les rendre plus petites et plus rapides. L&rsquo;ensemble de données provient de <a href="https://www.kaggle.com/mauriciocap/crunchbase2013">Kaggle</a>.&#160;<a class="footnote-backref" href="#fnref:doc_desc" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:denormalized">
+<p>Une telle duplication est couramment observée dans les feuilles de calcul. Les données sous cette forme sont appelées “dénormalisées”.&#160;<a class="footnote-backref" href="#fnref:denormalized" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:unique_id">
+<p>Si vous n&rsquo;avez pas de colonne d&rsquo;identification unique, vous pouvez en construire une avec une formule.&#160;<a class="footnote-backref" href="#fnref:unique_id" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/investment-research.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

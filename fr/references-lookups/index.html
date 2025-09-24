@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Les colonnes Référence et Liste de Références dans Grist permettent à une table de créer une référence explicite à une autre. Un exemple courant de cela est visible dans le modèle Inscription en Classe.">
+      <meta property="og:description" content="Les colonnes Référence et Liste de Références dans Grist permettent à une table de créer une référence explicite à une autre. Un exemple courant de cela est visible dans le modèle Inscription en Classe.">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/references-lookups/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>References and lookups - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="../FAQ/" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../lightweight-crm/" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../investment-research/" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../afterschool-program/" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-types/" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              Utiliser des références et des recherches dans les formules
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-reference-et-notation-par-points">
+                Colonnes de référence et notation par points
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#chainage">
+                Chaînage
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#lookupone">
+                lookupOne
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#lookupone-et-notation-par-points">
+                lookupOne et notation par points
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#lookupone-et-sort_by">
+                lookupOne et sort_by
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#comprendre-les-ensembles-denregistrements">
+                Comprendre les ensembles d&rsquo;enregistrements
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#listes-de-references-et-notation-par-points">
+                Listes de références et notation par points
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#lookuprecords">
+                lookupRecords
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#recherches-inversees">
+                Recherches inversées
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#travailler-avec-des-ensembles-denregistrements">
+                Travailler avec des ensembles d&rsquo;enregistrements
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-cheat-sheet/" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../self-managed/" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../dates/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../dates/" class="btn btn-xs btn-link">
+        Working with dates
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../formulas/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../formulas/" class="btn btn-xs btn-link">
+        Intro to formulas
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<h1 id="utiliser-des-references-et-des-recherches-dans-les-formules">Utiliser des références et des recherches dans les formules<a class="headerlink" href="#utiliser-des-references-et-des-recherches-dans-les-formules" title="Permanent link">#</a></h1>
+<p>Les colonnes <a href="../col-refs/">Référence et Liste de Références</a> dans Grist permettent à une table de créer une référence explicite à une autre. Un exemple courant de cela est visible dans le modèle <a href="https://templates.getgrist.com/doc/afterschool-program">Inscription en Classe</a>.</p>
+<p>Sur la page du Personnel, nous avons une liste de membres du personnel. Sur la page des classes, nous avons une colonne de référence étiquetée Instructeur qui fait référence aux enregistrements de notre page du Personnel.</p>
+<p><span class="screenshot-large"><em><img alt="reference-column" src="../images/references-lookups/reference-column.png" /></em></span></p>
+<p>Gardez à l&rsquo;esprit qu&rsquo;il ne s&rsquo;agit pas seulement de référencer la colonne Nom Complet, mais l&rsquo;ensemble de l&rsquo;enregistrement associé à l&rsquo;instructeur sélectionné.</p>
+<h2 id="colonnes-de-reference-et-notation-par-points">Colonnes de référence et notation par points<a class="headerlink" href="#colonnes-de-reference-et-notation-par-points" title="Permanent link">#</a></h2>
+<p>Utiliser une colonne de Référence dans une formule peut faciliter l&rsquo;obtention de données de l&rsquo;enregistrement référencé. Pour ce faire, nous utilisons la notation par points. Elle utilise le format <code>$A.B</code> où <code>A</code> est le nom de la colonne de référence et <code>B</code> est le nom de la colonne dans la table référencée dont nous voulons extraire des données.</p>
+<p>Voyons cela en action sur la page <a href="https://templates.getgrist.com/doc/afterschool-program/p/7">Vue d&rsquo;Inscription</a> du modèle d&rsquo;Inscription en Classe. La notation par points est utilisée dans la colonne Class_Times de la table INSCRIPTIONS, située en bas à droite de la page de la Vue d&rsquo;Inscription.</p>
+<p><span class="screenshot-large"><em><img alt="class-times" src="../images/references-lookups/class-times.png" /></em></span></p>
+<p>Nous pouvons voir que la colonne Class_Times utilise une formule avec la notation par points. En utilisant le format <code>$A.B</code> décrit ci-dessus, nous pouvons comprendre que Class est le nom de la colonne de référence et Times est le nom de la colonne dans la table référencée.</p>
+<p>Retrouvons cela à l&rsquo;endroit d&rsquo;où cela provient - puisque la colonne de référence est Class, nous pouvons consulter les informations de cette colonne pour découvrir de quelle table elle provient.</p>
+<p><span class="screenshot-large"><em><img alt="reference-classes" src="../images/references-lookups/reference-classes.png" /></em></span></p>
+<p>La colonne Class fait référence aux données de la table Classes. Par conséquent, la colonne Class_Times extrait des données de la colonne Times de la table Classes.</p>
+<p><span class="screenshot-large"><em><img alt="classes-times" src="../images/references-lookups/classes-times.png" /></em></span></p>
+<h2 id="chainage">Chaînage<a class="headerlink" href="#chainage" title="Permanent link">#</a></h2>
+<p>Si la recherche de référence renvoie une référence, cela peut être chaîné.</p>
+<p>Peut-être voulons-nous ajouter le numéro de téléphone de l&rsquo;instructeur à la table des Inscriptions. Nous pouvons utiliser la colonne de référence Class pour extraire les informations de l&rsquo;instructeur de la table Classes.</p>
+<p><span class="screenshot-large"><em><img alt="chaining-class-instructor" src="../images/references-lookups/chaining-class-instructor.png" /></em></span></p>
+<p>Comme vous pouvez le voir dans la capture d&rsquo;écran ci-dessus, la colonne de l&rsquo;instructeur est elle-même une colonne de référence. Si nous suivons le format précédent, notre notation par points serait <code>$Class.Instructor</code> mais la colonne de l&rsquo;instructeur pointe vers l&rsquo;ensemble de l&rsquo;enregistrement de l&rsquo;instructeur, donc nous devons lui indiquer quelle information nous voulons de cet enregistrement, créant ainsi une chaîne.</p>
+<p>La colonne de l&rsquo;instructeur fait référence à la table du Personnel, donc nous y naviguons pour découvrir quelle colonne nous devons utiliser pour obtenir le numéro de téléphone. La colonne qui contient le numéro de téléphone de l&rsquo;instructeur est Téléphone.</p>
+<p><span class="screenshot-large"><em><img alt="chaining-instructor-phone" src="../images/references-lookups/chaining-instructor-phone.png" /></em></span></p>
+<p>En rassemblant tout cela, notre notation par points pour le numéro de téléphone de l&rsquo;instructeur serait <code>$Class.Instructor.Phone</code></p>
+<p><span class="screenshot-large"><em><img alt="instructor-phone" src="../images/references-lookups/instructor-phone.png" /></em></span></p>
+<p>Que se passe-t-il si nous laissons nos formules comme <code>$Class.Instructor</code> ? Vous verrez un ID d&rsquo;enregistrement numérique de l&rsquo;enregistrement dans la table du Personnel auquel la colonne de l&rsquo;instructeur pointe.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="class-instructor" src="../images/references-lookups/class-instructor.png" /></em></span></p>
+<p>C&rsquo;est ce qu&rsquo;une colonne de référence stocke réellement. Si vous changez le type de cette colonne de formule en Référence, vous pourrez sélectionner une colonne à afficher, comme le Nom Complet.</p>
+<p><span class="screenshot-large"><em><img alt="reference-class-instructor" src="../images/references-lookups/reference-class-instructor.png" /></em></span></p>
+<p>Une autre façon de voir le nom est de chaîner la notation par points, comme nous l&rsquo;avons fait pour le téléphone : <code>$Class.Instructor.Full_Name</code>.</p>
+<p><span class="screenshot-large"><em><img alt="instructor-details" src="../images/references-lookups/instructor-details.png" /></em></span></p>
+<h2 id="lookupone">lookupOne<a class="headerlink" href="#lookupone" title="Permanent link">#</a></h2>
+<p>Une autre façon de pointer vers un enregistrement est d&rsquo;utiliser la fonction <code>Table.lookupOne(...)</code>. <a href="https://support.getgrist.com/functions/#lookupone">lookupOne</a> vous permet de rechercher un enregistrement par certains champs, similaire à la fonction VLOOKUP d&rsquo;Excel. En fait, la version de Grist de VLOOKUP est simplement un alias pour lookupOne. lookupOne est rarement utile dans Grist, car l&rsquo;utilisation d&rsquo;une colonne de type Référence est généralement la solution préférée pour connecter des enregistrements. Cependant, dans certaines occasions, lookupOne peut être utile.</p>
+<p>Une situation est lorsque vous avez deux ensembles de données qui se chevauchent même s&rsquo;ils représentent quelque chose de différent et proviennent peut-être de sources différentes. Un exemple de cela peut être trouvé dans notre document <a href="https://public.getgrist.com/6kTypo2FtSsf/Event-Sponsors-Attendees-References-and-Lookups/m/fork">Sponsors et Participants d&rsquo;Événements (Références et Recherches)</a> qui est une version modifiée du modèle Sponsors et Participants d&rsquo;Événements, disponible dans notre <a href="https://public.getgrist.com/p/templates">galerie de modèles</a>.</p>
+<p>Disons que vous organisez un événement et que vous avez une liste de participants inscrits, ainsi que des Sponsors. Les participants inscrits sont stockés dans la table Toutes les Inscriptions, peut-être peuplée via une intégration de formulaire.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="attendees" src="../images/references-lookups/attendees.png" /></em></span></p>
+<p>Les sponsors sont listés dans une table séparée, avec des champs liés à leur parrainage, et peut-être maintenue par une autre équipe.</p>
+<p><span class="screenshot-large"><em><img alt="sponsors" src="../images/references-lookups/sponsors.png" /></em></span></p>
+<p>Les deux tables contiennent des adresses e-mail qui identifient les participants et les sponsors. Parfois, un sponsor peut s&rsquo;inscrire pour assister à l&rsquo;événement. Dans ce cas, vous aurez un enregistrement de Participant avec une adresse e-mail qui apparaît également dans la table des Sponsors. C&rsquo;est utile à savoir pour quelqu&rsquo;un qui consulte la liste des participants.</p>
+<p>Vous pouvez rechercher un enregistrement dans la table des sponsors par adresse e-mail en utilisant une formule lookupOne. La colonne Sponsor dans la table Toutes les Inscriptions fait exactement cela en utilisant cette formule :</p>
+<pre><code>Sponsors.lookupOne(Contact_Email=$Registration_Email)
+</code></pre>
+<p>Cette formule vérifie si un Contact Email de la table des Sponsors correspond à un Registration Email de la table Toutes les Inscriptions.</p>
+<p>Le format général pour une formule lookupOne est : </p>
+<pre><code>[Table_Name].lookupOne([A]=$[B])
+</code></pre>
+<p><code>[Table_Name]</code> est le nom de la table dans laquelle vous souhaitez rechercher des données. <code>[A]</code> est la colonne dans la table qui est recherchée (nommée au début de la formule) et <code>[B]</code> est la colonne dans la table actuelle / la table dans laquelle vous entrez la formule.</p>
+<p><span class="screenshot-large"><em><img alt="sponsors-lookupone-text" src="../images/references-lookups/sponsors-lookupone-text.png" /></em></span></p>
+<p>Une telle formule renvoie une référence. Dans la capture d&rsquo;écran ci-dessus, vous pouvez voir que le résultat de la recherche renvoie <code>Sponsors[#]</code>. Le numéro qu&rsquo;il renvoie entre crochets est l&rsquo;ID d&rsquo;enregistrement du résultat de la recherche. Lorsqu&rsquo;il renvoie <code>Sponsors[0]</code>, aucune correspondance n&rsquo;a été trouvée.</p>
+<p>Il est souvent judicieux de créer une colonne pour le résultat de la recherche et de changer son type en Référence, comme vous le voyez dans la capture d&rsquo;écran ci-dessous. Ensuite, s&rsquo;il y a une correspondance, la colonne de référence pointera vers l&rsquo;ensemble de l&rsquo;enregistrement correspondant. Comme toute colonne de référence, vous pouvez sélectionner quel champ de cet enregistrement afficher. Dans cet exemple, il montre le champ Société de l&rsquo;enregistrement correspondant dans la table des Sponsors.</p>
+<p><span class="screenshot-large"><em><img alt="sponsors-lookupone" src="../images/references-lookups/sponsors-lookupone.png" /></em></span></p>
+<h2 id="lookupone-et-notation-par-points">lookupOne et notation par points<a class="headerlink" href="#lookupone-et-notation-par-points" title="Permanent link">#</a></h2>
+<p>Parce que lookupOne crée une référence à un enregistrement, nous pouvons utiliser la notation par points pour rechercher des champs supplémentaires dans cet enregistrement.</p>
+<p>Dans l&rsquo;<a href="https://public.getgrist.com/6kTypo2FtSsf/Event-Sponsors-Attendees-References-and-Lookups/p/1">exemple</a> ci-dessus, <code>Sponsors.lookupOne(Contact_Email=$Registration_Email)</code> vérifie si un Contact Email de la table des Sponsors correspond à un Registration Email de la table Toutes les Inscriptions.</p>
+<p>Que se passerait-il si nous voulions également rechercher le niveau de sponsor ?</p>
+<p>Nous pouvons ajouter <code>.Sponsor_Level</code> à la formule lookupOne, et, si une correspondance est trouvée, rechercher la valeur dans la colonne de niveau de sponsor pour l&rsquo;enregistrement correspondant.</p>
+<p>La formule complète serait <code>Sponsors.lookupOne(Contact_Email=$Registration_Email).Sponsor_Level</code>.</p>
+<p><span class="screenshot-large"><em><img alt="sponsor-level-lookupone" src="../images/references-lookups/sponsor-level-lookupone.png" /></em></span></p>
+<p>Maintenant, nous avons le Niveau de Sponsor listé dans la table Toutes les Inscriptions pour ces participants dont les e-mails apparaissent également sur la liste des sponsors.</p>
+<h2 id="lookupone-et-sort_by">lookupOne et sort_by<a class="headerlink" href="#lookupone-et-sort_by" title="Permanent link">#</a></h2>
+<p>Lorsque la fonction <code>lookupOne</code> rencontre plusieurs résultats correspondants, elle renvoie le premier par ID de ligne. Le paramètre optionnel <code>sort_by</code> peut être utilisé pour trier ces résultats par un autre champ, afin de déterminer lequel serait renvoyé comme première correspondance. Vous pouvez également préfixer l&rsquo;ID de colonne avec &ldquo;-&rdquo; pour inverser l&rsquo;ordre.</p>
+<p>Par exemple, considérons cet exemple du modèle <a href="https://templates.getgrist.com/doc/afterschool-program">Inscription en Classe</a>. Ce modèle suit l&rsquo;inscription à des cours extrascolaires et autres - enregistrant des informations pour les étudiants, les familles et le personnel.</p>
+<p>Sur cette page, nous avons une liste d&rsquo;étudiants et leurs informations respectives.</p>
+<p><span class="screenshot-large"><em><img alt="student-table" src="../images/references-lookups/students-final-2.png" /></em></span></p>
+<p>De plus, nous avons une page Familles qui décrit le parent de chaque étudiant et nous aimerions savoir quel étudiant dans chaque famille est le plus âgé. Nous créerions donc une colonne étudiant le plus âgé.</p>
+<p><span class="screenshot-large"><em><img alt="family-table" src="../images/references-lookups/families-final-2.png" /></em></span></p>
+<p>Ensuite, la formule suivante examinerait la table des Étudiants, trouverait les étudiants spécifiques associés à chaque famille, les trierait par leur date de naissance et renverrait l&rsquo;étudiant ayant la date de naissance la plus ancienne : </p>
+<p><code>Students.lookupOne(Family=$id, sort_by="Birthday")</code></p>
+<p>Dans ce cas, cela renverrait : Raddon, Brockie.</p>
+<p>Alternativement, si nous voulons trouver l&rsquo;étudiant le plus jeune, la formule inclurait &ldquo;-&ldquo;: </p>
+<p><code>Students.lookupOne(Family=$id, sort_by="-Birthday”)</code></p>
+<p>Dans ce cas, cela renverrait : Raddon, Care.</p>
+<h2 id="comprendre-les-ensembles-denregistrements">Comprendre les ensembles d&rsquo;enregistrements<a class="headerlink" href="#comprendre-les-ensembles-denregistrements" title="Permanent link">#</a></h2>
+<p>Parfois, un enregistrement peut référencer plusieurs enregistrements dans une autre table. Plusieurs références peuvent être faites avec une Colonne de Liste de Références.</p>
+<p>Un excellent exemple de cela est visible dans le modèle <a href="https://templates.getgrist.com/1BR9vm6GPTGX/Habit-Tracker">Suivi d&rsquo;Habitudes</a>.</p>
+<p>Sur la page Habitudes + Objectifs, nous avons une liste d&rsquo;habitudes et un objectif sur la fréquence à laquelle nous souhaitons accomplir cette habitude. Sur la page Suivi d&rsquo;Habitudes, nous avons une colonne de Liste de Références étiquetée Habitudes Complétées qui fait référence aux enregistrements de notre page Habitudes + Objectifs.</p>
+<p>La seule différence entre une colonne de Référence et une colonne de Liste de Références est la capacité de sélectionner plusieurs références. Cela crée un ensemble d&rsquo;enregistrements qui peuvent être utilisés dans des formules.</p>
+<p><span class="screenshot-large"><em><img alt="habit-tracker" src="../images/references-lookups/habit-tracker.png" /></em></span></p>
+<h2 id="listes-de-references-et-notation-par-points">Listes de références et notation par points<a class="headerlink" href="#listes-de-references-et-notation-par-points" title="Permanent link">#</a></h2>
+<p>Tout comme avec les références, vous pouvez utiliser la Notation par Points avec les listes de références.</p>
+<p>En s&rsquo;appuyant sur notre précédent <a href="https://public.getgrist.com/6kTypo2FtSsf/Event-Sponsors-Attendees-References-and-Lookups/p/3">exemple</a> de participants à une conférence, supposons que nous avons une liste de personnes inscrites à un événement et que nous voulons trouver le solde pour chaque inscrit. Pour ce faire, nous pouvons utiliser la notation par points.</p>
+<p>Ici, <code>$Registrants</code> est une liste de références. Notre Great Outdoors Expo a 4 inscrits. Nous pouvons voir la liste des inscrits dans la colonne Registrants. Cette liste est une référence à la colonne Nom de la table Toutes les Inscriptions.</p>
+<p><span class="screenshot-large"><em><img alt="reference-list-registrants" src="../images/references-lookups/reference-list-registrants.png" /></em></span></p>
+<p>Avec une liste de références, la notation par points renvoie une liste de tous les champs sélectionnés ;</p>
+<p><span class="screenshot-large"><em><img alt="registrants-balance" src="../images/references-lookups/registrants-balance.png" /></em></span></p>
+<p><code>$Registrants.Balance</code> est une liste des Soldes pour chaque participant dans la liste de <code>$Registrants</code>. Cela suit le format <code>$[A].[B]</code> où <code>[A]</code> est le nom de la colonne de Liste de Références et <code>[B]</code> est le nom de la colonne dans la table référencée dont vous souhaitez extraire des données. Nous apprendrons comment trouver la somme de ces soldes dans <a href="#working-with-record-sets">Travailler avec des ensembles d&rsquo;enregistrements</a>.</p>
+<h2 id="lookuprecords">lookupRecords<a class="headerlink" href="#lookuprecords" title="Permanent link">#</a></h2>
+<p>Vous pouvez également obtenir une liste de références en utilisant <a href="https://support.getgrist.com/functions/#lookuprecords">lookupRecords</a>.</p>
+<p>La formule pour lookupRecords suit ce format :</p>
+<pre><code>[Table_Name].lookupRecords([A]=$[B])
+</code></pre>
+<p><code>[Table_Name]</code> est le nom de la table dans laquelle vous souhaitez rechercher des données. <code>[A]</code> est la colonne dans la table qui est recherchée (nommée au début de la formule) et <code>[B]</code> est la colonne dans la table actuelle / la table dans laquelle vous entrez la formule.</p>
+<p>Supposons que nous souhaitions obtenir une liste des événements auxquels chaque personne de notre <a href="https://public.getgrist.com/6kTypo2FtSsf/Event-Sponsors-Attendees-References-and-Lookups/p/4">Liste d&rsquo;E-mails</a> a assisté. Nous pouvons utiliser lookupRecords pour cela. Tout d&rsquo;abord, nous devons rechercher des enregistrements où l&rsquo;e-mail figurant dans la table Toutes les Inscriptions correspond à un e-mail de cette liste. Ensuite, trouver l&rsquo;événement associé à chacun de ces enregistrements.</p>
+<p>En suivant le format ci-dessus, notre formule initiale est :</p>
+<pre><code>All_Registrations.lookupRecords(Registration_Email=$Email)
+</code></pre>
+<p><span class="screenshot-large"><em><img alt="lookup-records" src="../images/references-lookups/lookup-records.png" /></em></span></p>
+<p><code>All_Registrations.lookupRecords(Registration_Email=$Email)</code> renvoie une liste d&rsquo;ID d&rsquo;enregistrement pour chaque enregistrement dans la table Toutes les Inscriptions où l&rsquo;Email d&rsquo;Inscription correspond à l&rsquo;Email dans cette ligne de la table Liste d&rsquo;E-mails. Ensuite, nous devons trouver l&rsquo;Événement associé à chacun de ces enregistrements. Pour ce faire, nous pouvons utiliser la notation par points.</p>
+<p><code>All_Registrations.lookupRecords(Registration_Email=$Email).Event</code> renverra la valeur de la colonne Événement pour chaque enregistrement trouvé.</p>
+<p><span class="screenshot-large"><em><img alt="lookup-records-dot-notation" src="../images/references-lookups/lookup-records-dot-notation.png" /></em></span></p>
+<p>Nous avons vu des résultats similaires en utilisant la fonction <a href="#lookupone">lookupOne</a>. Il est utile de changer le type de colonne en Liste de Références, comme vous le voyez dans la capture d&rsquo;écran ci-dessous. Ensuite, s&rsquo;il y a une correspondance, la colonne de liste de références pointera vers l&rsquo;ensemble de l&rsquo;enregistrement pour chaque correspondance. Comme toute colonne de liste de références, vous pouvez sélectionner quel champ vous souhaitez afficher pour les enregistrements correspondants. Dans cet exemple, il montre le champ Événement de la table des Événements pour chaque enregistrement correspondant dans la table des Participants.</p>
+<p><span class="screenshot-large"><em><img alt="lookup-records-reference-list" src="../images/references-lookups/lookup-records-reference-list.png" /></em></span></p>
+<h2 id="recherches-inversees">Recherches inversées<a class="headerlink" href="#recherches-inversees" title="Permanent link">#</a></h2>
+<p>lookupRecords fonctionne un peu différemment si une référence existe entre deux tables. Avec une recherche inversée, nous pouvons utiliser l&rsquo;ID d&rsquo;enregistrement pour trouver un enregistrement.</p>
+<p>Chaque ligne a un ID numérique (disponible en tant que <code>$id</code> dans les formules) qui est unique dans cette table. Vous pouvez révéler l&rsquo;ID en ajoutant une colonne de formule où la formule est <code class="formula">$id</code></p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="row-id" src="../images/references-lookups/row-id.png" /></em></span></p>
+<p>Jetons un œil à la colonne des Inscrits de la table <a href="https://public.getgrist.com/6kTypo2FtSsf/Event-Sponsors-Attendees-References-and-Lookups/p/3">Événements</a>.</p>
+<p><span class="screenshot-large"><em><img alt="lookup-records-id" src="../images/references-lookups/lookup-records-id.png" /></em></span></p>
+<p>La formule utilisée ici est <code>All_Registrations.lookupRecords(Event=$id)</code>. Nous utilisons l&rsquo;ID pour trouver une correspondance car dans la table Toutes les Inscriptions, la colonne Événement est une colonne de référence, ce qui signifie que sa valeur est l&rsquo;ID d&rsquo;un enregistrement.</p>
+<p>Parce que All_Registrations.Event est une colonne de référence pointant vers un enregistrement d&rsquo;Événement dans la table Événements, nous pouvons faire correspondre l&rsquo;ID stocké dans la colonne de référence avec les ID des enregistrements dans la table Événements. C&rsquo;est pourquoi l&rsquo;argument dans la formule est <code>Event=$id</code>.</p>
+<p>Nous utilisons la référence existante, juste à l&rsquo;envers - d&rsquo;où le nom, Recherche Inversée.</p>
+<p><span class="screenshot-large"><em><img alt="reverse-lookup" src="../images/references-lookups/reverse-lookup.png" /></em></span></p>
+<p>Si vous souhaitez une vidéo explicative d&rsquo;une recherche inversée, nous avons un exemple dans notre <a href="https://www.youtube.com/watch?v=0qVDPZd2w9I&amp;t=788s">Webinaire Construire avec Grist - Formules d&rsquo;Initialisation vs Formules</a>.</p>
+<h2 id="travailler-avec-des-ensembles-denregistrements">Travailler avec des ensembles d&rsquo;enregistrements<a class="headerlink" href="#travailler-avec-des-ensembles-denregistrements" title="Permanent link">#</a></h2>
+<p>lookupRecords peut également être utilisé dans d&rsquo;autres formules.</p>
+<p><code>SUM()</code> peut être utile pour trouver la somme de tous les nombres dans une liste d&rsquo;enregistrements. Une fois que vous avez trouvé votre liste d&rsquo;enregistrements en utilisant la fonction lookupRecords et la notation par points, vous pouvez utiliser <code>SUM()</code> pour additionner toutes les valeurs renvoyées, comme vous le voyez dans cette formule :</p>
+<pre><code>SUM(Table.lookupRecords(Column_A=$Column_B).Column_C)
+</code></pre>
+<p>Vous pouvez également le faire sur une liste de références car une liste de références est la même chose, une liste d&rsquo;enregistrements.</p>
+<pre><code>SUM($RefList.Column)
+</code></pre>
+<p>Dans la section <a href="#reference-lists-and-dot-notation">Listes de références et notation par points</a>, nous avons utilisé la colonne Registrants et la notation par points pour trouver le solde pour chaque personne de notre liste d&rsquo;Inscrits. Nous pouvons utiliser <code>SUM()</code> avec notre formule précédente pour trouver le solde total.</p>
+<pre><code>SUM($Registrants.Balance)
+</code></pre>
+<p><span class="screenshot-large"><em><img alt="registrants-balance-sum" src="../images/references-lookups/registrants-balance-sum.png" /></em></span></p>
+<p>Nous pouvons également utiliser lookupRecords pour obtenir la liste des références, plutôt que d&rsquo;utiliser une colonne de liste de références, puis trouver la somme du solde pour tous les inscrits. Cette méthode est utilisée dans la colonne des Revenus des Billets de la table <a href="https://public.getgrist.com/6kTypo2FtSsf/Event-Sponsors-Attendees-References-and-Lookups/p/3">Événements</a> en utilisant la formule suivante :</p>
+<pre><code>SUM(All_Registrations.lookupRecords(Event=$id).Balance)
+</code></pre>
+<p><code>All_Registrations.lookupRecords(Event=$id).Balance</code> trouve tous les enregistrements dans la table Toutes les Inscriptions où la colonne Événement correspond à l&rsquo;ID de la ligne dans cette table, Événements. En utilisant la notation par points, nous trouvons le Solde pour chacun des enregistrements trouvés. Ensuite, <code>SUM()</code> additionne les soldes de tous les enregistrements trouvés.</p>
+<p><span class="screenshot-large"><em><img alt="lookup-records-registrants-balance-sum" src="../images/references-lookups/lookup-records-registrants-balance-sum.png" /></em></span></p>
+<p>Vous pouvez également itérer à travers une Liste de Références en utilisant une boucle <code>for</code> en Python. Un exemple de cela peut être vu dans la colonne Solde (&lsquo;for&rsquo; loop) dans la table Événements. Lors de l&rsquo;itération, chaque élément est une Référence, donc la notation par points peut également être utilisée ici. Pour trouver la somme du solde pour tous les inscrits, nous utilisons la formule suivante :</p>
+<pre><code>SUM(person.Balance for person in $Registrants)
+</code></pre>
+<p>Cela fait la même chose que notre formule lookupRecords que nous avons vue ci-dessus. <code>$Registrants</code> est notre liste de références. Pour chaque enregistrement (<code>person</code>) dans notre liste d&rsquo;Inscrits, nous trouvons le Solde. Ensuite, nous additionnons tous les soldes ensemble. Dans cette formule, <code>person</code> est une variable qui représente chaque élément de notre liste et pourrait être remplacée par n&rsquo;importe quelle autre variable.</p>
+<p><span class="screenshot-large"><em><img alt="reference-list-for-loop-sum" src="../images/references-lookups/reference-list-for-loop-sum.png" /></em></span></p>
+<p>Si vous souhaitez en savoir plus sur <a href="https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions">Structures de Données et Compréhension de Liste</a> en Python 3, <a href="http://python.org/">Python.org</a> est une excellente ressource.</p>
+<p><code>len()</code> peut être utile pour obtenir le nombre d&rsquo;éléments dans une liste. Une fois que vous avez trouvé votre liste d&rsquo;enregistrements en utilisant la fonction lookupRecords, vous pouvez utiliser <code>len()</code> pour compter le nombre d&rsquo;enregistrements renvoyés, comme vous le voyez dans cette formule :</p>
+<pre><code>len(Table.lookupRecords(Column_A=$Column_B))
+</code></pre>
+<p>Vous pouvez également le faire sur une liste de références.</p>
+<pre><code>len($RefList)
+</code></pre>
+<p>Nous voulons voir combien d&rsquo;événements nos Sponsors ont assisté. Nous pouvons utiliser lookupRecords pour cela. La formule suivante est utilisée dans la colonne Événements Assistés de la table <a href="https://public.getgrist.com/6kTypo2FtSsf/Event-Sponsors-Attendees-References-and-Lookups/p/2">Sponsors</a>.</p>
+<pre><code>len(All_Registrations.lookupRecords(Sponsor=$id))
+</code></pre>
+<p><span class="screenshot-large"><em><img alt="attendees-lookuprecords" src="../images/references-lookups/attendees-lookuprecords.png" /></em></span></p>
+<p>Décomposons les deux parties de cette formule, en travaillant de l&rsquo;intérieur vers l&rsquo;extérieur.</p>
+<p><code>All_Registrations.lookupRecords(Sponsor=$id)</code> recherche des correspondances où l&rsquo;enregistrement dans la colonne Sponsor de la table Toutes les Inscriptions a le même ID que l&rsquo;enregistrement dans cette ligne de la table Sponsors. Tous les enregistrements dans la table Toutes les Inscriptions qui correspondent sont ajoutés à une liste d&rsquo;enregistrements. Essayez d&rsquo;écrire la formule sans <code>len()</code> pour voir ce que Grist renvoie. Cela devrait ressembler à quelque chose comme ça.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="without-len" src="../images/references-lookups/without-len.png" /></em></span></p>
+<p>C&rsquo;est une liste d&rsquo;enregistrements.</p>
+<p><code>len()</code> compte combien d&rsquo;enregistrements se trouvent dans cette liste.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="len" src="../images/references-lookups/len.png" /></em></span></p>
+<p>Nous pouvons également inclure plusieurs arguments dans une formule lookupRecords. Un exemple de cela peut être trouvé dans la colonne Compte de la table Classes du modèle <a href="https://public.getgrist.com/doc/eW4nqWfK1k3K~8iDuMy8ApPXvzhcemSiYsS~14207/p/6">Inscription en Classe</a>. Cette colonne nous montre combien d&rsquo;étudiants sont inscrits dans chaque classe. La formule utilisée ici est :</p>
+<pre><code>len(Enrollments.lookupRecords(Class=$id, Status=&quot;Confirmed&quot;))
+</code></pre>
+<p><span class="screenshot-large"><em><img alt="lookup-records-multiple" src="../images/references-lookups/lookup-records-multiple.png" /></em></span></p>
+<p>Cette recherche utilise deux champs. Elle recherchera des enregistrements dans la table des Inscriptions où le Statut est &ldquo;Confirmé&rdquo; et la colonne Class correspond à l&rsquo;ID de la ligne dans cette table. Comme la colonne Class fait référence à la table Classes, nous utilisons l&rsquo;ID d&rsquo;enregistrement <code>$id</code> dans la recherche.</p>
+<p>Enfin, <code>len()</code> compte les éléments dans la liste renvoyée par <code>Enrollments.lookupRecords(Class=$id, Status="Confirmed")</code>.</p>
+<p>La moyenne, le minimum et le maximum sont quelques-unes des autres fonctions qui peuvent être utilisées avec les formules lookupRecords. Consultez toutes les fonctions disponibles sur notre page <a href="../functions/">Référence des fonctions</a>.</p>
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/references-lookups.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

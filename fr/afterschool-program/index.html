@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Grist brille lorsque vos données commerciales présentent une certaine complexité. Dans cet exemple, nous allons examiner une organisation qui propose des activités périscolaires pour les enfants.">
+      <meta property="og:description" content="Grist brille lorsque vos données commerciales présentent une certaine complexité. Dans cet exemple, nous allons examiner une organisation qui propose des activités périscolaires pour les enfants.">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/afterschool-program/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Manage business data - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="../FAQ/" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../lightweight-crm/" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../investment-research/" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              Intro
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#planification">
+                Planification
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#modelisation-des-donnees">
+                Modélisation des données
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#cours-et-instructeurs">
+                Cours et Instructeurs
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#formules">
+                Formules
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#references">
+                Références
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#etudiants">
+                Étudiants
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#relations-plusieurs-a-plusieurs">
+                Relations plusieurs-à-plusieurs
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#vue-des-cours">
+                Vue des Cours
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#vue-des-inscriptions">
+                Vue des Inscriptions
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#ajout-de-couches">
+                Ajout de Couches
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#document-exemple">
+                Document Exemple
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-types/" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../references-lookups/" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-cheat-sheet/" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../self-managed/" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../creating-doc/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../creating-doc/" class="btn btn-xs btn-link">
+        Creating a document
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../investment-research/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../investment-research/" class="btn btn-xs btn-link">
+        Analyze and visualize
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<h1 id="comment-gerer-les-donnees-commerciales">Comment gérer les données commerciales<a class="headerlink" href="#comment-gerer-les-donnees-commerciales" title="Permanent link">#</a></h1>
+<p>Grist brille lorsque vos données commerciales présentent une certaine complexité. Dans cet exemple, nous allons examiner une organisation qui propose des activités périscolaires pour les enfants.</p>
+<p>N&rsquo;hésitez pas à consulter le document <a href="https://templates.getgrist.com/doc/afterschool-program">Inscription en classe</a>, que vous trouverez sur notre page <a href="https://public.getgrist.com/p/templates">Exemples et modèles</a>.</p>
+<p>Dans cet exercice, nous allons montrer comment planifier, concevoir et créer un tel document.</p>
+<h2 id="planification">Planification<a class="headerlink" href="#planification" title="Permanent link">#</a></h2>
+<p>Un peu de planification à l&rsquo;avance vous aidera à obtenir une solution plus rapidement. Pensez aux types de données avec lesquels vous travaillez et aux types de flux de travail dont vous aurez besoin. Vous n&rsquo;avez pas besoin d&rsquo;anticiper tout dès le départ. Vous pouvez facilement ajouter de la complexité plus tard, comme vous le verrez ci-dessous.</p>
+<p>Notre organisation propose plusieurs cours pour les enfants. Chaque cours a un instructeur et plusieurs étudiants. Les étudiants peuvent s&rsquo;inscrire à plusieurs cours et peuvent revenir année après année. Pour chaque cours, nous souhaitons voir la liste des étudiants inscrits et s&rsquo;il reste des places disponibles. Lorsque qu&rsquo;un parent appelle, nous voulons un moyen pratique d&rsquo;inscrire un nouvel étudiant ou de modifier ou annuler l&rsquo;inscription d&rsquo;un étudiant.</p>
+<p>Si cela ressemble à la construction d&rsquo;une application, c&rsquo;est exactement ce que nous faisons. Cependant, comme vous le verrez, ce n&rsquo;est pas plus difficile que de créer une feuille de calcul.</p>
+<h2 id="modelisation-des-donnees">Modélisation des données<a class="headerlink" href="#modelisation-des-donnees" title="Permanent link">#</a></h2>
+<p>Plus vous modélisez bien vos données commerciales, plus votre travail sera facile. D&rsquo;une certaine manière, vous faites à la fois la conception de base de données et la construction d&rsquo;une application personnalisée. Grist rend simplement cela plus facile.</p>
+<p>Commençons par les cours et leurs instructeurs.</p>
+<p>Nous avons besoin d&rsquo;une liste de cours et d&rsquo;instructeurs. Le même instructeur peut enseigner différents cours, donc les instructeurs et les cours vivront dans des tables différentes. Appelons-les &ldquo;Cours&rdquo; et &ldquo;Personnel&rdquo;. Chaque cours a un seul instructeur, donc l&rsquo;une des propriétés d&rsquo;un cours sera l&rsquo;instructeur de ce cours.</p>
+<h2 id="cours-et-instructeurs">Cours et Instructeurs<a class="headerlink" href="#cours-et-instructeurs" title="Permanent link">#</a></h2>
+<p>En partant de zéro, vous allez créer un nouveau document vide (voir <a href="../creating-doc/">Créer un document</a>), renommer la table vide initiale &ldquo;Table1&rdquo; en &ldquo;Cours&rdquo;, ajouter les colonnes nécessaires et saisir quelques cours. Pour suivre les étapes de ce tutoriel, vous pouvez plutôt importer <a data-wm-adjusted="1" href="./unlocalized-assets/afterschool-program/Classes.csv">Classes.csv</a>
+(ou simplement vous référer au document exemple &ldquo;Programme périscolaire&rdquo;).</p>
+<p><img alt="add-classes" src="../images/afterschool-program/add-classes.png" /></p>
+<p>Pour la table Personnel, cliquez sur le bouton &ldquo;Ajouter nouveau&rdquo; et sélectionnez &ldquo;Ajouter une table vide&rdquo;. Renommez-la en &ldquo;Personnel&rdquo;, créez quelques colonnes et saisissez des données sur les instructeurs. Ou importez <a href="./unlocalized-assets/afterschool-program/Staff.csv">Staff.csv</a> pour utiliser des données d&rsquo;exemple et gagner quelques étapes.</p>
+<p><img alt="add-staff" src="../images/afterschool-program/add-staff.png" /></p>
+<p>Nous voulons que la colonne <em>Instructeur</em> dans la table <code>Cours</code> soit une référence à la table <code>Personnel</code>. Actuellement, la table <code>Personnel</code> n&rsquo;a pas de colonne qui identifie de manière unique chaque enregistrement. Pour configurer des références, il est judicieux d&rsquo;en ajouter une. Dans ce cas, nous allons ajouter une colonne &ldquo;Nom Complet&rdquo; à la table <code>Personnel</code>.</p>
+<h2 id="formules">Formules<a class="headerlink" href="#formules" title="Permanent link">#</a></h2>
+<p>Cliquez sur la page &ldquo;Personnel&rdquo; et ajoutez une colonne &ldquo;Nom Complet&rdquo; en utilisant le menu des colonnes ou le raccourci <code class="keys"><em>Alt</em> + <strong>=</strong></code>, puis tapez &ldquo;Nom Complet&rdquo; dans l&rsquo;en-tête de la nouvelle colonne.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="fullname-rename" src="../images/afterschool-program/fullname-rename.png" /></em></span></p>
+<p>Créez une formule en saisissant une valeur dans n&rsquo;importe quelle cellule de la nouvelle colonne, en commençant par le signe égal (“=”). Entrez la formule comme <code class="formula">$Last_Name + ", " + $First_Name</code>. Vous pouvez utiliser une syntaxe similaire à Excel pour le même effet : <code class="formula">CONCAT($Last_Name, ", ", $First_Name)</code>.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="fullname-formula" src="../images/afterschool-program/fullname-formula.png" /></em></span></p>
+<ul>
+<li>Dans Grist, une formule s&rsquo;applique toujours à chaque enregistrement de la table.</li>
+<li>Grist prend en charge Python dans les formules, ainsi que la plupart des fonctions Excel, qui ont des noms en majuscules.</li>
+</ul>
+<p>Comme les formules s&rsquo;appliquent à chaque ligne, vous devriez voir la colonne <em>Nom Complet</em> remplie automatiquement.</p>
+<p><img alt="fullname-result" src="../images/afterschool-program/fullname-result.png" /></p>
+<h2 id="references">Références<a class="headerlink" href="#references" title="Permanent link">#</a></h2>
+<p>Cliquez à nouveau sur la page &ldquo;Cours&rdquo; et ouvrez &ldquo;Options de colonne&rdquo; pour la colonne <em>Instructeur</em>. Nous allons la transformer en référence à <code>Personnel</code>.</p>
+<p><img alt="instructor-col" src="../images/afterschool-program/instructor-col.png" /></p>
+<p>Dans le panneau de droite, définissez le type de colonne sur &ldquo;Référence&rdquo; (en termes de base de données, cela est connu sous le nom de &ldquo;clé étrangère&rdquo;), et définissez la table référencée sur &ldquo;Personnel&rdquo;. Pour le menu déroulant &ldquo;AFFICHER LA COLONNE&rdquo;, sélectionnez &ldquo;Nom Complet&rdquo;, qui est la nouvelle colonne que nous venons d&rsquo;ajouter.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="instructor-ref" src="../images/afterschool-program/instructor-ref.png" /></em></span></p>
+<p>Cliquez sur le bouton &ldquo;Appliquer&rdquo; pour finaliser ce changement de type de colonne (si la colonne est vide, il n&rsquo;y a pas d&rsquo;étape de confirmation).</p>
+<p>Vous pouvez maintenant attribuer un instructeur à n&rsquo;importe quel cours. Cliquez sur une cellule dans la colonne <em>Instructeur</em>. Vous pouvez appuyer sur <code class="keys"><em>Entrée</em></code> et choisir parmi les instructeurs disponibles dans la table <code>Personnel</code>, ou commencer à taper pour utiliser l&rsquo;auto-complétion.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="instructor-autocomplete" src="../images/afterschool-program/instructor-autocomplete.png" /></em></span></p>
+<p>Ensuite, nous allons continuer avec les étudiants et leurs inscriptions.</p>
+<h2 id="etudiants">Étudiants<a class="headerlink" href="#etudiants" title="Permanent link">#</a></h2>
+<p>Chaque cours a un certain nombre d&rsquo;étudiants. Nous aurons donc besoin d&rsquo;une table d&rsquo;étudiants. Encore une fois, ajoutez une nouvelle table vide, renommez-la en &ldquo;Étudiants&rdquo; et remplissez-la avec les noms des étudiants, les niveaux de classe, etc. Ou importez <a href="./unlocalized-assets/afterschool-program/Students.csv">Students.csv</a> pour utiliser des données d&rsquo;exemple et gagner quelques étapes.</p>
+<p><img alt="students-table" src="../images/afterschool-program/students-table.png" /></p>
+<p>Ajoutons ici une colonne de formule &ldquo;Nom Complet&rdquo;, tout comme dans la table <code>Personnel</code>. Cela sera utile.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="students-fullname" src="../images/afterschool-program/students-fullname.png" /></em></span></p>
+<h2 id="relations-plusieurs-a-plusieurs">Relations plusieurs-à-plusieurs<a class="headerlink" href="#relations-plusieurs-a-plusieurs" title="Permanent link">#</a></h2>
+<p>Un étudiant peut suivre plus d&rsquo;un cours. Rappelons également qu&rsquo;il y a des cours passés et futurs, et qu&rsquo;il est précieux de conserver ces données historiques. Donc, pour chaque étudiant, il peut y avoir plusieurs cours, et dans chaque cours, il y a plusieurs étudiants.</p>
+<p>Une bonne façon de modéliser une telle relation est d&rsquo;ajouter le concept d&rsquo;une &ldquo;inscription&rdquo; et une nouvelle table <code>Inscriptions</code>. Une &ldquo;inscription&rdquo; représente un étudiant inscrit dans un cours. Elle a quelques propriétés utiles à elle : le statut de l&rsquo;inscription (Confirmé, En attente ou Annulé), si l&rsquo;étudiant a payé pour le cours, et peut-être plus.</p>
+<p>Dans la conception de bases de données, cela est connu sous le nom de relation &ldquo;plusieurs-à-plusieurs&rdquo;. La table supplémentaire est connue sous le nom de table de &ldquo;jointure&rdquo;. Essentiellement, elle ajoute un enregistrement pour chaque connexion étudiant-cours, et transforme la relation &ldquo;plusieurs-à-plusieurs&rdquo; en deux relations &ldquo;un-à-plusieurs&rdquo;.</p>
+<p>Cette relation :</p>
+<p class="screenshot-half"><span class="screenshot-full"><em><img alt="many-to-many-cross" src="../images/many-to-many-cross.png" /></em></span></p>
+<p>deviendra ceci :</p>
+<p class="screenshot-half"><span class="screenshot-full"><em><img alt="many-to-many-join" src="../images/many-to-many-join.png" /></em></span></p>
+<p>Alors, ajoutons une nouvelle table, nommons-la &ldquo;Inscriptions&rdquo;, et ajoutons les colonnes dont nous avons besoin. Ici aussi, pour suivre, vous pouvez importer des données d&rsquo;exemple à partir de <a href="./unlocalized-assets/afterschool-program/Enrollments.csv">Enrollments.csv</a>.</p>
+<p><img alt="enrollments-table" src="../images/afterschool-program/enrollments-table.png" /></p>
+<p>Dans les Options de colonne pour la colonne <em>Étudiant</em>, définissez le type de colonne sur &ldquo;Référence&rdquo;, définissez la table référencée sur <code>Étudiants</code>, et sélectionnez &ldquo;Nom Complet&rdquo; comme colonne à afficher.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="enrollments-student-col" src="../images/afterschool-program/enrollments-student-col.png" /></em></span></p>
+<p>Pour la colonne <em>Cours</em>, définissez le type de colonne sur &ldquo;Référence&rdquo;, la table référencée sur <code>Cours</code>, et sélectionnez &ldquo;Code de Cours&rdquo; comme colonne à afficher.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="enrollments-class-col" src="../images/afterschool-program/enrollments-class-col.png" /></em></span></p>
+<p>Il est possible d&rsquo;entrer des données d&rsquo;inscription en ajoutant des enregistrements à cette table et en utilisant l&rsquo;auto-complétion dans les colonnes <em>Étudiant</em> et <em>Cours</em>. Ci-dessous, nous allons mettre en place un moyen beaucoup plus pratique d&rsquo;inscrire les étudiants.</p>
+<h2 id="vue-des-cours">Vue des Cours<a class="headerlink" href="#vue-des-cours" title="Permanent link">#</a></h2>
+<p>Un de nos objectifs dans la phase de planification était de voir une liste des étudiants inscrits pour chaque cours. Maintenant que les tables de données sont en place, nous pouvons créer une page qui le fait.</p>
+<p>Cliquez sur &ldquo;Ajouter Nouveau&rdquo;, puis &ldquo;Ajouter Page&rdquo; pour ouvrir le sélecteur de widget. Sélectionnez pour afficher une table de <code>Cours</code>, et cliquez sur &ldquo;Ajouter Page&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="classlist-picker1" src="../images/afterschool-program/classlist-picker1.png" /></em></span></p>
+<p>La nouvelle page affiche une liste de cours. Renommons cette page &ldquo;Vue des Cours&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="classlist-renaming" src="../images/afterschool-program/classlist-renaming.png" /></em></span></p>
+<p>Ensuite, ajoutez la table <code>Inscriptions</code> liée à la table des cours. Cliquez à nouveau sur &ldquo;Ajouter Nouveau&rdquo;, puis &ldquo;Ajouter Widget à la Page&rdquo;. Dans le sélecteur de widget, sélectionnez pour afficher une table de <code>Inscriptions</code>. Pour &ldquo;SÉLECTIONNER PAR&rdquo;, choisissez &ldquo;COURS&rdquo;, et cliquez sur &ldquo;Ajouter à la Page&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="classlist-picker2" src="../images/afterschool-program/classlist-picker2.png" /></em></span></p>
+<p>Nous avons deux tables côte à côte. Sélectionner un cours affiche toutes les inscriptions dans ce cours, chacune d&rsquo;elles faisant référence à un étudiant particulier et incluant d&rsquo;autres informations d&rsquo;inscription.</p>
+<p><img alt="classlist-page1" src="../images/afterschool-program/classlist-page1.png" /></p>
+<p>Nous pouvons aller un peu plus loin pour rendre cette vue pratique pour nous. Ajoutons une carte de Cours à cette vue. Cliquez sur &ldquo;Ajouter Nouveau&rdquo; et &ldquo;Ajouter Widget à la Page&rdquo;. Dans le sélecteur de widget, sélectionnez le widget &ldquo;Carte&rdquo; pour les données <code>Cours</code>. Pour &ldquo;SÉLECTIONNER PAR&rdquo;, choisissez à nouveau &ldquo;COURS&rdquo;, et cliquez sur &ldquo;Ajouter à la Page&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="classlist-picker3" src="../images/afterschool-program/classlist-picker3.png" /></em></span></p>
+<p>Nous pouvons également ajouter une carte pour l&rsquo;instructeur qui dirige ce cours. Encore une fois, cliquez sur &ldquo;Ajouter Nouveau&rdquo; &gt; &ldquo;Ajouter Widget à la Page&rdquo;, et sélectionnez &ldquo;Carte&rdquo; pour les données <code>Personnel</code>. Pour &ldquo;SÉLECTIONNER PAR&rdquo;, vous pouvez maintenant choisir &ldquo;COURS • Instructeur&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="classlist-picker4" src="../images/afterschool-program/classlist-picker4.png" /></em></span></p>
+<p>Vous pouvez changer l&rsquo;apparence des nouvelles cartes. Cliquez sur le menu à trois points en haut à droite de la carte que vous souhaitez modifier, et choisissez &ldquo;Options de Widget&rdquo;. Trouvez le menu déroulant &ldquo;Thème&rdquo; dans le panneau de droite, et sélectionnez &ldquo;Compact&rdquo;.</p>
+<p><img alt="classlist-theme" src="../images/afterschool-program/classlist-theme.png" /></p>
+<p>Voici ce que nous avons maintenant dans la page Vue des Cours :</p>
+<p><img alt="classlist-page2" src="../images/afterschool-program/classlist-page2.png" /></p>
+<p>C&rsquo;est le bon moment pour nettoyer cette page en masquant les colonnes et les champs qui sont dupliqués ou distrayants. Consultez <a href="../page-widgets/#configuring-field-lists">Configurer les listes de champs</a> pour une méthode efficace de sélection des champs à afficher, et <a href="../custom-layouts/">Mises en page personnalisées</a> pour réorganiser les widgets sur la page.</p>
+<p><img alt="classlist-page3" src="../images/afterschool-program/classlist-page3.png" /></p>
+<h2 id="vue-des-inscriptions">Vue des Inscriptions<a class="headerlink" href="#vue-des-inscriptions" title="Permanent link">#</a></h2>
+<p>Notre autre objectif déclaré était de disposer d&rsquo;un moyen pratique d&rsquo;inscrire un étudiant et de voir ou d&rsquo;ajuster les inscriptions d&rsquo;un étudiant donné.</p>
+<p>Ajoutons une page pour cela. Cliquez sur &ldquo;Ajouter Nouveau&rdquo; &gt; &ldquo;Ajouter Page&rdquo;, et sélectionnez une table de <code>Étudiants</code>. Nous renommerons la nouvelle page en &ldquo;Vue des Inscriptions&rdquo;.</p>
+<p><img alt="enrollments-view1" src="../images/afterschool-program/enrollments-view1.png" /></p>
+<p>Lorsque nous sélectionnons un étudiant ici, nous aimerions voir toutes les inscriptions de cet étudiant. Donc, cliquez sur &ldquo;Ajouter Nouveau&rdquo; &gt; &ldquo;Ajouter Widget à la Page&rdquo;, et ajoutez une table de <code>Inscriptions</code>. Pour lier le nouveau widget au widget Étudiants dans la page, définissez le menu déroulant &ldquo;SÉLECTIONNER PAR&rdquo; sur &ldquo;ÉTUDIANTS&rdquo;, et cliquez sur &ldquo;Ajouter à la Page&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="enrollments-picker1" src="../images/afterschool-program/enrollments-picker1.png" /></em></span></p>
+<p>Maintenant, vous pouvez cliquer sur le nom d&rsquo;un étudiant à gauche et voir les cours auxquels cet étudiant est inscrit à droite. Vous pouvez inscrire l&rsquo;étudiant sélectionné dans un cours en saisissant simplement un code de cours dans la ligne vide spéciale en bas de la liste des inscriptions. Comme d&rsquo;habitude, la colonne de référence <em>Cours</em> propose l&rsquo;auto-complétion.</p>
+<p><img alt="enrollments-view2" src="../images/afterschool-program/enrollments-view2.png" /></p>
+<p>Vous pouvez masquer la colonne &ldquo;Étudiant&rdquo; dans la table &ldquo;INSCRIPTIONS&rdquo;, car elle affichera toujours l&rsquo;étudiant sélectionné de toute façon.</p>
+<p>Si vous souhaitez inclure plus d&rsquo;informations sur les cours dans la table Inscriptions, sélectionnez les Options de colonne pour la colonne <em>Cours</em>, et cliquez sur &ldquo;+ Ajouter une colonne&rdquo; dans le panneau latéral.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="enrollments-times" src="../images/afterschool-program/enrollments-times.png" /></em></span></p>
+<p>Tous les champs associés à un cours sont disponibles. Si vous examinez les colonnes que vous ajoutez de cette manière, vous verrez qu&rsquo;elles sont simplement des formules de la forme <code class="formula">$Class.Times</code>.</p>
+<p><img alt="enrollments-view3" src="../images/afterschool-program/enrollments-view3.png" /></p>
+<h2 id="ajout-de-couches">Ajout de Couches<a class="headerlink" href="#ajout-de-couches" title="Permanent link">#</a></h2>
+<p>Si vous travaillez avec des enfants, vous parlez à leurs parents. Vous devrez avoir les noms et les coordonnées des parents, que vous pouvez ajouter en tant que colonnes dans la table des étudiants.</p>
+<p>Vous constaterez probablement que certains parents ont plusieurs enfants qui s&rsquo;inscrivent ensemble à des cours. Reconnaître la relation parent-enfant dans votre base de données peut sembler une étape complexe, mais cela simplifiera probablement votre flux de travail quotidien.</p>
+<p>Alors, ajoutons une table de plus : <code>Familles</code>. Nous inclurons le nom et les coordonnées des parents, et lierons chaque enfant à un enregistrement ici. Vous pouvez importer des données d&rsquo;exemple à partir de <a href="./unlocalized-assets/afterschool-program/Families.csv">Families.csv</a>.</p>
+<p><img alt="families1" src="../images/afterschool-program/families1.png" /></p>
+<p>Notez que nous avons ajouté une colonne <em>Nom Complet</em> ici comme pour d&rsquo;autres tables qui listent des personnes.</p>
+<p>Dans la table des Étudiants, nous allons ajouter une colonne nommée &ldquo;Famille&rdquo;, et en faire une Référence à <code>Familles</code>.</p>
+<p><img alt="student-families" src="../images/afterschool-program/student-families.png" /></p>
+<p>Les données d&rsquo;exemple ont déjà des familles remplies, et la conversion en référence recherche le texte pour définir les références correctes. Si vous saisissiez de nouvelles données, vous pourriez lier les étudiants aux familles en utilisant l&rsquo;auto-complétion comme avec d&rsquo;autres colonnes de référence.</p>
+<p>Changeons notre &ldquo;Vue des Inscriptions&rdquo; pour lister les familles en premier. De cette façon, lorsque qu&rsquo;un parent appelle, vous pouvez choisir le bon enregistrement et voir tous leurs enfants et les inscriptions pour chaque enfant.</p>
+<p>Dans la page &ldquo;Vue des Inscriptions&rdquo;, cliquez sur &ldquo;Ajouter Nouveau&rdquo; &gt; &ldquo;Ajouter Widget à la Page&rdquo;. Sélectionnez pour afficher une table de <code>Familles</code>.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="enrollments-picker2" src="../images/afterschool-program/enrollments-picker2.png" /></em></span></p>
+<p>Réorganisez les widgets pour avoir les Familles à gauche, et les Étudiants et Inscriptions à droite.</p>
+<p><img alt="enrollments-view4" src="../images/afterschool-program/enrollments-view4.png" /></p>
+<p>Maintenant, liez les étudiants aux Familles : cliquez sur le menu à trois points en haut à droite de la table ÉTUDIANTS, et choisissez &ldquo;Sélection de données&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="enrollments-menu" src="../images/afterschool-program/enrollments-menu.png" /></em></span></p>
+<p>Dans le panneau latéral, vous pouvez définir le widget &ldquo;SÉLECTIONNER PAR&rdquo; sur &ldquo;FAMILLES&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="enrollments-select-by" src="../images/afterschool-program/enrollments-select-by.png" /></em></span></p>
+<p>Enfin, vous pouvez ajouter des widgets de carte pour les détails de la famille sélectionnée et de l&rsquo;étudiant sélectionné, et réorganiser les widgets sur la page pour créer une mise en page parfaite pour parler à un parent.</p>
+<p><img alt="enrollments-view5" src="../images/afterschool-program/enrollments-view5.png" /></p>
+<p>Vous sélectionnez un parent, voyez leurs enfants, puis sélectionnez un enfant pour voir ses inscriptions. Il est facile d&rsquo;ajouter un enregistrement d&rsquo;inscription pour un nouveau cours, ou de modifier un enregistrement (par exemple, le marquer comme &ldquo;annulé&rdquo;), d&rsquo;ajouter un autre enfant ou d&rsquo;ajouter une nouvelle famille.</p>
+<h2 id="document-exemple">Document Exemple<a class="headerlink" href="#document-exemple" title="Permanent link">#</a></h2>
+<p>Le document exemple &ldquo;Programme périscolaire&rdquo; comprend tout ce qui est décrit ci-dessus et un peu plus.</p>
+<p>En particulier, il ajoute un champ <em>Nombre</em> aux Cours pour calculer le nombre d&rsquo;étudiants inscrits, et un champ <em>Places Disponibles</em> pour montrer le nombre de places restantes, en comparant <em>Nombre</em> à <em>Max_Students</em> :</p>
+<ul>
+<li>La formule pour <em>Nombre</em> est <code class="formula">len(Enrollments.lookupRecords(Class=$id, Status="Confirmed"))</code>.</li>
+<li>La formule pour <em>Places Disponibles</em> est <code class="formula">max($Max_Students - $Count, 0) or "Complet"</code>.</li>
+</ul>
+<p class="screenshot-half"><span class="screenshot-full"><em><img alt="spots-left" src="../images/afterschool-program/spots-left.png" /></em></span></p>
+<p>Cela rend la page Vue des Cours plus utile, où il est maintenant facile de voir d&rsquo;un coup d&rsquo;œil quels cours ont des places restantes.</p>
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/afterschool-program.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

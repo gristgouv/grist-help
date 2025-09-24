@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Grist dispose d’un puissant moteur de données pour calculer les cellules de vos tables à l’aide de formules. Les formules Grist sont écrites en Python, le langage le plus populaire pour la science des données. Nous avons également une suite de fonctions semblables à celles d’Excel, avec des noms en majuscules. Voici quelques notes utiles :">
+      <meta property="og:description" content="Grist dispose d’un puissant moteur de données pour calculer les cellules de vos tables à l’aide de formules. Les formules Grist sont écrites en Python, le langage le plus populaire pour la science des données. Nous avons également une suite de fonctions semblables à celles d’Excel, avec des noms en majuscules. Voici quelques notes utiles :">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/formula-cheat-sheet/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Formula cheat sheet - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="../FAQ/" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../lightweight-crm/" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../investment-research/" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../afterschool-program/" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-types/" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../references-lookups/" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              Fiche de Formules
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#fonctions-mathematiques">
+                Fonctions Mathématiques
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#travailler-avec-des-chaines">
+                Travailler avec des Chaînes
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#travailler-avec-des-dates-et-des-heures">
+                Travailler avec des dates et des heures
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../self-managed/" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../assistant/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../assistant/" class="btn btn-xs btn-link">
+        Assistant
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../functions/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../functions/" class="btn btn-xs btn-link">
+        Function reference
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<h1 id="fiche-de-formules">Fiche de Formules<a class="headerlink" href="#fiche-de-formules" title="Permanent link">#</a></h1>
+<p>Grist dispose d&rsquo;un puissant moteur de données pour calculer les cellules de vos tables à l&rsquo;aide de formules. Les formules Grist sont écrites en <a href="https://docs.python.org/3/library/" target="_blank">Python</a>, le langage le plus populaire pour la science des données. Nous avons également une suite de <a href="../functions/">fonctions</a> semblables à celles d&rsquo;Excel, avec des noms en majuscules. Voici quelques notes utiles :</p>
+<ul>
+<li>Les formules s&rsquo;appliquent à toute la colonne.</li>
+<li>Les champs sont inclus dans les formules sous la forme <code>$ColumnID</code>.</li>
+<li>Python est sensible à la casse, y compris pour les noms de table et de colonne Grist. Si l&rsquo;ID de votre colonne est <code>title</code>, la formule utilisera <code>$title</code>, où les deux sont en minuscules.</li>
+<li>Vous pouvez écrire du code Python multi-lignes dans les formules (utilisez <code class="keys"><em>Shift</em> + <em>Enter</em></code> pour ajouter des lignes), y compris des instructions, des variables, des imports, etc.</li>
+<li>Le code Grist s&rsquo;exécute dans un sandbox sécurisé, sans accès à quoi que ce soit en dehors de votre document.</li>
+</ul>
+<p>Si vous ne trouvez pas ce que vous cherchez, postez dans le <a href="https://community.getgrist.com/">Forum Communautaire</a> et nous pourrons vous aider !</p>
+<h2 id="fonctions-mathematiques">Fonctions Mathématiques<a class="headerlink" href="#fonctions-mathematiques" title="Permanent link">#</a></h2>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="mathematiques-simples-addition-soustraction-multiplication-division">Mathématiques Simples (addition, soustraction, multiplication, division)<a class="headerlink" href="#mathematiques-simples-addition-soustraction-multiplication-division" title="Permanent link">#</a></h4>
+<p>Utilise les opérateurs <code>+</code>, <code>-</code>, <code>/</code> et <code>*</code> pour effectuer des calculs.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-mathematiques-simples">Exemple de Mathématiques Simples<a class="headerlink" href="#exemple-de-mathematiques-simples" title="Permanent link">#</a></h4>
+</summary>
+<p>Chestwood Art Studio expédie des œuvres d&rsquo;art à travers le pays et a la possibilité de paiements mensuels sur une période de 12 mois.</p>
+<p>Nous avons le sous-total, la taxe (basée sur l&rsquo;état de destination) et le montant dû mensuel. Cette colonne de formule utilise l&rsquo;addition, la multiplication et la division.</p>
+<p><span class="screenshot-large"><em><img alt="simple-math" src="../images/formula-cheat-sheet/simple-math.png" /></em></span></p>
+<p>La formule utilisée ici est :</p>
+<pre><code>($Subtotal + ($Subtotal*$Tax)) / 12
+</code></pre>
+<p>Nous ajoutons le sous-total à la taxe calculée, puis divisons cela par 12 mois pour obtenir notre montant dû mensuel.
+</details></p>
+<p><span></span><details><summary></p>
+<h4 id="depannage-des-erreurs">Dépannage des Erreurs<a class="headerlink" href="#depannage-des-erreurs" title="Permanent link">#</a></h4>
+</summary>
+<p><code>#TypeError</code> : Confirmez que toutes les colonnes utilisées dans la formule sont de type <a href="../col-types/#numeric-columns">Numérique</a>.
+</details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="max-et-min">max et min<a class="headerlink" href="#max-et-min" title="Permanent link">#</a></h4>
+<p>Vous permet de trouver les valeurs <a href="../functions/#max">max</a> ou <a href="../functions/#min">min</a> dans une liste.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemples-utilisant-max-et-min">Exemples utilisant MAX() et MIN()<a class="headerlink" href="#exemples-utilisant-max-et-min" title="Permanent link">#</a></h4>
+<p></summary>
+<em><a href="../functions/#max">MAX()</a> et <a href="../functions/#min">MIN()</a> lorsqu&rsquo;ils sont en majuscules sont des fonctions de tableur qui nécessitent une syntaxe spécifique. La syntaxe des formules de tableur est résumée dans notre <a href="../functions/">référence de fonctions</a>. max() et min() en minuscules sont des fonctions Python.</em></p>
+<p><strong>Max</strong> : Table des classes du modèle <a href="https://templates.getgrist.com/doc/afterschool-program" target="_blank">Class Enrollment</a>.</p>
+<p><span class="screenshot-large"><em><img alt="max" src="../images/formula-cheat-sheet/max.png" /></em></span></p>
+<p>La formule utilisée dans la colonne &lsquo;Spots Left&rsquo; de la table des Classes est :</p>
+<pre><code>max($Max_Students - $Count, 0) or &quot;Full&quot;
+</code></pre>
+<p>Cette formule montre le nombre de places restantes dans une classe, ou le texte &lsquo;Full&rsquo; lorsque la classe est pleine ou surabonnée.</p>
+<p>Nous construisons une liste entre les parenthèses composée de deux éléments : <code>$Max_Students - $Count</code> et <code>0</code>. La formule renvoie le plus grand des deux.</p>
+<p>Lorsque <code>$Count</code> est inférieur à <code>$Max_Students</code>, la différence <code>$Max_Students - $Count</code> est positive et représente les places restantes dans la classe. Lorsque <code>$Count</code> dépasse <code>$Max_Students</code>, alors la classe est pleine ou surabonnée, et <code>$Max_Students - $Count</code> est négatif. Le maximum d&rsquo;un nombre négatif et de 0 sera 0, donc <code>max($Max_Students - $Count, 0)</code> est 0. Cela représente une classe pleine. L&rsquo;ajout de <code>or "Full"</code> est appliqué lorsque la valeur est fausse, ce qui signifie qu&rsquo;un 0 est remplacé par le texte <code>"Full"</code>.</p>
+<p><strong>Min</strong> : Table des contacts du modèle <a href="https://templates.getgrist.com/doc/lightweight-crm" target="_blank">Lightweight CRM</a>.</p>
+<p><span class="screenshot-large"><em><img alt="min" src="../images/formula-cheat-sheet/min.png" /></em></span></p>
+<p>La formule utilisée dans la colonne &lsquo;Due&rsquo; de la table des Contacts est :</p>
+<pre><code>items = Interactions.lookupRecords(Contact=$id, Type=&quot;To-Do&quot;)
+return min(items.Date) if items else None
+</code></pre>
+<p>Décomposons cela.</p>
+<p><code>Interactions.lookupRecords(Contact=$id, Type="To-Do")</code> trouve tous les enregistrements dans la table Interactions où les Contacts correspondent et le Type est To-Do. Cela renvoie une liste d&rsquo;enregistrements que nous assignons à la variable <code>items</code>.</p>
+<p>Ensuite, nous utilisons la <a href="../references-lookups/#reference-columns-and-dot-notation">notation par points</a> pour trouver toutes les Dates assignées aux enregistrements de notre liste <code>items</code>. Ces dates sont évaluées pour trouver la date minimale. C&rsquo;est la valeur qui est renvoyée. Ainsi, nous voyons la date de la tâche qui est due le plus tôt.</p>
+<p>S&rsquo;il n&rsquo;y a pas d&rsquo;éléments dans la liste, rien n&rsquo;est renvoyé et le champ reste vide.</p>
+<p>Dans l&rsquo;exemple MAX(), la liste a deux éléments : <code>$Max_Students - $Count</code> et <code>0</code>, et la formule renvoie le plus grand des deux. Dans l&rsquo;exemple min(), la variable <code>items</code> tire une liste d&rsquo;enregistrements basée sur les arguments <a href="../references-lookups/#lookuprecords">lookupRecords</a>, énumérant les dates et renvoyant la plus petite date. Notez que c&rsquo;est une fonction Python. Si nous avions écrit la formule comme MIN(), une fonction de tableur, la formule ne fonctionnerait pas car la formule de tableur nécessite un <a href="../functions/#min">format très spécifique</a>.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="somme">Somme<a class="headerlink" href="#somme" title="Permanent link">#</a></h4>
+<p>Utilisez la fonction <a href="../functions/#sum">SUM()</a> lorsque vous souhaitez additionner une liste de valeurs disponibles dans une cellule. Si vous souhaitez additionner des valeurs dans une colonne, utilisez <a href="../summary-tables/">Tables de Résumé</a>.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-sum">Exemple de SUM()<a class="headerlink" href="#exemple-de-sum" title="Permanent link">#</a></h4>
+</summary>
+<p><strong><a href="https://templates.getgrist.com/gZmzYoGdS6b1/Custom-Product-Builder/p/6" target="_blank">Custom Product Builder</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="sum" src="../images/formula-cheat-sheet/sum-custom-product-builder.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Coût Total de la table Sélectionner ou Ajouter de Nouveaux Produits est :</p>
+<pre><code>SUM($Requirements.Cost)
+</code></pre>
+<p>La colonne Requirements est une <a href="../page-widgets/#configuring-field-lists">colonne cachée</a> dans cette table. C&rsquo;est une colonne de liste de référence qui tire des données de la table Build Requirements.</p>
+<p>Notre formule utilise la colonne Requirements pour accéder à la table Build Requirements, puis tire le coût pour chaque enregistrement dans la table.</p>
+<p>Nous utilisons SUM() pour additionner les coûts de chaque enregistrement.</p>
+<p><strong><a href="https://templates.getgrist.com/sXsBGDTKau1F/Inventory-Manager" target="_blank">Inventory Manager</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="sum" src="../images/formula-cheat-sheet/sum-inventory-manager.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Reçu de la table Tous les Produits est :</p>
+<pre><code>SUM(Incoming_Order_Line_Items.lookupRecords(SKU=$id).Received_Qty)
+</code></pre>
+<p>Nous utilisons la fonction <a href="../functions/#lookuprecords">lookupRecords</a> pour trouver tous les enregistrements dans la table Incoming Order Line Items où le SKU correspond au SKU dans cette ligne, puis tirer la valeur dans la colonne Received Qty pour chacun de ces enregistrements. Nous utilisons SUM() pour trouver la somme de ces valeurs.</p>
+<p>Les colonnes Qty on Order et Sold de la table <a href="https://templates.getgrist.com/sXsBGDTKau1F/Inventory-Manager/p/1" target="_blank">Tous les Produits</a> sont également de bons exemples de la fonction SUM().</p>
+<p><strong>Consultez un autre exemple dans notre Forum Communautaire :</strong> <a href="https://community.getgrist.com/t/creating-a-sum-of-net-and-gross-profit-from-multiple-tables/668" target="_blank">Créer une somme de bénéfice net et brut à partir de plusieurs tables</a>
+</details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="comparer-pour-legalite-et">Comparer pour l&rsquo;égalité : == et !=<a class="headerlink" href="#comparer-pour-legalite-et" title="Permanent link">#</a></h4>
+<p>Lors de la comparaison pour l&rsquo;égalité en Python, nous utilisons <code>==</code> pour &lsquo;égal&rsquo; et <code>!=</code> pour &lsquo;différent&rsquo;. Si <code>$A</code> est 2 et <code>$B</code> est 3, la formule <code>$A == $B</code> renverrait <code>False</code>, tandis que la formule <code>$A != $B</code> serait <code>True</code>.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemples-utilisant">Exemples utilisant <code>==</code><a class="headerlink" href="#exemples-utilisant" title="Permanent link">#</a></h4>
+</summary>
+<p><strong><a href="https://templates.getgrist.com/sXsBGDTKau1F/Inventory-Manager/p/10" target="_blank">Inventory Manager</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="equality-received-qty" src="../images/formula-cheat-sheet/equality-received-qty.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Received Qty de la table Incoming Order Line Items est :</p>
+<pre><code>if $Order.Status =='Received':
+  return $Qty
+else:
+  return None
+</code></pre>
+<p>La colonne Order de la table Incoming Order Line Items est une colonne de référence qui pointe vers la colonne Order Number de la table Incoming Orders. <code>$Order.Status</code> utilise la notation par points pour tirer la valeur de la colonne Status de la table Incoming Orders. Si la valeur dans cette colonne est égale à <code>Received</code>, la valeur de la colonne Qty sera renvoyée. Si la valeur n&rsquo;est pas égale à <code>Received</code>, rien n&rsquo;est renvoyé.</p>
+<p><span class="screenshot-large"><em><img alt="equality-date-received" src="../images/formula-cheat-sheet/equality-date-received.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Date Received de la table <a href="https://templates.getgrist.com/sXsBGDTKau1F/Inventory-Manager/p/16#a1.s35.r11.c82" target="_blank">Create New Order</a> est :</p>
+<pre><code>if $Status == &quot;Received&quot;:
+  return NOW()
+</code></pre>
+<p>C&rsquo;est une <a href="../formulas/#trigger-formulas">formule d&rsquo;initialisation</a> qui est déclenchée lorsqu&rsquo;un changement est effectué dans la colonne Status. Si la valeur dans la colonne Status est égale à <code>Received</code>, la date actuelle est renvoyée. Si les valeurs ne sont pas égales, rien n&rsquo;est renvoyé.</p>
+<p></details>
+<span></span><details><summary></p>
+<h4 id="exemples-utilisant_1">Exemples utilisant <code>!=</code><a class="headerlink" href="#exemples-utilisant_1" title="Permanent link">#</a></h4>
+</summary>
+<p><strong><a href="https://templates.getgrist.com/hifkng53AxyQ/Project-Management/p/9" target="_blank">Project Management</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="inequality-missed-deadline" src="../images/formula-cheat-sheet/inequality-missed-deadline.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Missed Deadline de la table Missed Deadline est :</p>
+<pre><code>TODAY()&gt; $Due_Date and $Status != &quot;Completed&quot;
+</code></pre>
+<p>Si la date actuelle est supérieure à la date donnée dans la colonne Due Date <strong>et</strong> que la valeur dans la colonne Status n&rsquo;est pas égale à <code>Completed</code>, la formule est <code>True</code>. Si l&rsquo;une de ces affirmations est fausse, la formule est <code>False</code>.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="comparer-des-valeurs">Comparer des Valeurs : &lt; , &gt; , &lt;= , &gt;=<a class="headerlink" href="#comparer-des-valeurs" title="Permanent link">#</a></h4>
+<p>Vous permet de comparer des valeurs numériques. Si Sales est égal à <code>1200</code> et Running_Cost est égal à <code>1650</code>, <code>"Gains" if $Sales &gt; $Running_Cost else "Loss"</code> renverrait <code>Loss</code>.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemples-de-comparaison-de-valeurs">Exemples de comparaison de valeurs<a class="headerlink" href="#exemples-de-comparaison-de-valeurs" title="Permanent link">#</a></h4>
+</summary>
+<p><strong><a href="https://templates.getgrist.com/sXsBGDTKau1F/Inventory-Manager" target="_blank">Inventory Manager</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="comparing-values-stock-alert" src="../images/formula-cheat-sheet/comparing-values-stock-alert.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Stock Alert de la table Tous les Produits est :</p>
+<pre><code>if $In_Stock + $QTY_on_Order &gt; 5:
+  return &quot;In Stock&quot;
+if $In_Stock + $QTY_on_Order &gt; 0:
+  return &quot;Low Stock&quot;
+else:
+  return &quot;OUT OF STOCK&quot;
+</code></pre>
+<p>Ici, nous avons deux déclarations <strong>if-return</strong> différentes ; si <code>x</code> est vrai, renvoyer <code>some_value</code>. Une fois qu&rsquo;une déclaration est vraie et qu&rsquo;une valeur est renvoyée, la formule s&rsquo;arrête. Si les deux sont fausses, <code>OUT OF STOCK</code> est renvoyé.</p>
+<p>Tout d&rsquo;abord, si la valeur dans la colonne In Stock plus la valeur dans la colonne Qty On Order est supérieure à 5, renvoyez &ldquo;In Stock&rdquo;.</p>
+<p>Ensuite, si la valeur dans la colonne In Stock plus la valeur dans la colonne Qty On Order est supérieure à 0, renvoyez &ldquo;Low Stock&rdquo;. Il est implicite que la valeur est inférieure ou égale à 5 car la première déclaration devrait être fausse pour que cela soit évalué.</p>
+<p>Enfin, si toutes les déclarations sont fausses, renvoyez &ldquo;OUT OF STOCK&rdquo;.</p>
+<p><strong><a href="https://templates.getgrist.com/j9ZH7rPGafbH/Internal-Links-Tracker-for-SEO" target="_blank">Internal Links Tracker for SEO</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="comparing-values-orphaned" src="../images/formula-cheat-sheet/comparing-values-orphaned.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Orphaned? de la table Orphaned Pages est :</p>
+<pre><code>len(Links.lookupRecords(To=$id))&lt;1
+</code></pre>
+<p>Nous utilisons la fonction <a href="../functions/#lookuprecords">lookupRecords</a> pour trouver tous les enregistrements dans la table Links où le lien dans la colonne To correspond au lien listé dans la colonne Slug de cette ligne.</p>
+<p>Nous utilisons <a href="../functions/#len">len()</a> pour compter le nombre d&rsquo;enregistrements trouvés. S&rsquo;il est inférieur à 1, la formule est évaluée comme vraie et la case à cocher sera cochée. S&rsquo;il est égal ou supérieur à 1, la formule est évaluée comme fausse.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="conversion-de-string-en-float">Conversion de String en Float<a class="headerlink" href="#conversion-de-string-en-float" title="Permanent link">#</a></h4>
+<p><strong><a href="https://www.w3schools.com/python/python_strings.asp" target="_blank">String</a></strong> : Une séquence de caractères ou d&rsquo;extraits de texte. Dans le code, les chaînes sont entre guillemets, par exemple <code>'Hello'</code> ou <code>"-12"</code> (ce sont trois caractères entre guillemets, par opposition à un nombre négatif). Voir <a href="https://www.w3schools.com/python/ref_func_str.asp" target="_blank">Fonction str() de Python</a> pour convertir une valeur spécifiée en chaîne.</p>
+<p><strong><a href="https://www.w3schools.com/python/gloss_python_float.asp" target="_blank">Float</a></strong> : Nombres réels qui peuvent stocker des valeurs décimales. Également appelés nombres à virgule flottante. Voir <a href="https://www.w3schools.com/python/ref_func_float.asp" target="_blank">Fonction float() de Python</a> pour convertir une valeur spécifiée en un nombre à virgule flottante.</p>
+<p><strong><a href="https://www.w3schools.com/python/python_numbers.asp" target="_blank">Integer</a></strong> : Un nombre entier, sans décimales. Voir <a href="https://www.w3schools.com/python/ref_func_int.asp" target="_blank">Fonction int() de Python</a> pour convertir une valeur spécifiée en un nombre entier.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-conversion-dune-chaine-en-float">Exemple de conversion d&rsquo;une chaîne en float<a class="headerlink" href="#exemple-de-conversion-dune-chaine-en-float" title="Permanent link">#</a></h4>
+</summary>
+<p><strong><a href="https://public.getgrist.com/fR4erkJzSpBd/Artwork-Orders/m/fork" target="_blank">Artwork Orders</a></strong></p>
+<p><span class="screenshot-large"><em><img alt="string-to-float" src="../images/formula-cheat-sheet/string-to-float.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Sale Price est :</p>
+<pre><code>if $Appraisal_Value.endswith(&quot;k&quot;):
+  return float($Appraisal_Value.rstrip(&quot;k&quot;)) * 1000
+return float($Appraisal_Value)
+</code></pre>
+<p>Dans cet exemple, la colonne Appraisal Value est une colonne de texte qui contient des caractères alphanumériques. Afin d&rsquo;utiliser cette valeur dans des formules mathématiques, nous devons convertir de string à float.</p>
+<p>Si la valeur dans la colonne Appraisal Value se termine par &ldquo;k&rdquo;, nous utilisons d&rsquo;abord <a href="https://docs.python.org/3/library/stdtypes.html#str.rstrip" target="_blank">rstrip()</a> pour supprimer &ldquo;k&rdquo; de la chaîne dans la colonne Appraisal Value.</p>
+<p>Maintenant que nous n&rsquo;avons que des caractères numériques, nous utilisons <a href="https://docs.python.org/3/library/functions.html?highlight=float#float" target="_blank">float()</a> pour convertir notre chaîne en float.</p>
+<p>Comme K représente 1000 et que nous avons supprimé cela de la valeur, nous multiplions notre float par 1000.</p>
+<p>Si la valeur dans la colonne Appraisal Value <strong><em>ne se termine pas</em></strong> par &ldquo;k&rdquo;, et ne contient que des caractères numériques, nous pouvons simplement utiliser <a href="https://docs.python.org/3/library/functions.html?highlight=float#float" target="_blank">float()</a> pour convertir notre chaîne en float.</p>
+</details>
+<p><span></span><details><summary></p>
+<h4 id="depannage">Dépannage<a class="headerlink" href="#depannage" title="Permanent link">#</a></h4>
+<p></summary>
+Si vous essayez d&rsquo;utiliser différentes colonnes avec des valeurs <em>numériques</em> dans une formule mathématique mais que vous voyez une erreur, vérifiez les types de colonnes pour chacune des colonnes utilisées dans la formule. Toutes doivent être de type <a href="../col-types/#numeric-columns">Numérique</a>.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="column-type-numeric" src="../images/formula-cheat-sheet/column-type-numeric.png" /></em></span></p>
+<p><a href="https://docs.python.org/3/library/functions.html#float" target="_blank">float()</a> n&rsquo;est nécessaire que lorsque vous traitez des valeurs alphanumériques comme nous le voyons dans l&rsquo;<a href="#example-converting-a-string-to-a-float">exemple</a>.</p>
+<p><strong>TypeError : impossible de multiplier une séquence par un type non-int de &lsquo;float&rsquo;</strong>
+<span class="screenshot-large"><em><img alt="multiply-non-int-float-type-error" src="../images/formula-cheat-sheet/multiply-non-int-float-type-error.png" /></em></span>
+Cette erreur se produit lorsqu&rsquo;une formule tente de <strong>multiplier</strong> des valeurs de plusieurs colonnes, dont au moins une n&rsquo;est pas de type <a href="../col-types/#numeric-columns">Numérique</a>. Dans la capture d&rsquo;écran ci-dessous, la colonne Tax est une colonne <a href="../col-types/#text-columns">Texte</a>.
+<span class="screenshot-large"><em><img alt="multiply-non-int-error-tax-text" src="../images/formula-cheat-sheet/multiply-non-int-error-tax-text.png" /></em></span>
+Lorsque nous changeons le type de colonne en <a href="../col-types/#numeric-columns">Numérique</a>, l&rsquo;erreur est résolue.
+<span class="screenshot-large"><em><img alt="multiply-non-int-error-tax-numeric" src="../images/formula-cheat-sheet/multiply-non-int-error-tax-numeric.png" /></em></span></p>
+<p><strong>TypeError : type d&rsquo;opérande non pris en charge pour / : &lsquo;float&rsquo; et &lsquo;str&rsquo;</strong>
+<span class="screenshot-large"><em><img alt="division-float-string-error" src="../images/formula-cheat-sheet/division-float-string-error.png" /></em></span>
+Cette erreur se produit lorsqu&rsquo;une formule tente de <strong>diviser</strong> des valeurs de plusieurs colonnes, dont au moins une n&rsquo;est pas de type <a href="../col-types/#numeric-columns">Numérique</a>. Dans l&rsquo;exemple ci-dessus, la colonne &lsquo;# of Payments&rsquo; est une colonne <a href="../col-types/#choice-columns">Choice</a>.</p>
+<p>Lorsque nous changeons le type de colonne en <a href="../col-types/#numeric-columns">Numérique</a>, l&rsquo;erreur est résolue.</p>
+<p><strong>TypeError : type d&rsquo;opérande non pris en charge pour + : &lsquo;float&rsquo; et &lsquo;str&rsquo;</strong>
+<span class="screenshot-large"><em><img alt="addition-float-string-error" src="../images/formula-cheat-sheet/addition-float-string-error.png" /></em></span>
+Cette erreur se produit lorsqu&rsquo;une formule tente d&rsquo;<strong>ajouter</strong> des valeurs de plusieurs colonnes, dont au moins une n&rsquo;est pas de type <a href="../col-types/#numeric-columns">Numérique</a>. Dans l&rsquo;exemple ci-dessus, la colonne Tax est une colonne <a href="../col-types/#text-columns">Texte</a>.</p>
+<p>Lorsque nous changeons le type de colonne en <a href="../col-types/#numeric-columns">Numérique</a>, l&rsquo;erreur est résolue.</p>
+<p><strong>TypeError : type d&rsquo;opérande non pris en charge pour - : &lsquo;float&rsquo; et &lsquo;str&rsquo;</strong>
+<span class="screenshot-large"><em><img alt="subtraction-float-string-error" src="../images/formula-cheat-sheet/subtraction-float-string-error.png" /></em></span>
+Cette erreur se produit lorsqu&rsquo;une formule tente de <strong>soustraire</strong> des valeurs de plusieurs colonnes, dont au moins une n&rsquo;est pas de type <a href="../col-types/#numeric-columns">Numérique</a>. Dans l&rsquo;exemple ci-dessus, la colonne Discount est une colonne <a href="../col-types/#text-columns">Texte</a>.</p>
+<p>Lorsque nous changeons le type de colonne en <a href="../col-types/#numeric-columns">Numérique</a>, l&rsquo;erreur est résolue.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="arrondir-les-nombres">Arrondir les Nombres<a class="headerlink" href="#arrondir-les-nombres" title="Permanent link">#</a></h4>
+<p>Spécifiez le nombre de décimales à donner dans un résultat en utilisant la fonction <a href="../functions/#round">ROUND()</a>. Si la Température Moyenne est égale à <code>46.5</code>, <code>ROUND($Average_Temperature)</code> renverrait <code>47</code>.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-darrondi-des-nombres">Exemple d&rsquo;arrondi des nombres<a class="headerlink" href="#exemple-darrondi-des-nombres" title="Permanent link">#</a></h4>
+<p></summary>
+<strong><a href="https://templates.getgrist.com/5pHLanQNThxk/Payroll/p/2" target="_blank">Payroll</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="round-payment" src="../images/formula-cheat-sheet/round-payment.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Payment est :</p>
+<pre><code>ROUND($Hours*$Per_Hour, 2)
+</code></pre>
+<p>La fonction <a href="../functions/#round">ROUND()</a> suit le format <code>ROUND(value, places)</code> qui arrondira la valeur donnée au nombre de décimales spécifié. Notre formule trouve la valeur pour <code>$Hours*$Per_Hour</code> puis arrondit cette valeur à <code>2</code> décimales.</p>
+<p><strong><a href="https://public.getgrist.com/v4vj2PDZS4jf/Community-665/m/fork" target="_blank">Mixing Products</a></strong></p>
+<p><span class="screenshot-large"><em><img alt="round" src="../images/formula-cheat-sheet/round.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Rounded Value est :</p>
+<pre><code>mix_list_str = $Mix_Product.Lt_per_100_Lt
+mix_list_float = [float(i) for i in mix_list_str]
+x = [Lt * $Water/100 for Lt in mix_list_float]
+round_x = [ROUND(num, 2) for num in x]
+l = $Mix_Product.Product
+' '.join('{} {}'.format(first, second) for first, second in zip(l, round_x))
+</code></pre>
+<p>Décomposons cela.</p>
+<p><code>$Mix_Product</code> représente la colonne Mix Product, une colonne de liste de référence qui tire des données de la colonne Product de Table1. Nous pouvons utiliser cette colonne comme un lien vers Table1 pour tirer d&rsquo;autres données. <code>$Mix_Product.Lt_per_100_Lt</code> utilise la colonne de liste de référence, Mix Product, pour tirer des valeurs de la colonne Lt per 100 Lt de Table1 pour les produits listés dans la colonne Mix Product de Table2, puis assigne cette liste de valeurs à la variable <code>mix_list_str</code>. C&rsquo;est la même formule utilisée dans la colonne Lt per 100 Lt de Table2, donc vous pouvez voir la valeur qu&rsquo;elle renvoie dans la ligne 1 de Table2. Elle renvoie une liste : <code>['0.2355', '1.2579']</code>. Cette liste est évaluée comme une chaîne plutôt que comme des valeurs numériques. Nous devons convertir chaque valeur de cette liste en float.</p>
+<p>Dans notre prochaine formule, <code>[float(i) for i in mix_list_str]</code>, nous itérons à travers la liste qui a été assignée dans la première équation à <code>mix_list_str</code> et convertissons chaque valeur en un nombre à virgule flottante. Nous voulons convertir en float plutôt qu&rsquo;en entier car toutes les valeurs ne sont pas des nombres entiers et contiennent des décimales. <code>i</code> est une variable représentant chaque valeur. Donc chaque valeur dans <code>mix_list_str</code> est évaluée dans l&rsquo;équation <code>float(i)</code>. <code>float(0.2355)</code> convertit <code>0.2355</code> en float et <code>float(1.2579)</code> convertit <code>1.2579</code> en float. Maintenant, nous assignons notre liste de floats à la variable <code>mix_list_float</code>.</p>
+<p>Nous pouvons maintenant utiliser nos valeurs float dans une équation mathématique. Encore une fois, nous itérons à travers la liste qui a été assignée à la variable <code>mix_list_float</code>. Dans notre équation <code>[Lt * $Water/100 for Lt in mix_list_float]</code>, <code>Lt</code> représente chaque valeur dans <code>mix_list_float</code> et <code>$Water</code> représente la valeur trouvée dans la colonne Water qui est <code>1000</code>. Nous évaluons l&rsquo;équation <code>Lt * 1000/100</code> lorsque <code>Lt = 0.2355</code> et <code>Lt = 1.2579</code>, ce qui renvoie la liste <code>[2.355, 12.579]</code>. Nous assignons cette liste à la variable <code>x</code>.</p>
+<p>Pour arrondir les valeurs dans <code>x</code> à deux décimales, nous devons évaluer l&rsquo;équation <code>ROUND(num, 2)</code> où num représente chaque valeur dans notre liste et 2 spécifie le nombre de décimales que nous voulons arrondir. Cela renvoie la liste <code>[2.36, 12.58]</code> que nous assignons à la variable round_x.</p>
+<p>Dans la première équation, nous avons utilisé notre colonne de liste de référence, Mix Product, comme notre lien vers Table1 afin de tirer des données de Table1 dans Table2. Nous utilisons cette méthode à nouveau dans <code>$Mix_Product.Product</code> pour tirer des données de la colonne Product de Table1. Cela renvoie une liste de produits ; <code>[Prod A, Prod B]</code>. Nous assignons cette liste à la variable <code>l</code>.</p>
+<p>Enfin, nous utilisons la méthode <a href="https://www.w3schools.com/python/ref_string_join.asp" target="_blank">join()</a> pour combiner nos deux listes. <code>' '</code> est notre chaîne de départ (vide). Nous utilisons la méthode <a href="https://www.w3schools.com/python/ref_string_format.asp" target="_blank">format</a> de Python pour formater notre chaîne. <code>{}</code> est un espace réservé pour chaque variable listée dans <code>.format()</code>. Enfin, nous utilisons la fonction <a href="https://www.w3schools.com/python/ref_func_zip.asp" target="_blank">zip()</a> de Python pour associer les premières valeurs de chaque liste ensemble, puis associer les deuxièmes valeurs de chaque liste ensemble. <code>l</code> est assigné comme notre liste <code>first</code> et <code>round_x</code> est assigné comme notre liste <code>second</code>. <code>l = [Prod A, Prod B]</code> et <code>round_x = [2.36, 12.58]</code>. En zippant nos listes dans <code>'{} {}'.format(first, second)</code>, nous obtenons <code>Prod A 2.36</code> dans notre première itération et <code>Prod B 12.58</code> dans notre seconde itération. Notre valeur de retour finale est <code>Prod A 2.36 Prod B 12.58</code>.
+</details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="formatage-des-nombres-avec-des-zeros-en-tete">Formatage des nombres avec des zéros en tête<a class="headerlink" href="#formatage-des-nombres-avec-des-zeros-en-tete" title="Permanent link">#</a></h4>
+<p>Vous permet de spécifier le nombre minimum de chiffres renvoyés dans une colonne numérique en ajoutant des zéros en tête. Si x = 5, <code>str(x).zfill(3)</code> ou <code>'{:0&gt;3}'.format(x)</code> renverrait <code>005</code>.</p>
+<p><span></span><details><summary></p>
+<h4 id="formatage-des-nombres-avec-des-zeros-en-tete_1">Formatage des nombres avec des zéros en tête<a class="headerlink" href="#formatage-des-nombres-avec-des-zeros-en-tete_1" title="Permanent link">#</a></h4>
+</summary>
+<p><strong>Exemple Communautaire : <a href="https://public.getgrist.com/p4zvsX9asVCc/2179-Using-id/p/1" target="_blank">Utilisation de Row ID</a></strong></p>
+<p><span class="screenshot-large"><em><img alt="min-digits" src="../images/formula-cheat-sheet/min-digits.png" /></em></span></p>
+<p>La formule utilisée dans la colonne ID à 5 chiffres de la table ID Examples est :</p>
+<pre><code>'TCH{:0&gt;5}'.format($id)
+</code></pre>
+<p><code>'{:0&gt;5}'.format($id)</code> prend l&rsquo;ID de ligne unique et le formate pour avoir un minimum de 5 chiffres. Nous ajoutons ensuite cela à notre chaîne <code>"TCH"</code> pour obtenir notre valeur finale. Si l&rsquo;ID <code>$id</code> est plus long que 5 chiffres, la formule renvoie la chaîne sans modification.</p>
+<p>Nous pouvons faire la même chose en utilisant la méthode <a href="https://docs.python.org/3/library/stdtypes.html#str.zfill" target="_blank"><code>str.zfill()</code></a>.</p>
+<p><span class="screenshot-large"><em><img alt="min-digits-zfill" src="../images/formula-cheat-sheet/min-digits-zfill.png" /></em></span></p>
+<p>La formule utilisée dans la colonne zfill Method de la table ID Examples est :</p>
+<pre><code>str($id).zfill(5)
+</code></pre>
+<p><code>str($id)</code> convertit l&rsquo;ID de ligne en chaîne. <code>.zfill(x)</code> renvoie une copie de la chaîne avec des zéros en tête pour faire une chaîne de longueur <code>x</code>. Dans notre exemple, cela ajoute des zéros en tête pour faire la chaîne de 5 caractères de long. Encore une fois, si l&rsquo;ID <code>$id</code> est plus long que 5 chiffres, la formule renvoie la chaîne sans modification.</p>
+</details>
+<p><span></span><details><summary></p>
+<h4 id="depannage-des-erreurs_1">Dépannage des Erreurs<a class="headerlink" href="#depannage-des-erreurs_1" title="Permanent link">#</a></h4>
+<p></summary>
+<code>#TypeError</code> : ne peut concaténer que str (pas &ldquo;int&rdquo;) à str</p>
+<p>Si vous souhaitez combiner une chaîne et une valeur numérique, assurez-vous de la convertir en chaîne en utilisant <code>str()</code>.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="string-type-error" src="../images/formula-cheat-sheet/string-type-error.png" /></em></span></p>
+<p></details>
+</section></p>
+<h2 id="travailler-avec-des-chaines">Travailler avec des Chaînes<a class="headerlink" href="#travailler-avec-des-chaines" title="Permanent link">#</a></h2>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="combinaison-de-texte-de-plusieurs-colonnes">Combinaison de Texte de Plusieurs Colonnes<a class="headerlink" href="#combinaison-de-texte-de-plusieurs-colonnes" title="Permanent link">#</a></h4>
+<p><strong>Méthode 1 :</strong> Si vous avez une colonne Prénom et une colonne Nom, vous pouvez combiner ces colonnes pour avoir une colonne Nom Complet. Si le Prénom est <code>George</code> et le Nom est <code>Washington</code>, <code>$First_Name + " " + $Last_Name</code> renverrait <code>George Washington</code>.</p>
+<p><strong>Méthode 2 :</strong> Si vous avez un formatage supplémentaire, une manière plus simple de le faire serait d&rsquo;utiliser la <a href="https://www.w3schools.com/python/ref_string_format.asp" target="_blank">méthode format() de Python</a>. La méthode <code>format()</code> formate les valeurs spécifiées et les insère à la place du placeholder, <code>{}</code>. En utilisant le même exemple que ci-dessus, notre formule serait <code>"{} {}".format($First_Name, $Last_Name)</code>.</p>
+<p>Remarque : Vous pouvez cliquer sur les colonnes pour les insérer dans vos formules, plutôt que de les taper.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemples-utilisant-la-methode-1">Exemples utilisant la Méthode 1<a class="headerlink" href="#exemples-utilisant-la-methode-1" title="Permanent link">#</a></h4>
+<p></summary>
+<strong><a href="https://templates.getgrist.com/doc/afterschool-program">Class Enrollment</a> template{:target=&rdquo;_blank&rdquo;}</strong></p>
+<p><span class="screenshot-large"><em><img alt="combining-text-students" src="../images/formula-cheat-sheet/combining-text-students.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Nom Complet de la table des Étudiants est :</p>
+<pre><code>$Last_Name + &quot;, &quot; + $First_Name
+</code></pre>
+<p>Ici, nous combinons la valeur trouvée dans la colonne Last Name avec une virgule suivie d&rsquo;un espace suivi de la valeur de la colonne First Name. Lorsque vous ajoutez des caractères ou des espaces supplémentaires, placez-les entre guillemets doubles, comme nous l&rsquo;avons fait dans l&rsquo;exemple avec <code>", "</code>. </p>
+<p>Une combinaison alternative de ces colonnes pour le Nom Complet pourrait être <code>$First_Name + " " + $Last_Name</code>. Pour l&rsquo;exemple dans la ligne 1, le Prénom est <code>Brockie</code> et le Nom est <code>Raddon</code>, donc la valeur renvoyée serait <code>Brockie Raddon</code>.</p>
+<p><strong><a href="https://templates.getgrist.com/sXsBGDTKau1F/Inventory-Manager" target="_blank">Inventory Manager</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="combining-text-sku" src="../images/formula-cheat-sheet/combining-text-sku.png" /></em></span></p>
+<p>La formule utilisée dans la colonne SKU de la table Tous les Produits est :</p>
+<pre><code>$Brand.Brand_Code+&quot;-&quot;+$Color.Code+&quot;-&quot;+$Size
+</code></pre>
+<p>Brand est une colonne de référence qui tire des données de la colonne Name Brand de la table Add Products. Nous utilisons cette colonne de référence dans <code>$Brand.Brand_Code</code> pour tirer des données de la colonne Brand Code de la table Add Products.</p>
+<p>Color est une colonne de référence qui tire des données de la colonne Color de la table Color. Nous utilisons cette colonne de référence dans <code>$Color.Code</code> pour tirer des données de la colonne Code de la table Color.</p>
+<p>Chacune des valeurs trouvées dans <code>$Brand.Brand_Code</code> et <code>$Color.Code</code> est combinée avec la valeur dans la colonne Size avec un <code>-</code> entre chacune des trois valeurs pour constituer le SKU.
+</details></p>
+<p><span></span><details><summary></p>
+<h4 id="exemples-utilisant-la-methode-2">Exemples utilisant la Méthode 2<a class="headerlink" href="#exemples-utilisant-la-methode-2" title="Permanent link">#</a></h4>
+<p></summary>
+<strong><a href="https://templates.getgrist.com/bReAxyLmzmEQ/Tracking-Time-Invoicing" target="_blank">Tracking Time + Invoicing</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="combining-text-project-name" src="../images/formula-cheat-sheet/combining-text-project-name.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Nom du Projet de la table des Projets est :</p>
+<pre><code>&quot;{}: {}&quot;.format($Client.Name, $Name)
+</code></pre>
+<p>Décomposons cela.</p>
+<p>Tout ce qui se trouve entre guillemets doubles <code>"</code> est notre chaîne. Les accolades <code>{}</code> sont des espaces réservés pour les valeurs trouvées à l&rsquo;aide de <code>.format()</code> qui est la méthode de formatage de chaîne de Python.</p>
+<p>Le premier ensemble d&rsquo;accolades est remplacé par la valeur trouvée dans <code>$Client.Name</code>. Client est une colonne de référence qui tire des données pour un enregistrement spécifique de la table Clients. <code>$Client.Name</code> utilise notre colonne de référence, Client pour tirer des données de la colonne Name de la table Clients.</p>
+<p>Le deuxième ensemble d&rsquo;accolades est remplacé par la valeur trouvée dans la colonne Name de cette table.</p>
+<p>Bien que la colonne Client montre la valeur que nous voulons, nous ne pouvons pas utiliser <code>$Client</code> comme nous l&rsquo;avons fait avec <code>$Name</code>. Cela est dû au fait que la colonne Client est une colonne de référence. Elle fait référence à l&rsquo;<strong>entier</strong> enregistrement mais utilise la valeur de la colonne Name de la table Clients comme représentation visuelle de cet enregistrement. Dans le panneau de configuration de la colonne sur le côté droit, nous pouvons changer quelle valeur de colonne nous voyons pour l&rsquo;enregistrement. Dans la capture d&rsquo;écran ci-dessous, &lsquo;Show Column&rsquo; a été changé de Name à Email.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="reference-client-email" src="../images/formula-cheat-sheet/reference-client-email.png" /></em></span></p>
+<p>Cela ne change pas les données, cela change simplement l&rsquo;étiquette sur ces données dans la colonne Client. Cela pointe toujours vers le même enregistrement mais montre maintenant une étiquette différente. <code>$Client.Name</code> tire le Nom pour l&rsquo;enregistrement qui est référencé dans la colonne Client, peu importe l&rsquo;étiquette que nous voyons.</p>
+<p><strong><a href="https://templates.getgrist.com/gZmzYoGdS6b1/Custom-Product-Builder" target="_blank">Custom Product Builder</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="combining-text-components" src="../images/formula-cheat-sheet/combining-text-components.png" /></em></span></p>
+<p>La formule utilisée dans la colonne All Components de la carte CONTRACT_BUILDER est :</p>
+<pre><code>'\n'.join(sorted(
+  &quot;{} — {:g} {}&quot;.format(comp.Component, quantity, comp.Unit)
+  for (comp, quantity) in $Components.items()
+))
+</code></pre>
+<p>Nous utilisons la méthode <a href="https://www.w3schools.com/python/ref_string_join.asp" target="_blank">join()</a>, la fonction <a href="https://www.w3schools.com/python/ref_func_sorted.asp" target="_blank">sorted()</a> et la méthode <a href="https://www.w3schools.com/python/ref_string_format.asp" target="_blank">format()</a> toutes en une seule fois !</p>
+<p><code>'\n'.join()</code> ajoute une nouvelle ligne entre chaque élément de la liste.</p>
+<p><code>sorted()</code> trie les éléments de la liste par ordre alphabétique.</p>
+<p>Cela nous laisse avec le suivant :</p>
+<pre><code>&quot;{} — {:g} {}&quot;.format(comp.Component, quantity, comp.Unit)
+  for (comp, quantity) in $Components.items()
+</code></pre>
+<p>Nous allons travailler à l&rsquo;envers. Tout d&rsquo;abord, nous devons examiner la colonne Components qui est une <a href="../page-widgets/#configuring-field-lists">colonne cachée</a> dans la table All Contracts.</p>
+<p><span class="screenshot-large"><em><img alt="combining-text-components-hidden" src="../images/formula-cheat-sheet/combining-text-components-hidden.png" /></em></span></p>
+<p>Cette colonne est une liste de composants et de leurs quantités associées pour le contrat. Dans la boucle <code>for</code>, nous assignons chaque élément de la liste de composants à deux variables, comp et quantity. Pour <code>Components[3]: 6.0</code>, comp = <code>Components[3]</code> et quantity = <code>6.0</code>. <code>Components[#]</code> spécifie un Composant dans la table Components par ID de ligne. <code>Components[3]</code> est le composant assigné <code>3</code> comme son ID de ligne.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="components-row-id" src="../images/formula-cheat-sheet/components-row-id.png" /></em></span></p>
+<p>Maintenant, nous exécutons chaque élément de la liste ci-dessus à travers l&rsquo;équation <code>"{} — {:g} {}".format(comp.Component, quantity, comp.Unit)</code>.</p>
+<p><code>comp.Component</code> remplace le premier ensemble de <code>{}</code>. <code>comp</code> est la variable avec notre ID de composant donc <code>comp.Component</code> trouve la valeur dans la colonne Component associée à cet ID de ligne. Pour <code>Components[3]</code>, <code>comp.Component</code> est Nozzle.</p>
+<p><code>quantity</code> remplace le deuxième ensemble de <code>{}</code>. Encore une fois, la quantité est la deuxième variable dans notre liste. Pour <code>Components[3]: 6.0</code>, quantity est <code>6.0</code>. Notre deuxième ensemble de <code>{}</code> n&rsquo;est pas vide. Ils incluent <code>:g</code>*. Cela convertit la valeur en un nombre à virgule flottante.</p>
+<p><code>comp.Unit</code> remplace le dernier ensemble de <code>{}</code>. <code>comp</code> est la variable avec notre ID de composant donc <code>comp.Unit</code> trouve la valeur dans la colonne Unit associée à cet ID de ligne. Pour <code>Components[3]</code>, <code>comp.Unit</code> est <code>None</code>.</p>
+<p>*Notez que <code>{:g}</code> formate les nombres à virgule flottante d&rsquo;une manière particulière qui omet les décimales lorsqu&rsquo;elles ne sont pas nécessaires. Il existe de nombreuses options disponibles dans les espaces réservés pour formater des nombres, des dates, etc. En savoir plus sur les espaces réservés <a href="https://www.w3schools.com/python/ref_string_format.asp" target="_blank">ici</a>.</p>
+<p><strong><a href="https://templates.getgrist.com/3HfynRQwpHPy/Email-Contacts" target="_blank">Email Contacts</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="combining-text-email" src="../images/formula-cheat-sheet/combining-text-email.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Body de la table Advanced Compose est :</p>
+<pre><code>&quot;Dear %s,\n\nWelcome to the %s team!&quot; % ($Contact_Name_as_Plaintext, $Team)
+</code></pre>
+<p>Cette technique utilise l&rsquo;opérateur <code>%</code> au lieu de la méthode <code>format()</code>. Les spécificateurs de format commencent par <code>%</code> suivi d&rsquo;un caractère qui représente le type de données. <code>%s</code> est un espace réservé pour une chaîne. Le premier <code>%s</code> est remplacé par la valeur trouvée dans la colonne &ldquo;Contact Name as Plaintext&rdquo; qui est une <a href="../page-widgets/#configuring-field-lists">colonne cachée</a> et le deuxième <code>%s</code> est remplacé par la valeur dans la colonne Team.</p>
+<p><code>\n</code> ajoute une nouvelle ligne.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="division-de-chaines-de-texte">Division de Chaînes de Texte<a class="headerlink" href="#division-de-chaines-de-texte" title="Permanent link">#</a></h4>
+<p>Divisez une chaîne en utilisant la méthode <a href="https://docs.python.org/3/library/stdtypes.html#str.split" target="_blank">split()</a> de Python. Si le Nom Complet est <code>George Washington</code>, <code>$Full_Name.split(" ")</code> renverrait <code>[George, Washington]</code>.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-division-de-chaines-de-texte">Exemple de Division de Chaînes de Texte<a class="headerlink" href="#exemple-de-division-de-chaines-de-texte" title="Permanent link">#</a></h4>
+</summary>
+<p><strong>Exemple Communautaire : <a href="https://public.getgrist.com/2tv3e8qxpNFP/Community-715/p/2" target="_blank">Colors</a></strong></p>
+<p><span class="screenshot-large"><em><img alt="split-hyperlink" src="../images/formula-cheat-sheet/split-hyperlink.png" /></em></span></p>
+<p>La formule dans la colonne &ldquo;Color Reference (Just URL)&rdquo; de la Table 2 est :</p>
+<pre><code>split = $Color_Reference.Color.split(&quot; &quot;)
+return split[-1]
+</code></pre>
+<p><code>$Color_Reference.Color</code> utilise la colonne de référence, &ldquo;Color Reference&rdquo; pour tirer des données de la table qu&rsquo;elle référence, Table 1. Spécifiquement, elle tire la valeur de la colonne Color de Table 1.</p>
+<p>Color est une colonne de texte qui contient un hyperlien avec une étiquette. Nous ne voyons que l&rsquo;étiquette dans Table 1 mais comme vous pouvez le voir dans la capture d&rsquo;écran ci-dessus, la valeur dans la cellule &lsquo;pink&rsquo; est développée pour montrer toute la chaîne qui contient &ldquo;pink&rdquo; suivie de l&rsquo;URL. Vous pouvez également voir cela dans la colonne &ldquo;Color Reference&rdquo; de la Table 2. Nous voulons obtenir le lien par lui-même dans &ldquo;Color Reference (Just URL)&rdquo;. Nous pouvons le faire en utilisant la méthode <a href="https://docs.python.org/3/library/stdtypes.html#str.split" target="_blank">split()</a> de Python.</p>
+<p><code>.split(" ")</code> nous permet de diviser la chaîne partout où il y a un espace <code>(" ")</code>. Dans la colonne Color, il y a une étiquette suivie d&rsquo;un espace suivi de l&rsquo;URL. La valeur de la colonne Color est divisée en une liste contenant deux éléments <code>Label</code> et <code>URL</code>. Cette liste est assignée à la variable <code>split</code>.</p>
+<p>Nous voulons renvoyer le dernier élément de la liste <code>split</code> afin d&rsquo;obtenir notre <code>URL</code>. Le dernier élément d&rsquo;une liste a toujours l&rsquo;index <code>[-1]</code>. <code>return split[-1]</code> renvoie le dernier élément de la liste <code>split</code>.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="lien-direct-vers-lhistorique-gmail-pour-un-contact">Lien Direct vers l&rsquo;Historique Gmail pour un Contact<a class="headerlink" href="#lien-direct-vers-lhistorique-gmail-pour-un-contact" title="Permanent link">#</a></h4>
+<p>Si vous stockez des contacts dans Grist et utilisez Gmail pour les email, vous pouvez créer une formule qui ouvrira Gmail sur une liste de conversations avec ce contact.</p>
+<p><strong>Lisez à ce sujet dans la Communauté :</strong> <a href="https://community.getgrist.com/t/pull-up-gmail-history-for-a-particular-contact/517" target="_blank">Afficher l&rsquo;historique Gmail pour un contact particulier</a></p>
+<p><span></span><details><summary></p>
+<h4 id="depannage_1">Dépannage<a class="headerlink" href="#depannage_1" title="Permanent link">#</a></h4>
+<p></summary>
+Votre URL s&rsquo;affiche-t-elle toujours après avoir ajouté une étiquette ? Assurez-vous que votre Type de Colonne est Texte et que le Format de Cellule est Hyperlien.</p>
+<p><span class="screenshot-large"><em><img alt="text-hyperlink" src="../images/formula-cheat-sheet/text-hyperlink.png" /></em></span></p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="joindre-une-liste-de-chaines">Joindre une Liste de Chaînes<a class="headerlink" href="#joindre-une-liste-de-chaines" title="Permanent link">#</a></h4>
+<p>Lorsque vous souhaitez joindre une liste de chaînes, vous pouvez utiliser la méthode <a href="https://www.w3schools.com/python/ref_string_join.asp" target="_blank">join() de Python</a>.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-jointure-dune-liste">Exemple de Jointure d&rsquo;une Liste<a class="headerlink" href="#exemple-de-jointure-dune-liste" title="Permanent link">#</a></h4>
+<p></summary>
+<strong>Exemple Communautaire : <a href="https://public.getgrist.com/2L3J99j7zW23/join-Example/m/fork" target="_blank">.join() Exemple</a></strong></p>
+<p><span class="screenshot-large"><em><img alt="join-list-values-example" src="../images/formula-cheat-sheet/join-list-values-example.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Advertisement de la table 2022 Grand Openings est :</p>
+<pre><code>&quot;Coming soon to a city near you!\n&quot; + &quot; : &quot;.join($New_Location_s_in_2022)
+</code></pre>
+<p>Ici, nous joignons plusieurs chaînes pour créer notre publicité.</p>
+<p><code>"Coming soon to a city near you!\n"</code> est renvoyé presque exactement comme nous le voyons, à l&rsquo;exception des guillemets <code>""</code> et <code>\n</code> à la fin de la chaîne.</p>
+<p>Les guillemets <code>""</code> spécifient qu&rsquo;il s&rsquo;agit d&rsquo;une chaîne et <code>\n</code> est en fait un caractère de nouvelle ligne qui peut être utilisé pour spécifier une nouvelle ligne dans une chaîne.</p>
+<p><code>" : ".join($New_Location_s_in_2022)</code> est également une chaîne mais utilise la méthode <a href="https://www.w3schools.com/python/ref_string_join.asp" target="_blank">join() de Python</a> pour joindre les valeurs de notre colonne de <a href="../col-types/#choice-list-columns">liste de choix</a>, &ldquo;New Locations in 2022&rdquo;. Ce que nous voyons entre guillemets avant <code>.join</code> est ce qui séparera chaque valeur de notre liste.</p>
+<p>Dans cet exemple, chaque valeur est séparée par un espace, <code>:</code> et un autre espace.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="trouver-des-doublons">Trouver des Doublons<a class="headerlink" href="#trouver-des-doublons" title="Permanent link">#</a></h4>
+<p>Vous pouvez trouver des doublons dans une colonne en utilisant soit le formatage conditionnel, soit une colonne d&rsquo;aide.</p>
+<p><strong>Lisez à ce sujet dans la Communauté :</strong> <a href="https://community.getgrist.com/t/ensure-unique-values-or-detect-duplicates/76" target="_blank">Assurer des valeurs uniques ou détecter des doublons</a></p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-trouver-des-doublons">Exemple de Trouver des Doublons<a class="headerlink" href="#exemple-de-trouver-des-doublons" title="Permanent link">#</a></h4>
+<p></summary>
+<strong>Exemple Communautaire : <a href="https://public.getgrist.com/3CJkcpF7wu9Q/-1790/p/4" target="_blank">Finding Duplicates</a></strong></p>
+<p><span class="screenshot-large"><em><img alt="duplicates-single-column" src="../images/formula-cheat-sheet/duplicates-single-column.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Duplicate? de la table Duplicates est :</p>
+<pre><code>len(Duplicates.lookupRecords(Grocery_List=$Grocery_List))&gt;1
+</code></pre>
+<p>Décomposons cela, en travaillant de l&rsquo;intérieur vers l&rsquo;extérieur.</p>
+<pre><code>Duplicates.lookupRecords(Grocery_List=$Grocery_List)
+</code></pre>
+<p>Ceci est une fonction <a href="../functions/#lookuprecords">lookupRecords</a> qui suit le format :</p>
+<pre><code>[Table_Name].lookupRecords([A]=$[B])
+</code></pre>
+<p>Où <code>[Table_Name]</code> est le nom de la table dans laquelle vous souhaitez rechercher des données. <code>[A]</code> est la colonne dans la table étant recherchée (nommée au début de la formule) et <code>[B]</code> est la colonne dans la table actuelle / la table dans laquelle vous entrez la formule.</p>
+<p>Cette formule recherche des enregistrements dans la table Duplicates où un enregistrement dans la colonne Grocery List correspond à un autre enregistrement dans la même colonne.</p>
+<p><code>len()</code> compte le nombre d&rsquo;enregistrements dans notre liste. Puisque chaque doublon correspondra à l&rsquo;autre, il devrait apparaître deux fois dans notre liste. C&rsquo;est pourquoi <code>len() &gt; 1</code>.</p>
+<p>Si <code>len() &gt; 1</code>, la formule est vraie. Si <code>len() &lt;= 1</code>, la formule est fausse.</p>
+<p>Cette même formule peut être utilisée dans le formatage conditionnel. Cela peut être vu dans la colonne &lsquo;Grocery List&rsquo; de la table Duplicates.</p>
+<p><span class="screenshot-large"><em><img alt="duplicates-single-conditional-formatting" src="../images/formula-cheat-sheet/duplicates-single-conditional-formatting.png" /></em></span></p>
+<p>Si <code>len() &gt; 1</code>, notre formule est vraie et la couleur de cellule conditionnelle est appliquée à ces cellules.</p>
+<p>Si <code>len() &lt;= 1</code>, notre formule est fausse et la couleur de cellule reste inchangée.</p>
+</details>
+</section>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="utilisation-de-lidentifiant-unique-dun-enregistrement-dans-les-formules">Utilisation de l&rsquo;Identifiant Unique d&rsquo;un Enregistrement dans les Formules<a class="headerlink" href="#utilisation-de-lidentifiant-unique-dun-enregistrement-dans-les-formules" title="Permanent link">#</a></h4>
+<p>Lorsqu&rsquo;un enregistrement est créé, il se voit attribuer un ID numérique (disponible sous la forme <code>$id</code> dans les formules) qui est unique au sein de cette table. Vous pouvez révéler l&rsquo;ID de ligne en ajoutant une colonne de formule où la formule est <code class="formula">$id</code>.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemples-dutilisation-de-lid-de-ligne-dans-les-formules">Exemples d&rsquo;Utilisation de l&rsquo;ID de Ligne dans les Formules<a class="headerlink" href="#exemples-dutilisation-de-lid-de-ligne-dans-les-formules" title="Permanent link">#</a></h4>
+<p></summary>
+Vous pouvez révéler l&rsquo;ID avec la formule <code>$id</code></p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="row-id" src="../images/formula-cheat-sheet/row-id.png" /></em></span></p>
+<p><strong><a href="https://templates.getgrist.com/gZmzYoGdS6b1/Custom-Product-Builder" target="_blank">Custom Product Builder</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="row-id-trigger" src="../images/formula-cheat-sheet/row-id-trigger.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Contract No de la table Contract Builder est :</p>
+<pre><code>$id + 500
+</code></pre>
+<p>Ici, nous utilisons une formule d&rsquo;initialisation pour créer un numéro de contrat unique lors de la création d&rsquo;un enregistrement.</p>
+<p><strong><a href="https://templates.getgrist.com/doc/afterschool-program" target="_blank">Class Enrollment</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="id-reverse-lookup" src="../images/formula-cheat-sheet/id-reverse-lookup.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Count de la table des Classes est :</p>
+<pre><code>len(Enrollments.lookupRecords(Class=$id, Status=&quot;Confirmed&quot;))
+</code></pre>
+<p>Ceci est appelé une recherche inversée. Nous pouvons utiliser l&rsquo;ID de ligne pour faire correspondre un enregistrement dans une autre table où une colonne de référence est utilisée. LookupRecords suit le format <code>[Table_Name].lookupRecords([A]=$[B])</code>. <code>[Table_Name]</code> est le nom de la table dans laquelle vous souhaitez rechercher des données. <code>[A]</code> est la colonne dans la table étant recherchée (nommée au début de la formule) et <code>[B]</code> est la colonne dans la table actuelle / la table dans laquelle vous entrez la formule. Lookup Records crée une liste d&rsquo;enregistrements qui correspondent aux critères énumérés. <code>len()</code> compte combien d&rsquo;enregistrements sont dans cette liste.</p>
+<p>Ici, nous recherchons des enregistrements dans la table Enrollments où l&rsquo;enregistrement mentionné dans la colonne Class (notre colonne de référence) a le même ID de ligne que la ligne dans la table dans laquelle vous entrez la formule. De plus, la valeur dans la colonne Status de la table Enrollments est <code>Confirmed</code>. Nous allons décomposer cela.</p>
+<p>La table dans laquelle nous recherchons des enregistrements est la table Enrollments. Nos critères proviennent de la colonne Class et de la colonne Status. Le critère pour Status est simple ; la valeur doit être <code>Confirmed</code> pour être incluse dans notre liste d&rsquo;enregistrements. Class est un peu plus compliqué. Comme nous le voyons dans la capture d&rsquo;écran ci-dessous, Class est une colonne de référence qui tire des données de la table Classes. Ici, la colonne Class montre la valeur de la colonne Class Code de la table Classes mais elle pointe vers l&rsquo;enregistrement entier où le code de classe est <code>2018F-Stars</code>.</p>
+<p><span class="screenshot-large"><em><img alt="id-reference-class-code" src="../images/formula-cheat-sheet/id-reference-class-code.png" /></em></span></p>
+<p>Une colonne de référence pointe vers l&rsquo;<strong>entier</strong> enregistrement, pas seulement la valeur que vous voyez ici dans la colonne Class. En utilisant le panneau de configuration sur le côté droit de l&rsquo;écran, vous pouvez choisir n&rsquo;importe quelle colonne de la table d&rsquo;origine à afficher. Pour cet exemple, la colonne Class montre la valeur de la colonne Class Code de la table Classes mais elle pointe vers l&rsquo;enregistrement entier où le code de classe est <code>2018F-Stars</code>.</p>
+<p><span class="screenshot-large"><em><img alt="id-class-id" src="../images/formula-cheat-sheet/id-class-id.png" /></em></span></p>
+<p>Comme vous pouvez le voir dans cette capture d&rsquo;écran, l&rsquo;ID de ligne pour cet enregistrement particulier est <code>2</code> et parce que nous calculons le Count pour la ligne avec <code>Row ID = 2</code>, il comptera tous les enregistrements dans la table Enrollment où Class montre <code>2018F-Stars</code> et Status est <code>Confirmed</code>.</p>
+<p><strong><a href="https://templates.getgrist.com/e4gEm7dt4cgB/Restaurant-Custom-Orders" target="_blank">Restaurant Custom Orders</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="inequality-restaurant-bom" src="../images/formula-cheat-sheet/inequality-restaurant-bom.png" /></em></span></p>
+<p>La formule d&rsquo;initialisation utilisée dans la colonne BOM # de la table Bill of Materials est :</p>
+<pre><code>MAX(o.BOM_ for o in Bill_Of_Materials.all if o.id != $id) + 1
+</code></pre>
+<p>Tout d&rsquo;abord, nous allons examiner la formule à l&rsquo;intérieur des parenthèses, puis travailler vers l&rsquo;extérieur.</p>
+<p>Ici, <code>o</code> est une variable représentant chaque enregistrement dans notre table. <code>o.BOM_</code> représente le BOM # pour chaque enregistrement et <code>o.id</code> représente l&rsquo;ID de ligne pour chaque enregistrement. C&rsquo;est une boucle <code>for</code> qui crée une liste des BOM # pour chaque enregistrement dans la table Bill of Materials lorsque l&rsquo;ID d&rsquo;enregistrement n&rsquo;est pas égal à l&rsquo;ID de cette ligne.</p>
+<p><code>MAX()</code> trouve le maximum des BOM # dans la liste puis <code>+ 1</code> pour obtenir notre valeur finale.</p>
+<p>C&rsquo;est une formule d&rsquo;initialisation qui ne s&rsquo;applique qu&rsquo;aux nouveaux enregistrements. Lorsqu&rsquo;un nouvel enregistrement est créé, la formule trouve le plus grand BOM # dans la table puis ajoute 1 pour que nous ayons un BOM # unique pour le nouvel enregistrement.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="suppression-des-doublons-dune-liste">Suppression des Doublons d&rsquo;une Liste<a class="headerlink" href="#suppression-des-doublons-dune-liste" title="Permanent link">#</a></h4>
+<p>Vous pouvez supprimer des doublons d&rsquo;une liste avec l&rsquo;aide de la méthode <a href="https://docs.python.org/3/tutorial/datastructures.html#sets" target="_blank">set()</a> de Python.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-suppression-des-doublons-dune-liste">Exemple de Suppression des Doublons d&rsquo;une Liste<a class="headerlink" href="#exemple-de-suppression-des-doublons-dune-liste" title="Permanent link">#</a></h4>
+</summary>
+<p><strong>Exemple Communautaire : <a href="https://public.getgrist.com/3pZUMdP2bJx6/1957/p/3" target="_blank">Removing Duplicates From a List</a></strong></p>
+<p><span class="screenshot-large"><em><img alt="removing-duplicates" src="../images/formula-cheat-sheet/removing-duplicates.png" /></em></span></p>
+<p>La formule dans la colonne All Divisions de la table Abroad Trips est :</p>
+<pre><code>confirmed_div = $Attending_Confirmed.Role_Division.Division
+pending_div = $Attending_Pending.Role_Division.Division
+full_list = confirmed_div + pending_div
+return sorted(set(full_list))
+</code></pre>
+<p>Nous allons décomposer cela ligne par ligne.</p>
+<p>Attending-Confirmed est une colonne de liste de référence qui tire des données de la table EMPLOYEES. <code>$Attending_Confirmed.Role_Division</code> tire la valeur de la colonne Role Division de la table EMPLOYEES. La colonne Role Division dans la table EMPLOYEES est elle-même une colonne de référence, qui pointe vers un enregistrement dans la table Divisions. <a href="../references-lookups/#chaining">Chaining</a> nous permet de spécifier quelles informations nous voulons de cet enregistrement. Dans ce cas, nous voulons la Division. Nous développons notre formule pour <code>$Attending_Confirmed.Role_Division.Division</code>. La Division est trouvée pour chaque employé listé dans la colonne Attending-Confirmed, créant une liste. Nous assignons cette liste de divisions à la variable <code>confirmed_div</code>.</p>
+<p>Attending-Pending est également une colonne de liste de référence qui tire des données de la table EMPLOYEES. <code>$Attending_Pending.Role_Division.Division</code> fait la même chose que ci-dessus sauf que maintenant nous tirons la division pour chaque employé dans la colonne Attending-Pending. Nous assignons cette liste à la variable <code>pending_div</code>.</p>
+<p>Nous créons une liste de toutes les divisions en ajoutant les deux listes ensemble et en assignant cette liste combinée à la variable <code>full_list</code>.</p>
+<p><code>return sorted(set(full_list))</code> utilise d&rsquo;abord la méthode <a href="https://docs.python.org/3/tutorial/datastructures.html#sets" target="_blank">set()</a> de Python pour créer une liste sans doublons. Nous utilisons ensuite la méthode <a href="https://docs.python.org/3/library/functions.html#sorted" target="_blank">sorted()</a> pour renvoyer notre ensemble de divisions, trié par ordre alphabétique.</p>
+<p>Notez que la formule ci-dessus peut être simplifiée encore plus à :</p>
+<pre><code>sorted(
+  set($Attending_Confirmed.Role_Division.Division) |
+  set($Attending_Pending.Role_Division.Division)
+)
+</code></pre>
+<p><span class="screenshot-large"><em><img alt="removing-duplicates-simplified" src="../images/formula-cheat-sheet/removing-duplicates-simplified.png" /></em></span></p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="definir-des-valeurs-par-defaut-pour-de-nouveaux-enregistrements">Définir des Valeurs par Défaut pour de Nouveaux Enregistrements<a class="headerlink" href="#definir-des-valeurs-par-defaut-pour-de-nouveaux-enregistrements" title="Permanent link">#</a></h4>
+<p>Vous pouvez définir des valeurs par défaut pour lorsque un nouvel enregistrement est créé et vous épargner le tracas de devoir remplir les mêmes champs avec les mêmes valeurs encore et encore.</p>
+<p><strong>Lisez à ce sujet dans la Communauté :</strong> <a href="https://community.getgrist.com/t/default-values-on-the-widget/689/4" target="_blank">Valeurs par défaut sur le widget</a></p>
+</section>
+<h2 id="travailler-avec-des-dates-et-des-heures">Travailler avec des dates et des heures<a class="headerlink" href="#travailler-avec-des-dates-et-des-heures" title="Permanent link">#</a></h2>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="tampons-automatiques-de-date-heure-et-auteur">Tampons Automatiques de Date, Heure et Auteur<a class="headerlink" href="#tampons-automatiques-de-date-heure-et-auteur" title="Permanent link">#</a></h4>
+<p>Vous pouvez automatiquement ajouter la date ou l&rsquo;heure à laquelle un enregistrement a été créé ou mis à jour ainsi que qui a effectué le changement.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemples-de-tampons-automatiques-de-date-heure-et-auteur">Exemples de Tampons Automatiques de Date, Heure et Auteur<a class="headerlink" href="#exemples-de-tampons-automatiques-de-date-heure-et-auteur" title="Permanent link">#</a></h4>
+<p></summary>
+<strong><a href="https://templates.getgrist.com/sC5CAW41bVZU/Grant-Application-Tracker" target="_blank">Grant Application Tracker</a> template</strong></p>
+<p><span class="screenshot-large"><em><img alt="date-time-trigger-formula" src="../images/formula-cheat-sheet/date-time-trigger-formula.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Last Updated de la table Tasks est :</p>
+<pre><code>NOW()
+</code></pre>
+<p>C&rsquo;est une <a href="../formulas/#trigger-formulas">formule d&rsquo;initialisation</a> qui se déclenche lorsqu&rsquo;un changement est effectué dans n&rsquo;importe quel champ pour cet enregistrement. Lorsqu&rsquo;un changement est effectué, cette formule exécute son calcul. <code>NOW()</code> calcule l&rsquo;heure et la date actuelles pour le <a href="../dates/#time-zones">fuseau horaire</a> sélectionné.</p>
+<p><span class="screenshot-large"><em><img alt="created-by-trigger" src="../images/formula-cheat-sheet/created-by-trigger.png" /></em></span></p>
+<p>La formule utilisée dans la colonne Created By de la table Tasks est :</p>
+<pre><code>user.Name
+</code></pre>
+<p>C&rsquo;est une <a href="../formulas/#trigger-formulas">formule d&rsquo;initialisation</a> qui se déclenche lorsqu&rsquo;un nouvel enregistrement est créé. Lorsque l&rsquo;enregistrement est créé, cette formule exécute son calcul. <code>user.Name</code> recherche le compte utilisateur qui est connecté à Grist et renvoie le nom associé à ce compte.</p>
+</details>
+<p><span></span><details><summary></p>
+<h4 id="depannage-des-erreurs_2">Dépannage des Erreurs<a class="headerlink" href="#depannage-des-erreurs_2" title="Permanent link">#</a></h4>
+<p></summary>
+Si la valeur de temps dans votre colonne datetime ne se calcule pas, vérifiez votre formule. Si <code>TODAY()</code> est utilisé dans DateTime, l&rsquo;heure affichera toujours 12:00 am comme vous le voyez ci-dessous. <code>NOW()</code> est utilisé pour les colonnes DateTime. <code>TODAY()</code> est utilisé pour la Date.</p>
+<p><span class="screenshot-large"><em><img alt="today-vs-now-error" src="../images/formula-cheat-sheet/today-vs-now-error.png" /></em></span></p>
+<p><span></span><div class="deflist"></p>
+<ul>
+<li>
+<p><code>#AttributeError</code></p>
+<p>Vous avez probablement entré <code>user.name</code> mais la formule est <code>user.Name</code>. Faites attention à la capitalisation !</p>
+</li>
+<li>
+<p><code>#NameError</code></p>
+<p>Vous avez peut-être entré <code>username</code> ou <code>userName</code>. La formule correcte est <code>user.Name</code>. </p>
+</li>
+</ul>
+<p>Une autre possibilité est que cela a été entré en tant que colonne de formule plutôt qu&rsquo;en tant que colonne de formule d&rsquo;initialisation. Convertissez-la en formule d&rsquo;initialisation et cela devrait résoudre le problème.</p>
+<p></details>
+</section></p>
+<p><span></span><section class="cheat-sheet"></p>
+<h4 id="filtrer-les-donnees-dans-une-duree-specifiee">Filtrer les Données dans une Durée Spécifiée<a class="headerlink" href="#filtrer-les-donnees-dans-une-duree-specifiee" title="Permanent link">#</a></h4>
+<p>En utilisant la fonction <a href="../functions/#dateadd"><code>DATEADD()</code></a> et les <a href="#comparing-values">opérateurs de comparaison</a>, vous pouvez déterminer si une date tombe dans une plage spécifique puis appliquer un filtre.</p>
+<p><span></span><details><summary></p>
+<h4 id="exemple-de-filtrage-des-donnees-qui-tombe-dans-une-plage-de-1-mois">Exemple de Filtrage des Données qui &lsquo;Tombe dans une Plage de 1 Mois&rsquo;<a class="headerlink" href="#exemple-de-filtrage-des-donnees-qui-tombe-dans-une-plage-de-1-mois" title="Permanent link">#</a></h4>
+</summary>
+<p><strong>Exemple Communautaire :</strong> <a href="https://public.getgrist.com/4zxVeFtGNt7n/1844" target="_blank">Filtrage des Données dans une Plage de 1 Mois</a></p>
+<p><span class="screenshot-large"><em><img alt="1-month-range" src="../images/formula-cheat-sheet/1-month-range.png" /></em></span>
+La formule utilisée dans la colonne Falls in 1 Month Range? de la table Interactions est :</p>
+<pre><code>TODAY() &gt;= $Date &gt;=  DATEADD(TODAY(),months=-1)
+</code></pre>
+<p><a href="../functions/#today"><code>TODAY()</code></a> renvoie la date actuelle.</p>
+<p><code>$Date</code> est le nom d&rsquo;une colonne dans notre table, qui est de type <a href="../col-types/#date-columns">Date</a>.</p>
+<p><a href="../functions/#dateadd"><code>DATEADD(start_date, days=0, months=0, years=0, weeks=0)</code></a> renvoie la date qui est le nombre donné de jours, mois, années ou semaines avant ou après la <code>start_date</code>. Dans cet exemple, elle renvoie la date qui est un mois avant la date de départ, <code>TODAY()</code>.</p>
+<p>Cette formule est vraie si la valeur de date dans la colonne Date tombe entre <code>TODAY()</code> et notre date <code>DATEADD()</code> qui est un mois auparavant. Si la valeur de date dans la colonne Date ne tombe pas entre ces deux dates, la formule renvoie faux.</p>
+<p>Nous pouvons utiliser cette colonne pour filtrer nos données. Si nous ne voulons voir que les interactions qui tombent dans la Plage de 1 Mois, nous filtrerions pour n&rsquo;inclure que les valeurs <code>true</code>. Si nous voulons voir les interactions qui tombent en dehors de la Plage de 1 Mois, nous filtrerions pour n&rsquo;inclure que les valeurs <code>false</code>.</p>
+<p><span class="screenshot-large"><em><img alt="add-filter" src="../images/formula-cheat-sheet/add-filter.png" /></em></span></p>
+</details>
+<p><span></span><details><summary></p>
+<h4 id="depannage-des-erreurs_3">Dépannage des Erreurs<a class="headerlink" href="#depannage-des-erreurs_3" title="Permanent link">#</a></h4>
+</summary>
+<p><span></span><div class="deflist"></p>
+<ul>
+<li>
+<p><code>#TypeError</code> :</p>
+<p><span class="screenshot-large"><em><img alt="1-month-range-type-error" src="../images/formula-cheat-sheet/1-month-range-type-error.png" /></em></span></p>
+<p>Parce que <code>$Date</code> est une colonne de type <a href="../col-types/#date-columns">Date</a>, <code>TODAY()</code> doit être utilisé dans les formules comparant des dates. <a href="../functions/#now"><code>NOW()</code></a> est une formule DateTime qui ne doit être utilisée qu&rsquo;avec d&rsquo;autres valeurs DateTime. Par exemple, si la colonne <code>$Date</code> était une colonne de type <a href="../col-types/#datetime-columns">DateTime</a>, <code>NOW()</code> devrait être utilisé plutôt que <code>TODAY()</code> car il inclut le composant temps.</p>
+<p><code>NOW()</code> est date et heure. <code>TODAY()</code> est seulement date.
+</div></p>
+</li>
+</ul>
+</details>
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/formula-cheat-sheet.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

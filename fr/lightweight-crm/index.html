@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Grist est aussi facile à utiliser qu’un tableur, mais vous donne de nouveaux pouvoirs lorsque les données ne s’intègrent pas dans une simple grille.">
+      <meta property="og:description" content="Grist est aussi facile à utiliser qu’un tableur, mais vous donne de nouveaux pouvoirs lorsque les données ne s’intègrent pas dans une simple grille.">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/lightweight-crm/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Create your own CRM - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="../FAQ/" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              Intro
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#explorer-lexemple">
+                Explorer l&rsquo;exemple
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#creer-le-votre">
+                Créer le vôtre
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#ajouter-une-autre-table">
+                Ajouter une autre table
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#lier-les-enregistrements-de-donnees">
+                Lier les enregistrements de données
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#definir-dautres-types">
+                Définir d&rsquo;autres types
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#lier-visuellement-les-tables">
+                Lier visuellement les tables
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#personnaliser-la-mise-en-page">
+                Personnaliser la mise en page
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#personnaliser-les-champs">
+                Personnaliser les champs
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#taches-a-faire-pour-les-contacts">
+                Tâches à faire pour les contacts
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#configuration-des-taches-a-faire">
+                
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#autres-fonctionnalites">
+                Autres fonctionnalités
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../investment-research/" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../afterschool-program/" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-types/" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../references-lookups/" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-cheat-sheet/" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../self-managed/" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../investment-research/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../investment-research/" class="btn btn-xs btn-link">
+        Analyze and visualize
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../FAQ/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../FAQ/" class="btn btn-xs btn-link">
+        FAQ
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<h1 id="comment-creer-un-crm-personnalise">Comment créer un CRM personnalisé<a class="headerlink" href="#comment-creer-un-crm-personnalise" title="Permanent link">#</a></h1>
+<p>Grist est aussi facile à utiliser qu&rsquo;un tableur, mais vous donne de nouveaux pouvoirs lorsque les données ne s&rsquo;intègrent pas dans une simple grille.</p>
+<p>Un bon exemple est le suivi des contacts et de nos conversations avec eux. Pour une entreprise, cela pourrait être des clients, des prospects ou des candidats à un emploi. Pour un particulier, cela pourrait être des entreprises auxquelles il a postulé dans le cadre d&rsquo;une recherche d&rsquo;emploi.</p>
+<p>Dans ce tutoriel, nous allons expliquer l&rsquo;exemple de &ldquo;CRM léger&rdquo;, que vous pouvez utiliser comme modèle pour vos propres contacts, puis montrer comment le construire à partir de zéro. Vous apprendrez à :</p>
+<ul>
+<li>Ajouter des tables</li>
+<li>Lier des données</li>
+<li>Définir des types de colonnes</li>
+<li>Créer des mises en page personnalisées</li>
+</ul>
+<h2 id="explorer-lexemple">Explorer l&rsquo;exemple<a class="headerlink" href="#explorer-lexemple" title="Permanent link">#</a></h2>
+<p>Ouvrez le document <a href="https://templates.getgrist.com/doc/lightweight-crm" target="_blank">CRM léger</a>, trouvé dans Exemples &amp; Modèles sur votre <a href="https://docs.getgrist.com/">page d&rsquo;accueil Grist</a>.</p>
+<ul>
+<li>
+<p>Vous verrez la page &ldquo;Contacts&rdquo;, listant les contacts sur la gauche de l&rsquo;écran.</p>
+</li>
+<li>
+<p>Cliquez sur n&rsquo;importe quel contact pour le sélectionner. Les deux sections à droite montrent les détails et l&rsquo;historique des interactions avec le contact sélectionné.</p>
+</li>
+</ul>
+<p>Comment cela se compare-t-il à un tableur ? Ces captures d&rsquo;écran montrent l&rsquo;exemple de CRM léger à gauche, et un tableur ordinaire avec les mêmes données à droite.</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="carousel-grist" class="carousel slide" data-interval="false">
+        <!-- Indicateurs -->
+        <ol class="carousel-indicators">
+          <li data-target="#carousel-grist" data-slide-to="0" class="active"></li>
+          <li data-target="#carousel-grist" data-slide-to="1"></li>
+          <li data-target="#carousel-grist" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper pour les diapositives -->
+        <div class="carousel-inner" role="listbox">
+          <div class="item active">
+            <img src="../images/lightweight-crm/grist-crm1.png" alt="Capture d'écran Grist1">
+          </div>
+          <div class="item">
+            <img src="../images/lightweight-crm/grist-crm2.png" alt="Capture d'écran Grist2">
+          </div>
+          <div class="item">
+            <img src="../images/lightweight-crm/grist-crm3.png" alt="Capture d'écran Grist3">
+          </div>
+        </div>
+
+        <!-- Contrôles -->
+        <a class="left carousel-control" href="#carousel-grist" role="button" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+          <span class="sr-only">Précédent</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-grist" role="button" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+          <span class="sr-only">Suivant</span>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div id="carousel-spreadsheet" class="carousel slide" data-interval="false">
+        <!-- Indicateurs -->
+        <ol class="carousel-indicators">
+          <li data-target="#carousel-spreadsheet" data-slide-to="0" class="active"></li>
+          <li data-target="#carousel-spreadsheet" data-slide-to="1"></li>
+          <li data-target="#carousel-spreadsheet" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper pour les diapositives -->
+        <div class="carousel-inner" role="listbox">
+          <div class="item active">
+            <img src="../images/lightweight-crm/spreadsheet1.png" alt="Capture d'écran Tableur1">
+          </div>
+          <div class="item">
+            <img src="../images/lightweight-crm/spreadsheet2.png" alt="Capture d'écran Tableur2">
+          </div>
+          <div class="item">
+            <img src="../images/lightweight-crm/spreadsheet3.png" alt="Capture d'écran Tableur3">
+          </div>
+        </div>
+
+        <!-- Contrôles -->
+        <a class="left carousel-control" href="#carousel-spreadsheet" role="button" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+          <span class="sr-only">Précédent</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-spreadsheet" role="button" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+          <span class="sr-only">Suivant</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p>&nbsp;</p>
+<p>La difficulté réside dans l&rsquo;historique des notes pour un contact. Dans une grille bidimensionnelle, vous avez peu d&rsquo;options pour inclure plusieurs notes. Si vous les incluez sous forme de plusieurs colonnes, cela rend rapidement le tableur difficile à gérer et à naviguer.</p>
+<p>Grist ressemble davantage à une application, mais reste aussi polyvalent qu&rsquo;un tableur.</p>
+<p>L&rsquo;exemple de &ldquo;CRM léger&rdquo; peut être utilisé immédiatement tel quel (avec les données d&rsquo;exemple), ou comme modèle (juste la structure sans les données). Voici quelques points supplémentaires sur son utilisation en tant que CRM :</p>
+<ul>
+<li>
+<p>Pour ajouter un nouveau contact, cliquez sur la ligne vide en bas de la liste des contacts, puis remplissez la section vide &ldquo;Fiche CONTACTS&rdquo; qui apparaît à droite.</p>
+</li>
+<li>
+<p>Pour ajouter une nouvelle conversation, sélectionnez un contact, puis cliquez sur la ligne vide à la fin de la table Interactions. Vous pouvez entrer la date d&rsquo;aujourd&rsquo;hui en utilisant le raccourci <code class="keys"><em>⌘</em> + <strong>;</strong> (point-virgule)</code> (Mac) ou <code class="keys"><em>Ctrl</em> + <strong>;</strong> (point-virgule)</code> (Windows). Ensuite, sélectionnez le type d&rsquo;interaction à l&rsquo;aide de l&rsquo;auto-complétion et tapez vos notes.</p>
+</li>
+<li>
+<p>Vous pouvez ajouter des éléments à faire pour un contact : dans la liste des Interactions, sélectionnez &ldquo;À faire&rdquo; dans la colonne &ldquo;Type&rdquo; en tant que type spécial d&rsquo;interaction. Pensez à la date associée comme à la date d&rsquo;échéance pour cette tâche.</p>
+</li>
+<li>
+<p>La table Contacts montre la liste des éléments à faire à venir, triés par leur date d&rsquo;échéance.</p>
+</li>
+<li>
+<p>Si vous utilisez Gmail, le lien pratique &ldquo;Recherche Gmail&rdquo; dans la section &ldquo;Fiche CONTACTS&rdquo; ouvrira une fenêtre de navigateur avec les résultats de recherche Gmail pour l&rsquo;adresse e-mail de ce contact.</p>
+</li>
+</ul>
+<p>Vous pouvez utiliser cet exemple comme modèle pour vos propres contacts. Avec l&rsquo;exemple de &ldquo;CRM léger&rdquo; ouvert, cliquez sur le bouton &ldquo;Enregistrer une copie&rdquo; dans la barre supérieure, puis cochez la case &ldquo;En tant que modèle&rdquo;. Vous obtiendrez un document vide avec la même mise en page, et pourrez commencer à le remplir avec vos propres données. Si vous n&rsquo;êtes pas connecté, vous devrez vous connecter pour faire une copie de l&rsquo;exemple.</p>
+<h2 id="creer-le-votre">Créer le vôtre<a class="headerlink" href="#creer-le-votre" title="Permanent link">#</a></h2>
+<p>Le reste de ce tutoriel vous montrera comment créer un tel document par vous-même. C&rsquo;est un excellent exercice qui vous apprendra certaines des fonctionnalités clés de Grist.</p>
+<p>Pour commencer, nous allons importer un fichier avec des contacts d&rsquo;exemple depuis la page d&rsquo;accueil de Grist. Tout d&rsquo;abord, enregistrez ce fichier sur votre bureau : <a href="./unlocalized-assets/lightweight-crm-contacts.csv">lightweight-crm-contacts.csv</a>. Ensuite, cliquez sur le bouton &ldquo;Ajouter nouveau&rdquo; en haut à gauche de votre page d&rsquo;accueil Grist, cliquez sur &ldquo;Importer le document&rdquo;, et sélectionnez le fichier sur votre bureau.</p>
+<p><img alt="import1" src="../images/lightweight-crm/import1.png" /></p>
+<p>Vous verrez une table de contacts avec des données d&rsquo;exemple. Notez qu&rsquo;à Grist, les colonnes ont des noms.</p>
+<p><img alt="first-table" src="../images/lightweight-crm/first-table.png" /></p>
+<p>Renommez cette table en &ldquo;Contacts&rdquo; en cliquant sur son nom dans la barre supérieure et en tapant le nouveau nom.</p>
+<p><img alt="table-rename" src="../images/lightweight-crm/table-rename.png" /></p>
+<p>C&rsquo;est tout ce dont vous avez besoin pour une simple table de contacts. Vous pouvez ajouter des lignes ici, ou ajouter de nouvelles colonnes pour associer plus de données à chaque contact.</p>
+<h2 id="ajouter-une-autre-table">Ajouter une autre table<a class="headerlink" href="#ajouter-une-autre-table" title="Permanent link">#</a></h2>
+<p>Pour notre prochaine étape, nous voulons pouvoir sélectionner un contact et voir la liste des conversations avec ce contact. Ces conversations devraient être une nouvelle table de données. L&rsquo;indice est qu&rsquo;elle a un nombre de lignes différent de la table des contacts.</p>
+<p>Créez la nouvelle table en utilisant le bouton vert &ldquo;Ajouter nouveau&rdquo; en haut à gauche de votre écran, et cliquez sur &ldquo;Ajouter une table vide&rdquo; dans le menu.</p>
+<p><img alt="add-empty-table" src="../images/lightweight-crm/add-empty-table.png" /></p>
+<p>Cette table représentera les interactions avec nos contacts, alors renommons-la &ldquo;Interactions&rdquo; en cliquant sur son nom par défaut (&ldquo;Table1&rdquo;) en haut de l&rsquo;écran, comme précédemment.</p>
+<p><img alt="interactions-table" src="../images/lightweight-crm/interactions-table.png" /></p>
+<p>Il est judicieux de donner des noms significatifs aux colonnes. Dans ce cas, pour chaque interaction, nous devons savoir à quel Contact elle se réfère, la date, le type et les notes de conversation. Pour renommer une colonne, cliquez sur son en-tête pour sélectionner la colonne, puis cliquez à nouveau sur l&rsquo;en-tête pour modifier son nom. Vous pouvez appuyer sur la touche Tab pour continuer à renommer la colonne suivante.</p>
+<p><img alt="col-rename" src="../images/lightweight-crm/col-rename.png" /></p>
+<p>Enfin, appuyez sur le bouton &ldquo;+&rdquo; à droite de la dernière colonne pour créer une colonne supplémentaire, et nommez-la &ldquo;Notes&rdquo;.</p>
+<p><img alt="col-add" src="../images/lightweight-crm/col-add.png" /></p>
+<h2 id="lier-les-enregistrements-de-donnees">Lier les enregistrements de données<a class="headerlink" href="#lier-les-enregistrements-de-donnees" title="Permanent link">#</a></h2>
+<p>Chaque enregistrement dans cette table appartiendra à un contact particulier. Vous le configurez en transformant la colonne &ldquo;Contact&rdquo; en une référence à la table &ldquo;Contacts&rdquo;. En utilisant le triangle dans l&rsquo;en-tête de la colonne &ldquo;Contact&rdquo;, ouvrez le menu et sélectionnez &ldquo;Options de colonne&rdquo;.</p>
+<p><img alt="col-options" src="../images/lightweight-crm/col-options.png" /></p>
+<p>Dans le panneau de droite, utilisez le menu déroulant &ldquo;Type de colonne&rdquo; pour sélectionner &ldquo;Référence&rdquo;, puis sous &ldquo;Données de la table&rdquo;, sélectionnez &ldquo;Contacts&rdquo;.</p>
+<p><img alt="set-reference1" src="../images/lightweight-crm/set-reference1.png" /></p>
+<p>Chaque cellule de cette colonne contiendra un pointeur vers une <em>ligne</em> dans la table &ldquo;Contacts&rdquo;<sup id="fnref:foreign-key"><a class="footnote-ref" href="#fn:foreign-key">1</a></sup>. Bien qu&rsquo;elle fasse référence à une ligne entière, il est utile de voir un identifiant particulier de cette ligne, donc sous &ldquo;Afficher la colonne&rdquo;, sélectionnez &ldquo;Société&rdquo;. Vous verrez cela en action sous peu.</p>
+<p><img alt="set-reference2" src="../images/lightweight-crm/set-reference2.png" /></p>
+<h2 id="definir-dautres-types">Définir d&rsquo;autres types<a class="headerlink" href="#definir-dautres-types" title="Permanent link">#</a></h2>
+<p>Dans Grist, chaque colonne a un type. Souvent, le type par défaut de Texte ou Numérique est correct. Pour notre colonne &ldquo;Date&rdquo;, un meilleur type est Date. Cliquez sur n&rsquo;importe quelle cellule dans la colonne &ldquo;Date&rdquo;, et dans le panneau de droite, cliquez dans le menu déroulant &ldquo;Type de colonne&rdquo; et sélectionnez &ldquo;Date&rdquo;. Si vous le souhaitez, vous pouvez également choisir un format de date différent juste en dessous du type.</p>
+<p><img alt="set-date" src="../images/lightweight-crm/set-date.png" /></p>
+<p>Maintenant, si vous cliquez sur une cellule dans la colonne &ldquo;Date&rdquo; et appuyez sur Entrée, vous avez un sélecteur de date pratique.</p>
+<p>Un autre type de colonne utile pour nous est &ldquo;Choix&rdquo;. Nos interactions seront soit &ldquo;Téléphone&rdquo;, &ldquo;Email&rdquo; ou &ldquo;En personne&rdquo;, et il est utile de lister ces options. Cliquez dans la colonne &ldquo;Type&rdquo;, et dans le panneau de droite, définissez &ldquo;Type de colonne&rdquo; sur &ldquo;Choix&rdquo;.</p>
+<p><img alt="set-choice" src="../images/lightweight-crm/set-choice.png" /></p>
+<p>Vous verrez une zone de texte &ldquo;Valeurs de choix&rdquo; en dessous. Cliquez dessus et entrez vos choix là-bas, un par ligne : &ldquo;Téléphone&rdquo;, &ldquo;Email&rdquo;, &ldquo;En personne&rdquo;.</p>
+<p><img alt="set-choice-values" src="../images/lightweight-crm/set-choice-values.png" /></p>
+<p>Maintenant, si vous cliquez sur une cellule dans la colonne &ldquo;Type&rdquo; et appuyez sur Entrée, vous pouvez choisir parmi les choix que vous avez définis, ou commencer à taper et utiliser l&rsquo;auto-complétion.</p>
+<h2 id="lier-visuellement-les-tables">Lier visuellement les tables<a class="headerlink" href="#lier-visuellement-les-tables" title="Permanent link">#</a></h2>
+<p>La prochaine étape consiste à lier visuellement les deux tables. Ouvrez la page &ldquo;Contacts&rdquo;, cliquez sur le bouton &ldquo;Ajouter nouveau&rdquo; en haut du panneau de gauche, puis &ldquo;Ajouter un widget à la page&rdquo;. Sélectionnez le widget &ldquo;Table&rdquo; et les données &ldquo;Interactions&rdquo;. Dans le menu déroulant &ldquo;Sélectionner par&rdquo; en bas de la boîte de dialogue, sélectionnez &ldquo;CONTACTS&rdquo;.</p>
+<p><img alt="add-widget1" src="../images/lightweight-crm/add-widget1.png" /></p>
+<p>Cela signifie que choisir un contact affichera uniquement les interactions avec ce contact. Cliquez sur &ldquo;Ajouter à la page&rdquo; pour terminer.</p>
+<p><img alt="two-tables" src="../images/lightweight-crm/two-tables.png" /></p>
+<p>Ensuite, sélectionnons un contact dans la table à gauche (utilisons &ldquo;Douglas LLC&rdquo; dans la quatrième ligne) et ajoutons quelques notes pour celui-ci. Tapez une date (indice : le raccourci <code class="keys"><em>⌘</em> + <strong>;</strong> (point-virgule)</code> sur Mac ou <code class="keys"><em>Ctrl</em> + <strong>;</strong> (point-virgule)</code> sur Windows insère la date d&rsquo;aujourd&rsquo;hui), sélectionnez un type, et entrez une note. Dès que cette ligne est créée, la colonne &ldquo;Contact&rdquo; est automatiquement remplie avec &ldquo;Douglas LLC&rdquo;, grâce aux sections étant liées.</p>
+<p><img alt="add-record1" src="../images/lightweight-crm/add-record1.png" /></p>
+<p>La note que nous avons ajoutée n&rsquo;est affichée que lorsque &ldquo;Douglas LLC&rdquo; est sélectionné. Nous pouvons ajouter plus de notes pour &ldquo;Douglas LLC&rdquo;, ou ajouter des notes pour n&rsquo;importe lequel des autres contacts.</p>
+<p>Nous pouvons maintenant masquer la colonne &ldquo;Contact&rdquo; dans la table &ldquo;Interactions&rdquo; : en utilisant le menu dans l&rsquo;en-tête de la colonne, sélectionnez &ldquo;Masquer la colonne&rdquo;. Comme les tables sont liées, nous voyons déjà pour qui sont les notes.</p>
+<p><img alt="hide-column" src="../images/lightweight-crm/hide-column.png" /></p>
+<p>Pour que les longues notes soient pratiques, redimensionnez la colonne &ldquo;Notes&rdquo; en faisant glisser le bord droit de son en-tête. Pour envelopper de longues notes, ouvrez les Options de colonne et cliquez sur l&rsquo;icône de retour à la ligne.</p>
+<p><img alt="line-wrap" src="../images/lightweight-crm/line-wrap.png" /></p>
+<h2 id="personnaliser-la-mise-en-page">Personnaliser la mise en page<a class="headerlink" href="#personnaliser-la-mise-en-page" title="Permanent link">#</a></h2>
+<p>Une fois que vous avez plusieurs tables sur un même écran, la mise en page de l&rsquo;écran peut devenir un problème. Avoir de nombreuses colonnes dans la table Contacts peut ne plus être pratique. Il est préférable de la disposer comme une application personnalisée : sélectionnez un contact dans une liste à gauche et voyez les détails et les interactions de ce contact.</p>
+<p>Cela peut être fait en utilisant à nouveau &ldquo;Ajouter un widget à la page&rdquo;. Cette fois, nous allons sélectionner le widget &ldquo;Carte&rdquo; pour la table &ldquo;Contacts&rdquo;, et pour &ldquo;Sélectionner par&rdquo;, nous utiliserons à nouveau &ldquo;CONTACTS&rdquo;.</p>
+<p><img alt="add-widget-card" src="../images/lightweight-crm/add-widget-card.png" /></p>
+<p>Vous pouvez déplacer les sections résultantes pour créer une mise en page pratique. Déplacez votre souris vers le coin supérieur gauche de chaque section jusqu&rsquo;à ce que vous voyiez une icône de &ldquo;poignée de tirage&rdquo;. Utilisez cette icône pour faire glisser chaque section à l&rsquo;endroit désiré par rapport aux autres sections.</p>
+<p><img alt="layout-drag" src="../images/lightweight-crm/layout-drag.png" /></p>
+<p>Vous pouvez également redimensionner les sections en déplaçant la souris entre elles pour trouver une ligne pointillée. Faites glisser cette ligne pour redimensionner.</p>
+<p>Notez que les mêmes données personnelles sont maintenant affichées à deux endroits sur l&rsquo;écran. Ce ne sont pas des copies de données, mais des présentations différentes des mêmes données. Changer les données à un endroit les changera à l&rsquo;autre.</p>
+<h2 id="personnaliser-les-champs">Personnaliser les champs<a class="headerlink" href="#personnaliser-les-champs" title="Permanent link">#</a></h2>
+<p>À ce stade, nous pouvons faire un peu de nettoyage : masquer les colonnes inutiles dans la table principale &ldquo;Contacts&rdquo; et réorganiser les champs dans le widget Carte.</p>
+<p>Un moyen rapide de masquer des colonnes est d&rsquo;utiliser le panneau de droite. En utilisant le menu à trois points en haut à droite de la table &ldquo;Contacts&rdquo;, sélectionnez &ldquo;Options de widget&rdquo;. Dans le panneau qui s&rsquo;ouvre, trouvez une liste de &ldquo;Colonnes visibles&rdquo;. Déplacez la souris sur chaque colonne pour révéler l&rsquo;icône &ldquo;œil&rdquo;. Cliquez dessus pour masquer toutes les colonnes sauf &ldquo;Société&rdquo;.</p>
+<p><img alt="hide-column-eye" src="../images/lightweight-crm/hide-column-eye.png" /></p>
+<p>Pour personnaliser le widget Carte, cliquez dessus. Le panneau de droite affichera les options pertinentes. Vous pouvez sélectionner un thème différent, par exemple &ldquo;Compact&rdquo;.</p>
+<p><img alt="theme-compact" src="../images/lightweight-crm/theme-compact.png" /></p>
+<p>Pour réorganiser les champs, cliquez sur &ldquo;Modifier la mise en page&rdquo; dans le panneau de droite. Vous pouvez maintenant faire glisser et déposer des champs dans la carte, les redimensionner ou les supprimer. Cliquez sur &ldquo;Enregistrer&rdquo; une fois que vous avez terminé.</p>
+<p><img alt="edit-layout" src="../images/lightweight-crm/edit-layout.png" /></p>
+<p>En quelques étapes, nous sommes passés d&rsquo;un tableur encombrant et difficile à utiliser à un enregistrement concis et élégant de vos interactions dans une application personnalisée simple et efficace.</p>
+<h2 id="taches-a-faire-pour-les-contacts">Tâches à faire pour les contacts<a class="headerlink" href="#taches-a-faire-pour-les-contacts" title="Permanent link">#</a></h2>
+<p>L&rsquo;exemple de &ldquo;CRM léger&rdquo; a un autre tour dans son sac. La colonne &ldquo;Type&rdquo; dans la table des interactions a un choix supplémentaire, &ldquo;À faire&rdquo;. Après avoir parlé à un contact, vous pouvez ajouter une note supplémentaire sur ce que vous devez faire pour la prochaine conversation, et la date à laquelle elle est due.</p>
+<p>La table &ldquo;Contacts&rdquo; rend ces éléments à faire visibles, et triables par date d&rsquo;échéance. De cette façon, vous pouvez voir d&rsquo;un coup d&rsquo;œil ce qui est à venir.</p>
+<p>Si vous êtes intéressé par les détails de sa configuration, développez la section ci-dessous. Pour votre première introduction à Grist, vous êtes libre de l&rsquo;ignorer.</p>
+<h2 id="configuration-des-taches-a-faire"><a style="color: inherit; text-decoration: none" data-toggle="collapse" href="#todo-tasks" role="button" aria-expanded="false" aria-controls="todo-tasks">&gt; Configuration des tâches à faire</a><a class="headerlink" href="#configuration-des-taches-a-faire" title="Permanent link">#</a></h2>
+<div class="collapse" id="todo-tasks">
+<p>Pour configurer les éléments à faire comme dans l&rsquo;exemple, sélectionnez les Options de colonne pour la colonne &ldquo;Type&rdquo; dans la table Interactions, et ajoutez un autre choix (&ldquo;À faire&rdquo;) à la liste des choix :</p>
+<p><img alt="add-todo-choice" src="../images/lightweight-crm/add-todo-choice.png" /></p>
+<p>Choisissons notre contact &ldquo;Douglas LLC&rdquo; et ajoutons un élément à faire :</p>
+<p><img alt="add-todo-item" src="../images/lightweight-crm/add-todo-item.png" /></p>
+<p>Dans la table &ldquo;Contacts&rdquo;, ajoutez deux nouvelles colonnes :</p>
+<p><img alt="col-add2" src="../images/lightweight-crm/col-add2.png" /></p>
+<p>Renommez-les en &ldquo;Échéance&rdquo; et &ldquo;Éléments à faire&rdquo;.</p>
+<p><img alt="col-rename2" src="../images/lightweight-crm/col-rename2.png" /></p>
+<p>Les deux colonnes sont calculées à l&rsquo;aide de formules. Grist a un excellent support pour les formules, permettant une syntaxe Python complète et de nombreuses fonctions Excel. Dans Grist, une formule s&rsquo;applique toujours à l&rsquo;ensemble de la colonne de données. Pour entrer une formule, cliquez sur une cellule dans la colonne &ldquo;Échéance&rdquo;, et appuyez sur la touche &ldquo;=&rdquo; :</p>
+<p><img alt="formula-start" src="../images/lightweight-crm/formula-start.png" /></p>
+<p>Dans cette formule, nous voulons rechercher toutes les Interactions pour le Contact actuel dont le Type est &ldquo;À faire&rdquo;, puis sélectionner celle avec la Date la plus ancienne. En utilisant la syntaxe Python, la formule est :</p>
+<pre><code class="language-python">items = Interactions.lookupRecords(Contact=$id, Type=&quot;To-Do&quot;)
+return min(items.Date) if items else None
+</code></pre>
+<p>Collez-la ou tapez-la. Lorsque vous tapez des formules multi-lignes, utilisez <code>Shift+Enter</code> pour ajouter de nouvelles lignes, et <code>Enter</code> pour enregistrer.</p>
+<p>Il est également temps de changer le type de colonne en &ldquo;Date&rdquo;. Ouvrez les Options de colonne, et sélectionnez &ldquo;Date&rdquo; pour le type. Vous pouvez choisir le format de date directement en dessous du type.</p>
+<p><img alt="date-format" src="../images/lightweight-crm/date-format.png" /></p>
+<p>Pour les &ldquo;Éléments à faire&rdquo;, entrez une formule de manière similaire. En cas de plusieurs éléments à faire, cette formule les concaténera, séparés par des sauts de ligne. Cliquez dans la colonne &ldquo;Éléments à faire&rdquo;, appuyez sur &ldquo;=&rdquo; pour commencer à taper la formule, et entrez</p>
+<pre><code class="language-python">items = Interactions.lookupRecords(Contact=$id, Type=&quot;To-Do&quot;)
+return &quot;\n&quot;.join(items.Notes)
+</code></pre>
+<p>Maintenant, l&rsquo;élément à faire que nous avons entré plus tôt est visible dans la table principale Contacts.</p>
+<p>Notez que les valeurs dans ces colonnes sont en lecture seule, car elles sont calculées. Pour changer la date d&rsquo;échéance, trouvez l&rsquo;élément à faire dans la table Interactions où vous l&rsquo;avez créé.</p>
+<h3 id="trier-les-tables">Trier les tables<a class="headerlink" href="#trier-les-tables" title="Permanent link">#</a></h3>
+<p>Nous voulons que les contacts avec des éléments à faire apparaissent en premier, par ordre de date d&rsquo;échéance. Cliquez sur le triangle dans l&rsquo;en-tête de la colonne &ldquo;Échéance&rdquo;, et sélectionnez &ldquo;Trier A-Z&rdquo;.</p>
+<p><img alt="sorting" src="../images/lightweight-crm/sorting.png" /></p>
+<p>Par défaut, les paramètres de tri ne sont pas enregistrés. Le bouton vert surligné en haut à droite de la table &ldquo;Contacts&rdquo; nous rappelle cela. Pour conserver cet ordre de tri lorsque vous rouvrez le document, enregistrez-le en cliquant sur ce bouton vert et en sélectionnant &ldquo;Enregistrer&rdquo;. Vous pouvez également enregistrer en cliquant sur la coche verte, à droite de l&rsquo;icône de filtre.</p>
+<p><img alt="section-menu" src="../images/lightweight-crm/section-menu.png" /></p>
+</div>
+<h2 id="autres-fonctionnalites">Autres fonctionnalités<a class="headerlink" href="#autres-fonctionnalites" title="Permanent link">#</a></h2>
+<p>Grist a d&rsquo;autres fonctionnalités intéressantes, dont certaines sont utilisées dans l&rsquo;exemple de document &ldquo;CRM léger&rdquo;. Pour en savoir plus à leur sujet, suivez les liens vers leur documentation.</p>
+<ul>
+<li>
+<p>Toute colonne de texte peut être affichée comme un <a href="https://support.getgrist.com/col-types/#hyperlinks">hyperlien</a>. L&rsquo;exemple de CRM léger l&rsquo;utilise deux fois : pour le champ &ldquo;site web&rdquo;, et pour un hyperlien construit par formule vers une page de <a href="https://community.getgrist.com/t/pull-up-gmail-history-for-a-particular-contact/517">recherche Gmail</a> pour l&rsquo;adresse e-mail de ce contact. Ce dernier est pratique si vous utilisez Gmail.</p>
+</li>
+<li>
+<p>Grist prend en charge <a href="https://support.getgrist.com/col-types/#attachment-columns_">les pièces jointes</a>. Dans l&rsquo;exemple, il y a un champ &ldquo;Pièces jointes&rdquo; pour chaque contact qui peut être utilisé pour stocker une image d&rsquo;une carte de visite, par exemple.</p>
+</li>
+</ul>
+<p>Dans une entreprise réelle, vous aurez besoin de plus. Les produits CRM spécialisés ont des tonnes de fonctionnalités. Leur problème est la complexité : essayer de satisfaire les besoins de nombreux clients différents rend le produit compliqué à utiliser. La beauté de Grist est que vous pouvez commencer simplement et ajouter uniquement le niveau de complexité dont vous avez besoin, et rien de plus.</p>
+<p>D&rsquo;autres tutoriels montrent comment modéliser des données plus complexes, analyser et représenter des données, et plus encore.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:foreign-key">
+<p>Dans le monde des bases de données, ce type de référence ou de pointeur est connu sous le nom de &ldquo;clé étrangère&rdquo;.&#160;<a class="footnote-backref" href="#fnref:foreign-key" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/lightweight-crm.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

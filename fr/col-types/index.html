@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Tutorials and resources for Grist, to help you organize your data, your way.">
+      <meta property="og:description" content="Tutorials and resources for Grist, to help you organize your data, your way.">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/col-types/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Columns & types - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 "><a href="../FAQ/" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../lightweight-crm/" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../investment-research/" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../afterschool-program/" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              Colonnes et types de données
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#ajouter-et-supprimer-des-colonnes">
+                Ajouter et supprimer des colonnes
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#reorganiser-les-colonnes">
+                Réorganiser les colonnes
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#renommer-les-colonnes">
+                Renommer les colonnes
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#mise-en-forme-des-colonnes">
+                Mise en forme des colonnes
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#specifier-un-type">
+                Spécifier un type
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#types-pris-en-charge">
+                Types pris en charge
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-texte">
+                Colonnes de texte
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-numeriques">
+                Colonnes numériques
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-entieres">
+                Colonnes entières
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-basculantes">
+                Colonnes basculantes
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-date">
+                Colonnes de date
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-dateheure">
+                Colonnes DateHeure
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-choix">
+                Colonnes de choix
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-liste-de-choix">
+                Colonnes de liste de choix
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-reference">
+                Colonnes de référence
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-liste-de-references">
+                Colonnes de liste de références
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#colonnes-de-pieces-jointes">
+                Colonnes de pièces jointes
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../references-lookups/" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-cheat-sheet/" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../self-managed/" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../col-refs/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../col-refs/" class="btn btn-xs btn-link">
+        Reference columns
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href="../document-tutorials/" class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href="../document-tutorials/" class="btn btn-xs btn-link">
+        Document tutorials
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/kEKYcW3h4V8?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<h1 id="colonnes-et-types-de-donnees">Colonnes et types de données<a class="headerlink" href="#colonnes-et-types-de-donnees" title="Permanent link">#</a></h1>
+<h2 id="ajouter-et-supprimer-des-colonnes">Ajouter et supprimer des colonnes<a class="headerlink" href="#ajouter-et-supprimer-des-colonnes" title="Permanent link">#</a></h2>
+<p>Chaque table Grist, lorsqu&rsquo;elle est créée pour la première fois, a trois colonnes appelées A, B et C. Pour renommer une colonne, survolez l&rsquo;en-tête de la colonne, cliquez sur le menu déroulant, puis sélectionnez &ldquo;Renommer la colonne&rdquo; (vous pouvez également cliquer deux fois sur l&rsquo;en-tête de la colonne).</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-rename-column" src="../images/columns/columns-rename-column.png" /></em></span></p>
+<p>Pour supprimer une colonne, survolez l&rsquo;en-tête de la colonne, cliquez sur le menu déroulant, puis sélectionnez &ldquo;Supprimer la colonne&rdquo;.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-delete-column" src="../images/columns/columns-delete-column.png" /></em></span></p>
+<p>Pour ajouter une colonne, cliquez sur le symbole &ldquo;+&rdquo; dans la ligne d&rsquo;en-tête pour ouvrir le menu &ldquo;Ajouter une colonne&rdquo;.</p>
+<p><img alt="Ajouter une colonne" src="../images/columns/columns-add-column.png" /></p>
+<p>La première option dans le menu, &ldquo;Ajouter une colonne&rdquo;, ajoutera une nouvelle colonne de données vide à votre table.</p>
+<p>Si vous savez quel type de colonne vous avez besoin, l&rsquo;option suivante vous permet d&rsquo;assigner un type à votre nouvelle colonne. Sélectionnez un type de colonne dans le menu déroulant.</p>
+<p class="screenshot-half"><em><img alt="Ajouter un nouveau type de colonne" src="../images/columns/columns-add-new-column-type.png" /></em></p>
+<p>La troisième option, &ldquo;Ajouter une colonne de formule&rdquo;, ajoutera une nouvelle colonne de formule avec la boîte d&rsquo;entrée de formule immédiatement ouverte afin que vous puissiez commencer à entrer votre formule sans clics supplémentaires.</p>
+<p><img alt="Ajouter une colonne de formule" src="../images/columns/columns-add-formula-column.png" /></p>
+<p>&ldquo;Colonnes cachées&rdquo; s&rsquo;agrandit pour montrer une liste de colonnes cachées de cette vue qui peuvent être rapidement ajoutées à nouveau.</p>
+<p class="screenshot-half"><em><img alt="Ajouter une colonne cachée" src="../images/columns/columns-add-hidden-column.png" /></em></p>
+<p>&ldquo;Appariements&rdquo; vous permet d&rsquo;ajouter des colonnes de données provenant de tables liées. Vous pouvez utiliser des colonnes de référence pour relier des données dans différentes tables. En savoir plus sur <a href="../references-lookups/">Références et Appariements</a>.</p>
+<p class="screenshot-half"><em><img alt="Ajouter une colonne d'appariement" src="../images/columns/columns-add-lookup.png" /></em></p>
+<p>&ldquo;Raccourcis&rdquo; répertorie les fonctions de <a href="../formulas/#trigger-formulas">formule d&rsquo;initialisation</a> les plus fréquemment utilisées.</p>
+<p class="screenshot-half"><em><img alt="Ajouter une colonne de raccourci" src="../images/columns/columns-add-shortcut.png" /></em></p>
+<p>En savoir plus sur chaque option de raccourci aux liens ci-dessous :</p>
+<ul>
+<li>
+<p><a href="../formula-cheat-sheet/#examples-of-automatic-date-time-and-author-stamps">Horodatage</a></p>
+</li>
+<li>
+<p><a href="../formula-cheat-sheet/#examples-of-automatic-date-time-and-author-stamps">Autorité</a></p>
+</li>
+<li>
+<p><a href="../formula-cheat-sheet/#finding-duplicates">Détecter les doublons dans&hellip;</a></p>
+</li>
+<li>
+<p><a href="../access-rules/#link-keys">UUID</a></p>
+</li>
+</ul>
+<h2 id="reorganiser-les-colonnes">Réorganiser les colonnes<a class="headerlink" href="#reorganiser-les-colonnes" title="Permanent link">#</a></h2>
+<p>Pour réorganiser une colonne, sélectionnez d&rsquo;abord la colonne si elle n&rsquo;est pas déjà sélectionnée, en cliquant sur l&rsquo;en-tête de la colonne. Ensuite, cliquez et maintenez l&rsquo;en-tête de la colonne. Après une seconde ou deux, vous pourrez faire glisser l&rsquo;ensemble de la colonne vers son nouvel emplacement.</p>
+<p>Une autre façon de réorganiser les colonnes est via les options de vue :</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-widget-options" src="../images/columns/columns-widget-options.png" /></em></span></p>
+<p>Dans la section des colonnes visibles, les colonnes peuvent être déplacées librement pour les réorganiser. Vous pouvez également cacher des colonnes ici.</p>
+<p class="screenshot-half"><em><img alt="Colonnes visibles" src="../images/columns/columns-visible-columns.png" /></em></p>
+<h2 id="renommer-les-colonnes">Renommer les colonnes<a class="headerlink" href="#renommer-les-colonnes" title="Permanent link">#</a></h2>
+<p>Vous pouvez renommer les colonnes de plusieurs manières. Une façon est de double-cliquer sur un en-tête de colonne. Ensuite, vous pouvez renommer la colonne ou ajouter une description de colonne.</p>
+<p class="screenshot-half"><em><img alt="renommer les colonnes" src="../images/columns/columns-rename-header.png" /></em></p>
+<p>Vous pouvez également survoler l&rsquo;en-tête de la colonne, cliquer sur le menu déroulant, puis sélectionner &ldquo;Renommer la colonne&rdquo;. Cela ouvre la même fenêtre contextuelle que celle vue ci-dessus.</p>
+<p class="screenshot-half"><em><img alt="renommer les colonnes" src="../images/columns/columns-rename-renamecolumn.png" /></em></p>
+<p>Sélectionner &ldquo;Options de colonne&rdquo; dans le même menu déroulant ouvre le panneau de création. À partir de là, vous pouvez modifier l&rsquo;étiquette de la colonne, affichée en haut ou ajouter une description.</p>
+<p class="screenshot-half"><em><img alt="renommer les colonnes" src="../images/columns/columns-rename-creatorpanel.png" /></em></p>
+<p>Un avantage de cette méthode est que vous pouvez également contrôler l&rsquo;identifiant donné à la colonne dans les formules. Par défaut, cela est basé sur le nom du champ, avec tous les caractères que Python n&rsquo;aime pas remplacés par &ldquo;_&ldquo;, et un numéro ajouté si nécessaire pour garder le nom unique dans votre table. Si vous n&rsquo;aimez pas cet identifiant, vous pouvez le changer, bien qu&rsquo;il doive toujours être compatible avec Python. Cliquez sur l&rsquo;icône de lien pour rendre le champ ID modifiable, puis entrez le nouvel ID de colonne.</p>
+<p class="screenshot-half"><em><img alt="renommer les colonnes" src="../images/columns/columns-rename-col-id.png" /></em></p>
+<h2 id="mise-en-forme-des-colonnes">Mise en forme des colonnes<a class="headerlink" href="#mise-en-forme-des-colonnes" title="Permanent link">#</a></h2>
+<p>Les styles d&rsquo;en-tête et de cellule peuvent être modifiés sous l&rsquo;onglet Colonne du panneau de création.</p>
+<p class="screenshot-half"><em><img alt="colonnes-mise-en-forme" src="../images/columns/columns-formatting.png" /></em></p>
+<p>Lorsque vous ouvrez le menu de style, vous avez la possibilité d&rsquo;appliquer un formatage de texte ainsi que des couleurs de texte et de remplissage.</p>
+<p><em><img alt="options de mise en forme des colonnes" src="../images/columns/columns-formatting-options.png" /></em></p>
+<p>Si vous souhaitez plus d&rsquo;options de couleur, cliquez sur la boîte de couleur de remplissage puis trouvez la teinte que vous souhaitez. Si vous avez une couleur spécifique que vous souhaitez utiliser, vous pouvez entrer le code hexadécimal, les valeurs RGB ou HSL.</p>
+<p class="screenshot-half"><em><img alt="mise-en-forme-des-colonnes-hex" src="../images/columns/column-formatting-hex.png" /></em></p>
+<p>Le style de cellule peut également être modifié en fonction de règles conditionnelles. En savoir plus sur <a href="../conditional-formatting/">Mise en forme conditionnelle</a>.</p>
+<h2 id="specifier-un-type">Spécifier un type<a class="headerlink" href="#specifier-un-type" title="Permanent link">#</a></h2>
+<p>Les colonnes Grist ont des types, similaires à d&rsquo;autres feuilles de calcul ou bases de données. Le type d&rsquo;une colonne contrôle son apparence et l&rsquo;aide que Grist vous offrira lors de l&rsquo;édition des cellules.</p>
+<p>Lorsque vous créez une nouvelle colonne, elle a initialement le type <code>Any</code>. Lorsque vous entrez dans la première cellule de la colonne, Grist essaie de restreindre ce type. Si vous entrez un nombre, la colonne sera changée en type <code>Numeric</code>, qui est aligné à droite par défaut. Si vous entrez quelque chose qui ne ressemble pas à un nombre, la colonne sera changée en type <code>Text</code>, qui est aligné à gauche par défaut.</p>
+<p>Pour inspecter le type d&rsquo;une colonne, survolez l&rsquo;en-tête de la colonne, puis cliquez sur le menu déroulant, puis sélectionnez &ldquo;Options de colonne&rdquo;. La section &ldquo;Type de colonne&rdquo; est ce que vous recherchez.</p>
+<p><em><img alt="options de colonne" src="../images/columns/columns-column-options.png" /></em></p>
+<p>Vous voudrez souvent contrôler le type de colonne manuellement. Vous pouvez le changer dans la section &ldquo;Type de colonne&rdquo;. Par exemple, ici nous définissons une colonne pleine de réponses &ldquo;oui&rdquo; et &ldquo;non&rdquo; comme étant de type <code>Toggle</code> :</p>
+<p><em><img alt="colonnes-toggle" src="../images/columns/columns-toggle.png" /></em></p>
+<p>Un avantage de faire cela est que Grist peut maintenant vous offrir des moyens de visualiser la colonne qui sont spécialisés pour les valeurs de type on/off. Chaque type de colonne a différentes options dans la section &ldquo;Format de cellule&rdquo; du panneau latéral :</p>
+<p><em><img alt="apparence-toggle" src="../images/columns/columns-toggle-appearance.png" /></em></p>
+<p>Quel que soit le type de colonne, vous pouvez entrer <strong>n&rsquo;importe quelle valeur</strong> dans les cellules. Si une valeur entrée est incompatible avec le type défini, la cellule sera mise en surbrillance avec une erreur (et les colonnes référencées par la valeur invalide afficheront également une erreur) :</p>
+<p><img alt="Toggle hors vocabulaire" src="../images/columns/columns-toggle-oov.png" /></p>
+<h2 id="types-pris-en-charge">Types pris en charge<a class="headerlink" href="#types-pris-en-charge" title="Permanent link">#</a></h2>
+<p>Grist prend en charge les types suivants :</p>
+<div class='grist-mod__table'></div>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Texte</td>
+<td>(<strong>Par défaut</strong>) Toute chaîne de texte.</td>
+</tr>
+<tr>
+<td>Numérique</td>
+<td>Nombres à virgule flottante.</td>
+</tr>
+<tr>
+<td>Entier</td>
+<td>Entiers (nombres entiers).</td>
+</tr>
+<tr>
+<td>Basculer</td>
+<td>Booléen (Vrai / Faux)</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>Date valide (sans composant horaire).</td>
+</tr>
+<tr>
+<td>DateHeure</td>
+<td>Date + heure valide.</td>
+</tr>
+<tr>
+<td>Choix</td>
+<td>Valeur unique d&rsquo;une liste de valeurs valides prédéfinies.</td>
+</tr>
+<tr>
+<td>Liste de choix</td>
+<td>Plusieurs valeurs d&rsquo;une liste de valeurs valides prédéfinies.</td>
+</tr>
+<tr>
+<td>Référence</td>
+<td>Une colonne de référence vers une autre table.</td>
+</tr>
+<tr>
+<td>Liste de références</td>
+<td>Une liste de références vers une autre table.</td>
+</tr>
+<tr>
+<td>Pièce jointe</td>
+<td>Cellules où vous pouvez placer des fichiers ou des images.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="colonnes-de-texte">Colonnes de texte<a class="headerlink" href="#colonnes-de-texte" title="Permanent link">#</a></h2>
+<p>Vous pouvez mettre n&rsquo;importe quel texte que vous aimez dans ce type de colonne. Pour la mise en forme, vous pouvez contrôler l&rsquo;alignement et le retour à la ligne, la couleur du texte et la couleur de fond.</p>
+<p>Si la colonne est utilisée pour stocker des liens web, vous pouvez activer le formatage &ldquo;HyperLink&rdquo; pour rendre les liens plus jolis et inclure une icône de lien cliquable.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-text" src="../images/columns/columns-format-text.png" /></em></span></p>
+<h3 id="hyperliens">Hyperliens<a class="headerlink" href="#hyperliens" title="Permanent link">#</a></h3>
+<p>Lorsque une colonne de texte utilise le formatage &ldquo;HyperLink&rdquo;, les valeurs sont formatées comme suit :</p>
+<ul>
+<li><code>https://getgrist.com</code> affichera <a href="https://getgrist.com">https://getgrist.com</a>.</li>
+<li><code>Grist Labs https://getgrist.com</code> affichera <a href="https://getgrist.com">Grist Labs</a> (liant à &ldquo;https://getgrist.com&rdquo; avec “Grist Labs” comme texte).</li>
+<li><code>Email Help mailto:support@getgrist.com</code> affichera <a href="mailto:support@getgrist.com">Email Help</a>, un lien qui ouvrirait un programme de messagerie pour composer un email à support@getgrist.com.</li>
+</ul>
+<p>En général, la valeur jusqu&rsquo;au dernier espace est utilisée comme texte du lien, tandis que le dernier mot est utilisé comme destination du lien.</p>
+<p>Le formatage des liens est particulièrement utile lorsque les liens sont générés à l&rsquo;aide d&rsquo;une formule telle que :<br />
+<code class="formula">$Company + " " + $Website</code></p>
+<h2 id="colonnes-numeriques">Colonnes numériques<a class="headerlink" href="#colonnes-numeriques" title="Permanent link">#</a></h2>
+<p>Ce type est pour les nombres, y compris les nombres à virgule flottante. En plus de contrôler l&rsquo;alignement et la couleur, vous pouvez choisir le format de nombre, et le nombre minimum et maximum de chiffres à afficher après la virgule.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-numeric" src="../images/columns/columns-format-numeric.png" /></em></span></p>
+<p>Choisir l&rsquo;option &ldquo;Spinner&rdquo; pour le FORMAT DE CELLULE affichera des flèches dans chaque cellule pour augmenter/diminuer le nombre.</p>
+<p>Les options sous FORMAT DE NOMBRE incluent :</p>
+<ul>
+<li><code>$</code> : Format pour les montants en devise, tels que les dollars ou les euros. Sélectionner le <code>$</code> ajoutera un préfixe de devise, des séparateurs de milliers, et par défaut à 2 chiffres après la virgule. Cela ouvrira également un sélecteur de devise pour les devises internationales.</li>
+</ul>
+<p class="screenshot-half"><em><img alt="Format numérique" src="../images/columns/columns-format-currency.png" /></em></p>
+<div class="admonition note">
+<p class="admonition-title">Définir la devise par défaut</p>
+<p>Vous pouvez définir le fuseau horaire, la locale et la devise par défaut d&rsquo;un document dans <a href="../creating-doc/#document-settings">Paramètres du document</a>.</p>
+</div>
+<ul>
+<li><code>,</code> : Activer l&rsquo;affichage des séparateurs de milliers.</li>
+<li><code>%</code> : Afficher les nombres en pourcentages. Par exemple, &ldquo;0.5&rdquo; s&rsquo;afficherait comme &ldquo;50%&rdquo;.</li>
+<li><code>Exp</code> : Afficher les nombres en notation exponentielle (ou scientifique). Par exemple, &ldquo;1234&rdquo; serait affiché comme &ldquo;1.234E3&rdquo;.</li>
+<li><code>(-)</code> : Afficher les nombres négatifs entre parenthèses, sans signe moins devant. Ceci est couramment utilisé en comptabilité, et généralement combiné avec les formats <code>$</code> ou <code>,</code>.</li>
+</ul>
+<h2 id="colonnes-entieres">Colonnes entières<a class="headerlink" href="#colonnes-entieres" title="Permanent link">#</a></h2>
+<p>Ce type est strictement pour les nombres entiers. Il a les mêmes options que le type numérique.</p>
+<h2 id="colonnes-basculantes">Colonnes basculantes<a class="headerlink" href="#colonnes-basculantes" title="Permanent link">#</a></h2>
+<p>Ce type est pour stocker des valeurs vrai/faux. Les valeurs peuvent être affichées sous forme de texte, de cases à cocher ou de commutateurs.</p>
+<p class="screenshot-half"><em><img alt="Format basculant" src="../images/columns/columns-format-toggle.png" /></em></p>
+<p>Voir également l&rsquo;exemple dans <a href="./#specifying-a-type">Spécifier un type</a>.</p>
+<h2 id="colonnes-de-date">Colonnes de date<a class="headerlink" href="#colonnes-de-date" title="Permanent link">#</a></h2>
+<p>Ce type est pour stocker des dates de calendrier (sans composant horaire). Plus de détails dans <a href="../dates/">Travailler avec des dates</a>. Vous pouvez choisir le format des dates, voir la <a href="https://momentjs.com/docs/#/displaying/format/">référence de formatage des dates</a>.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-date" src="../images/columns/columns-format-date.png" /></em></span></p>
+<h2 id="colonnes-dateheure">Colonnes DateHeure<a class="headerlink" href="#colonnes-dateheure" title="Permanent link">#</a></h2>
+<p>Ce type est pour stocker des dates de calendrier plus l&rsquo;heure de la journée. Plus de détails dans <a href="../dates/">Travailler avec des dates</a>. Vous pouvez choisir le format des dates, voir la <a href="https://momentjs.com/docs/#/displaying/format/">référence de formatage des dates et heures</a>. Vous pouvez également spécifier le fuseau horaire à afficher.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-datetime" src="../images/columns/columns-format-datetime.png" /></em></span></p>
+<p>Si vous souhaitez définir un fuseau horaire par défaut pour votre document, vous pouvez le faire dans <a href="../creating-doc/#document-settings">Paramètres du document</a>.</p>
+<h2 id="colonnes-de-choix">Colonnes de choix<a class="headerlink" href="#colonnes-de-choix" title="Permanent link">#</a></h2>
+<p>Ce type est pour stocker une valeur parmi un ensemble de valeurs valides, où vous pouvez spécifier les valeurs disponibles.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-choice" src="../images/columns/columns-format-choice.png" /></em></span></p>
+<p>Il y a un exemple d&rsquo;utilisation de ce type de colonne dans l&rsquo;<a href="../lightweight-crm/#setting-other-types">exemple de CRM léger</a>.</p>
+<p>Si vous commencez avec une colonne de texte peuplée, Grist prendra toutes les valeurs uniques de cette colonne comme choix valides.</p>
+<p>Vous pouvez ajouter ou supprimer des choix en cliquant soit sur <code>Modifier</code> soit sur la boîte de choix. Pour ajouter un choix, tapez sa valeur dans le champ de texte en dessous des autres choix et appuyez sur <code>Entrée</code>. Pour supprimer un choix, cliquez sur l&rsquo;icône de suppression à droite du choix ou sélectionnez le choix en cliquant dessus, puis appuyez sur <code>Retour arrière</code>/<code>Supprimer</code>. Pour appliquer/enregistrer vos modifications, vous pouvez soit cliquer sur le bouton <code>Enregistrer</code>, soit appuyer sur <code>Entrée</code>. Pour annuler vos modifications, vous pouvez soit cliquer sur le bouton <code>Annuler</code>, soit appuyer sur <code>Échap</code>.</p>
+<p>Cliquer sur le menu déroulant de couleur à gauche d&rsquo;un choix ouvrira un sélecteur de couleur pour personnaliser la couleur de remplissage et de texte d&rsquo;un choix. Les modifications de couleurs sont reflétées dans les cellules et dans le reste de votre document une fois que vous avez enregistré vos modifications.</p>
+<p>Les choix peuvent être réorganisés en cliquant et en les faisant glisser, ce qui détermine l&rsquo;ordre dans lequel ils apparaissent lors de la saisie dans une cellule. Vous pouvez également renommer un choix en cliquant dessus et en tapant un nouveau nom. Renommer un choix renomme également toutes les valeurs utilisées dans votre document.</p>
+<p>L&rsquo;éditeur de configuration prend en charge de nombreux raccourcis clavier pratiques. Vous pouvez appuyer sur les touches <code>Flèche haut</code> et <code>Flèche bas</code> pour naviguer entre les choix sélectionnés ; maintenir la touche <code>Maj</code> pour sélectionner plusieurs choix adjacents tout en cliquant ou en utilisant les touches fléchées ; et maintenir la touche <code>Commande</code>/<code>Contrôle</code> pour sélectionner plusieurs choix tout en cliquant. Pour sélectionner tous les choix, vous pouvez appuyer sur <code>Commande</code>/<code>Contrôle</code> + <code>A</code>.</p>
+<p>L&rsquo;annulation et la rétablissement sont également pris en charge dans l&rsquo;éditeur de configuration. Lorsque votre curseur est focalisé sur le champ de texte de l&rsquo;éditeur, vous pouvez appuyer sur <code>Commande</code>/<code>Contrôle</code> + <code>Z</code> pour annuler votre dernière modification, et <code>Commande</code>/<code>Contrôle</code> + <code>Maj</code> + <code>Z</code> pour la rétablir.</p>
+<p>L&rsquo;éditeur de configuration prend également en charge le copier-coller. Pour copier, sélectionnez les choix que vous souhaitez copier et appuyez sur <code>Commande</code>/<code>Contrôle</code> + <code>C</code>. Pour coller, concentrez-vous sur le champ de texte et appuyez sur <code>Commande</code>/<code>Contrôle</code> + <code>V</code>. Les choix sont collés en bloc si le presse-papiers contient plusieurs lignes de texte. Les choix peuvent également être copiés à partir de l&rsquo;éditeur de configuration d&rsquo;une colonne et collés dans une autre, ce qui copiera à la fois les valeurs et leurs couleurs configurées.</p>
+<p>Lors de la saisie dans une cellule de colonne de choix, vos choix configurés seront affichés dans un menu de saisie semi-automatique. Vous pouvez soit cliquer sur un choix, soit utiliser les touches fléchées et <code>Entrée</code> pour ajouter un choix à une cellule. Si votre saisie n&rsquo;est pas l&rsquo;un des choix valides, Grist affichera une option de menu pour l&rsquo;ajouter facilement comme choix valide et dans la cellule en une seule étape.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-cell-choice" src="../images/columns/columns-cell-choice.png" /></em></span></p>
+<h2 id="colonnes-de-liste-de-choix">Colonnes de liste de choix<a class="headerlink" href="#colonnes-de-liste-de-choix" title="Permanent link">#</a></h2>
+<p>Ce type est pour stocker plusieurs valeurs d&rsquo;un ensemble de valeurs valides, où vous pouvez spécifier les valeurs disponibles.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-choice-list" src="../images/columns/columns-format-choice-list.png" /></em></span></p>
+<p>Si vous commencez avec une colonne de texte peuplée, Grist prendra toutes les valeurs uniques de cette colonne comme choix valides.</p>
+<p>Les colonnes de liste de choix sont configurées de la même manière que les colonnes de <a href="#choice-columns">Choix</a>, et prennent en charge le même niveau de personnalisation et de raccourcis clavier. Elles diffèrent par le nombre de choix qu&rsquo;elles permettent d&rsquo;entrer dans chaque cellule. Alors que les colonnes de choix ne permettent qu&rsquo;une seule valeur au maximum dans une cellule, les colonnes de liste de choix en permettent plusieurs.</p>
+<p>Comme avec les colonnes de choix, lors de la saisie dans une cellule de colonne de liste de choix, les choix valides seront affichés dans un menu de saisie semi-automatique. Une fois que vous avez sélectionné une valeur, vous pouvez continuer à ajouter des choix à la même cellule.</p>
+<p class="screenshot-half"><em><img alt="Format choix" src="../images/columns/columns-cell-choice-list.png" /></em></p>
+<p>Les choix peuvent être réorganisés à l&rsquo;intérieur de leurs cellules en cliquant et en les faisant glisser pendant que la cellule est en cours d&rsquo;édition. Vous pouvez également utiliser les touches fléchées et la touche <code>Supprimer</code> pour naviguer et supprimer des choix, ou simplement cliquer sur l&rsquo;icône de suppression lorsque vous survolez un choix.</p>
+<div class="admonition note">
+<p class="admonition-title">Filtrer les listes déroulantes des colonnes de choix et de liste de choix</p>
+<p>Lors de la saisie de données dans une colonne de choix ou de liste de choix, vous verrez une liste déroulante de tous les choix disponibles. Parfois, il serait utile de filtrer la liste déroulante en fonction d&rsquo;une condition, comme la valeur dans une autre cellule. Écrire des conditions pour filtrer les listes déroulantes de choix est similaire à <a href="../col-refs/#filtering-reference-choices-in-dropdown">filtrer les listes déroulantes des colonnes de référence</a>.</p>
+</div>
+<h2 id="colonnes-de-reference">Colonnes de référence<a class="headerlink" href="#colonnes-de-reference" title="Permanent link">#</a></h2>
+<p>Ceci établit une référence croisée à une autre table. Vous pouvez spécifier la table à référencer, et une colonne au sein de cette table à afficher. Il y a beaucoup de choses que vous pouvez faire avec ce type de colonne, voir <a href="../col-refs/">Colonnes de référence</a> pour plus de détails.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-reference" src="../images/columns/columns-format-reference.png" /></em></span></p>
+<h2 id="colonnes-de-liste-de-references">Colonnes de liste de références<a class="headerlink" href="#colonnes-de-liste-de-references" title="Permanent link">#</a></h2>
+<p>Comme les <a href="#reference-columns">Colonnes de référence</a>, mais peuvent stocker plusieurs références dans une seule cellule. Il y a beaucoup de choses que vous pouvez faire avec ce type de colonne, voir <a href="../col-refs/#creating-a-new-reference-list-column">Colonnes de référence</a> pour plus de détails.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-reference-list" src="../images/columns/columns-format-reference-list.png" /></em></span></p>
+<h2 id="colonnes-de-pieces-jointes">Colonnes de pièces jointes<a class="headerlink" href="#colonnes-de-pieces-jointes" title="Permanent link">#</a></h2>
+<p>Ce type de colonne vous permet d&rsquo;insérer des fichiers et des images entiers dans des cellules. Lorsque des images sont ajoutées dans des cellules, une miniature d&rsquo;aperçu est affichée dans la cellule. La barre &ldquo;Taille&rdquo; permet de contrôler l&rsquo;échelle de cette miniature.</p>
+<p class="screenshot-half"><span class="screenshot-large"><em><img alt="columns-format-attachment" src="../images/columns/columns-format-attachment.png" /></em></span></p>
+<p>Lorsque vous créez une colonne de pièces jointes, les cellules de cette colonne auront une icône de trombone :</p>
+<p><img alt="Icône de trombone de pièce jointe" src="../images/columns/columns-attachment-column.png" /></p>
+<p>Lorsque vous cliquez sur une icône de trombone, vous pouvez sélectionner un fichier à joindre. Si c&rsquo;est une image, vous verrez une miniature dans la cellule.</p>
+<p><img alt="Pièce jointe d'image" src="../images/columns/columns-attach-image.png" /></p>
+<!-- Source: https://en.wikipedia.org/wiki/File:Red_eyed_tree_frog_edit2.jpg -->
+
+<p>Si vous survolez l&rsquo;image, vous verrez à nouveau une icône de trombone, que vous pouvez utiliser pour ajouter d&rsquo;autres fichiers dans la même cellule. Vous verrez également une icône &ldquo;œil ouvert&rdquo;, qui, lorsqu&rsquo;elle est cliquée, affiche une vue agrandie de toutes les pièces jointes de la cellule, et vous donne un moyen de les renommer, de les télécharger ou de les supprimer.</p>
+<p><img alt="Navigateur d'images" src="../images/columns/columns-view-image.png" /></p>
+<!-- Pour le style css via css/extra.css -->
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/col-types.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

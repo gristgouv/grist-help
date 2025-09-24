@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+      <meta name="description" content="Tutorials and resources for Grist, to help you organize your data, your way.">
+      <meta property="og:description" content="Tutorials and resources for Grist, to help you organize your data, your way.">
+    
+    
+    <link rel="canonical" href="https://support.getgrist.com/FAQ/">
+    <link rel="shortcut icon" href="/images/favicon.png">
+    <link rel="me" href="https://fosstodon.org/@grist">
+    <meta name="thumbnail" content="https://support.getgrist.com/images/favicon.png">
+    <meta property="og:image" content="https://support.getgrist.com/images/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>FAQ - Grist Help Center</title>
+    
+  
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-5FDHKQ9');</script>
+  <!-- End Google Tag Manager -->
+    <link href="/css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="/css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="/css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/highlight.css">
+    <link href="../css/grist.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery-3.2.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7.min.js"></script>
+    <script src="/js/highlight.pack.js"></script>
+    <script src="/js/elasticlunr.min.js"></script>
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+    </script>
+    <script src="/js/base.js"></script>
+      <script src="../js/grist.js"></script>
+    <script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script>
+<script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function() {
+    window.Beacon('config', {display: { style: 'icon' }});
+    window.Beacon('init', 'fc61df2a-664b-4422-b24f-964bd0cb6d53');
+    window.Beacon('suggest', [
+      {url: 'https://community.getgrist.com/', text: 'Community Forum'},
+      {url: 'https://docs.getgrist.com/p/templates', text: 'Templates'},
+      {url: 'https://github.com/gristlabs/grist-core/projects/1', text: 'Roadmap'},
+    ]);
+
+    fetch('https://api.getgrist.com/api/session/access/all', {credentials: 'include'})
+      .then(function(resp) { return resp.json(); })
+      .then(function(status) {
+        // If there's exactly two orgs, will use the team name for the non-merged personal
+        // org as the company name.  Otherwise don't worry about setting company name.
+        var org = undefined;
+        if (status.orgs.length === 2) {
+          org = status.orgs[0].owner ? status.orgs[1] : status.orgs[0];
+        }
+        // If there's one user account available, fill it in silently; otherwise use
+        // the first one and prefill fields but let user see them so they can override
+        // them.  If testing this, be aware that if 'identify' was called previously,
+        // it will be cached in local storage and used even if it is not set this time
+        // around.
+        var user = status.users[0];
+        var identifyOrPrefill = status.users.length === 1 ? 'identify' : 'prefill';
+        if (user && !user.anonymous) {
+          var userObj = {};
+          if (user.email) { userObj.email = user.email; }
+          if (user.name) { userObj.name = user.name; }
+          if (user.picture) { userObj.avatar = user.picture; }
+          if (user.helpScoutSignature) { userObj.signature = user.helpScoutSignature; }
+          if (org && org.name) { userObj.company = org.name; }
+          window.Beacon(identifyOrPrefill, userObj);
+        }
+      });
+  });
+</script> 
+</head>
+
+<body>
+  
+  
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FDHKQ9"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="/search.html" method="GET">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left wm-top-toc-button">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+    <div id="wm-language-select-container" class="wm-vcenter wm-top-tool home-top-tool-selector pull-right wm-small-left">
+      <select id="wm-language-select" name="lang"
+        
+        >
+        
+        <option value="/" >en - English</option>
+        
+        <option value="/fr/" selected>fr - français</option>
+        
+        <option value="/it/" >it - italiano</option>
+        
+        <option value="/pt/" >pt - português</option>
+        
+        <option value="/uk/" >uk - українська мова</option>
+        
+      </select>
+    </div>
+
+    
+    
+
+    
+    
+      <a href="https://community.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link ">
+        <div class="wm-top-title">
+          Community
+        </div>
+      </a>
+    
+      <a href="https://www.getgrist.com" class="wm-top-tool wm-top-link pull-right wm-vcenter home-link wm-small-hide">
+        <div class="wm-top-title">
+          Back to Grist
+        </div>
+      </a>
+    
+
+    
+    <a href=".." class="wm-top-brand wm-top-link wm-vcenter">
+      
+        <img class="wm-top-logo" src="../images/logo.png"/>
+      
+      <div class="wm-top-title">
+        Grist Help Center<br>
+        
+          <span class="wm-top-version">1.0.2-dev</span>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+<div id="main-content">
+  
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href=".." class="wm-article-link wm-toc-text">Welcome to Grist</a>
+
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1  wm-current wm-page-toc-opener wm-page-toc-open"><a href="./" class="wm-article-link wm-toc-text">FAQ</a>
+
+    
+    
+    <li class="wm-page-toc wm-toc-li-nested collapse in">
+      <ul class="wm-toctree">
+        
+          <li class="wm-toc-li">
+            <a class="wm-article-link wm-page-toc-text" href="#_top">
+              Questions Fréquemment Posées
+            </a>
+          </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#comptes">
+                Comptes
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#plans">
+                Plans
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#documents-et-donnees">
+                Documents et données
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#partage">
+                Partage
+              </a>
+            </li>
+            <li class="wm-toc-li">
+              <a class="wm-article-link wm-page-toc-text" href="#grist-et-votre-site-webapplication">
+                Grist et votre site Web/application
+              </a>
+            </li>
+        
+      </ul>
+    </li>
+    
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">How-to tutorials</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../lightweight-crm/" class="wm-article-link wm-toc-text">Create your own CRM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../investment-research/" class="wm-article-link wm-toc-text">Analyze and visualize</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../afterschool-program/" class="wm-article-link wm-toc-text">Manage business data</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Managing documents</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../creating-doc/" class="wm-article-link wm-toc-text">Creating a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-settings/" class="wm-article-link wm-toc-text">Document settings</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../sharing/" class="wm-article-link wm-toc-text">Sharing a document</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../copying-docs/" class="wm-article-link wm-toc-text">Copying documents</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../imports/" class="wm-article-link wm-toc-text">Importing more data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../exports/" class="wm-article-link wm-toc-text">Exports & backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../automatic-backups/" class="wm-article-link wm-toc-text">Automatic backups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-history/" class="wm-article-link wm-toc-text">Document history</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../workspaces/" class="wm-article-link wm-toc-text">Workspaces</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Pages and tables</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../enter-data/" class="wm-article-link wm-toc-text">Entering data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../page-widgets/" class="wm-article-link wm-toc-text">Pages & widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../raw-data/" class="wm-article-link wm-toc-text">Raw data</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../search-sort-filter/" class="wm-article-link wm-toc-text">Search, sort & filter</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-table/" class="wm-article-link wm-toc-text">Table widget</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-card/" class="wm-article-link wm-toc-text">Card & card list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-form/" class="wm-article-link wm-toc-text">Form</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-chart/" class="wm-article-link wm-toc-text">Chart</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-calendar/" class="wm-article-link wm-toc-text">Calendar</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../widget-custom/" class="wm-article-link wm-toc-text">Custom</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../linking-widgets/" class="wm-article-link wm-toc-text">Linking widgets</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../custom-layouts/" class="wm-article-link wm-toc-text">Custom layouts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../record-cards/" class="wm-article-link wm-toc-text">Record cards</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../summary-tables/" class="wm-article-link wm-toc-text">Summary tables</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tours/" class="wm-article-link wm-toc-text">Document tours</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../document-tutorials/" class="wm-article-link wm-toc-text">Document tutorials</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Columns and data types</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-types/" class="wm-article-link wm-toc-text">Columns & types</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-refs/" class="wm-article-link wm-toc-text">Reference columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../conditional-formatting/" class="wm-article-link wm-toc-text">Conditional formatting</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../timestamps/" class="wm-article-link wm-toc-text">Timestamp columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../authorship/" class="wm-article-link wm-toc-text">Authorship columns</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../col-transform/" class="wm-article-link wm-toc-text">Transformations</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Using formulas</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formulas/" class="wm-article-link wm-toc-text">Intro to formulas</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../references-lookups/" class="wm-article-link wm-toc-text">References and lookups</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../dates/" class="wm-article-link wm-toc-text">Working with dates</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-timer/" class="wm-article-link wm-toc-text">Formula timer</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../python/" class="wm-article-link wm-toc-text">Python versions</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../formula-cheat-sheet/" class="wm-article-link wm-toc-text">Formula cheat sheet</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">AI Assistant</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../assistant/" class="wm-article-link wm-toc-text">Assistant</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Team sites</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../teams/" class="wm-article-link wm-toc-text">Creating team sites</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../team-sharing/" class="wm-article-link wm-toc-text">Sharing team sites</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Access rules</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../access-rules/" class="wm-article-link wm-toc-text">Intro to access rules</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Integrations</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../rest-api/" class="wm-article-link wm-toc-text">REST API usage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../api/" class="wm-article-link wm-toc-text">REST API reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../integrators/" class="wm-article-link wm-toc-text">Integrator services</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../embedding/" class="wm-article-link wm-toc-text">Embedding</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../webhooks/" class="wm-article-link wm-toc-text">Webhooks</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Plugin API</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/" class="wm-article-link wm-toc-text">Intro to Plugin API</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../code/modules/grist_plugin_api/" class="wm-article-link wm-toc-text">grist-plugin-api</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="/... | flat | **/code/modules/**" class="wm-article-link wm-toc-text">AWESOME_PAGES_REST</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Self-managed</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../self-managed/" class="wm-article-link wm-toc-text">Self-managed Grist</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/saml/" class="wm-article-link wm-toc-text">SAML</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/oidc/" class="wm-article-link wm-toc-text">OIDC</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/scim/" class="wm-article-link wm-toc-text">SCIM</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/forwarded-headers/" class="wm-article-link wm-toc-text">Forwarded headers</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/cloud-storage/" class="wm-article-link wm-toc-text">Cloud storage</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-connect/" class="wm-article-link wm-toc-text">GristConnect</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../install/grist-builder-edition/" class="wm-article-link wm-toc-text">Grist Builder Edition</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-panel/" class="wm-article-link wm-toc-text">Admin Panel</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../admin-controls/" class="wm-article-link wm-toc-text">Admin Controls</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Audit logs</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-overview/" class="wm-article-link wm-toc-text">Audit log overview</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-streaming/" class="wm-article-link wm-toc-text">Audit log streaming</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../install/audit-log-events/" class="wm-article-link wm-toc-text">Audit log events</a>
+
+    
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Telemetry</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry/" class="wm-article-link wm-toc-text">Overview of telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-limited/" class="wm-article-link wm-toc-text">Limited telemetry</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="../telemetry-full/" class="wm-article-link wm-toc-text">Full telemetry</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">News & updates</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/" class="wm-article-link wm-toc-text">Newsletters</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-08/" class="wm-article-link wm-toc-text">2025/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-07/" class="wm-article-link wm-toc-text">2025/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-06/" class="wm-article-link wm-toc-text">2025/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-05/" class="wm-article-link wm-toc-text">2025/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-04/" class="wm-article-link wm-toc-text">2025/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-03/" class="wm-article-link wm-toc-text">2025/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-02/" class="wm-article-link wm-toc-text">2025/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2025-01/" class="wm-article-link wm-toc-text">2025/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-12/" class="wm-article-link wm-toc-text">2024/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-11/" class="wm-article-link wm-toc-text">2024/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-10/" class="wm-article-link wm-toc-text">2024/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-09/" class="wm-article-link wm-toc-text">2024/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-08/" class="wm-article-link wm-toc-text">2024/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-07/" class="wm-article-link wm-toc-text">2024/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-06/" class="wm-article-link wm-toc-text">2024/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-05/" class="wm-article-link wm-toc-text">2024/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-04/" class="wm-article-link wm-toc-text">2024/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-03/" class="wm-article-link wm-toc-text">2024/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-02/" class="wm-article-link wm-toc-text">2024/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2024-01/" class="wm-article-link wm-toc-text">2024/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-12/" class="wm-article-link wm-toc-text">2023/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-11/" class="wm-article-link wm-toc-text">2023/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-10/" class="wm-article-link wm-toc-text">2023/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-09/" class="wm-article-link wm-toc-text">2023/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-08/" class="wm-article-link wm-toc-text">2023/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-07/" class="wm-article-link wm-toc-text">2023/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-06/" class="wm-article-link wm-toc-text">2023/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-05/" class="wm-article-link wm-toc-text">2023/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-04/" class="wm-article-link wm-toc-text">2023/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-03/" class="wm-article-link wm-toc-text">2023/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-02/" class="wm-article-link wm-toc-text">2023/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2023-01/" class="wm-article-link wm-toc-text">2023/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-12/" class="wm-article-link wm-toc-text">2022/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-11/" class="wm-article-link wm-toc-text">2022/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-10/" class="wm-article-link wm-toc-text">2022/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-09/" class="wm-article-link wm-toc-text">2022/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-08/" class="wm-article-link wm-toc-text">2022/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-07/" class="wm-article-link wm-toc-text">2022/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-06/" class="wm-article-link wm-toc-text">2022/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-05/" class="wm-article-link wm-toc-text">2022/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-04/" class="wm-article-link wm-toc-text">2022/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-03/" class="wm-article-link wm-toc-text">2022/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-02/" class="wm-article-link wm-toc-text">2022/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2022-01/" class="wm-article-link wm-toc-text">2022/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-12/" class="wm-article-link wm-toc-text">2021/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-11/" class="wm-article-link wm-toc-text">2021/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-10/" class="wm-article-link wm-toc-text">2021/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-09/" class="wm-article-link wm-toc-text">2021/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-08/" class="wm-article-link wm-toc-text">2021/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-07/" class="wm-article-link wm-toc-text">2021/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-06/" class="wm-article-link wm-toc-text">2021/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-05/" class="wm-article-link wm-toc-text">2021/05</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-04/" class="wm-article-link wm-toc-text">2021/04</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-03/" class="wm-article-link wm-toc-text">2021/03</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-02/" class="wm-article-link wm-toc-text">2021/02</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2021-01/" class="wm-article-link wm-toc-text">2021/01</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-12/" class="wm-article-link wm-toc-text">2020/12</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-11/" class="wm-article-link wm-toc-text">2020/11</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-10/" class="wm-article-link wm-toc-text">2020/10</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-09/" class="wm-article-link wm-toc-text">2020/09</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-08/" class="wm-article-link wm-toc-text">2020/08</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-07/" class="wm-article-link wm-toc-text">2020/07</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-06/" class="wm-article-link wm-toc-text">2020/06</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../newsletters/2020-05/" class="wm-article-link wm-toc-text">2020/05</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">More examples</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/" class="wm-article-link wm-toc-text">More examples</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-credit-card/" class="wm-article-link wm-toc-text">Credit card expenses</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-06-book-club/" class="wm-article-link wm-toc-text">Book club links</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-07-email-compose/" class="wm-article-link wm-toc-text">Prefill emails</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-08-invoices/" class="wm-article-link wm-toc-text">Prepare invoices</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-09-payroll/" class="wm-article-link wm-toc-text">Track payroll</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-10-print-labels/" class="wm-article-link wm-toc-text">Print mailing labels</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-11-treasure-hunt/" class="wm-article-link wm-toc-text">Treasure hunt</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2020-12-map/" class="wm-article-link wm-toc-text">Map</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-01-tasks/" class="wm-article-link wm-toc-text">Task management</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-03-leads/" class="wm-article-link wm-toc-text">Lead list</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-04-link-keys/" class="wm-article-link wm-toc-text">Link keys guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-05-reference-columns/" class="wm-article-link wm-toc-text">Reference columns guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-06-timesheets/" class="wm-article-link wm-toc-text">Summary tables guide</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2021-07-auto-stamps/" class="wm-article-link wm-toc-text">Time and user stamps</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-01-acl-memo/" class="wm-article-link wm-toc-text">Restrict duplicate records</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../examples/2023-07-proposals-contracts/" class="wm-article-link wm-toc-text">Proposals & contracts</a>
+
+    
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Reference</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../keyboard-shortcuts/" class="wm-article-link wm-toc-text">Keyboard shortcuts</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="/functions/" class="wm-article-link wm-toc-text">Function reference</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../limits/" class="wm-article-link wm-toc-text">Limits</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../data-security/" class="wm-article-link wm-toc-text">Data security</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../browser-support/" class="wm-article-link wm-toc-text">Browser support</a>
+
+    
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="../glossary/" class="wm-article-link wm-toc-text">Glossary</a>
+
+    
+</li>
+  </ul>
+</li>
+
+  </ul>
+
+  <div class="wm-toc-quick-links">
+    <div class="wm-toc-quick-links-header"><span class="wm-toc-text">Quick Links</span></div>
+    <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://community.getgrist.com/" class="wm-quick-link wm-toc-text">Community</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://docs.getgrist.com/p/templates" class="wm-quick-link wm-toc-text">Templates</a>
+      </li>
+      <li class="wm-toc-li wm-toc-lev2">
+        <a href="https://github.com/gristlabs/grist-core/projects/1" class="wm-quick-link wm-toc-text">Roadmap</a>
+      </li>
+    </ul>
+    <ul class="wm-toctree wm-toc-repo">
+      <li class="wm-toc-li wm-toc-lev2">
+      <a class="wm-quick-link wm-toc-text" href="https://github.com/gristlabs/grist-help">
+        <i class="fa fa-github"></i>
+
+        Edit on GitHub
+      </a>
+      </li>
+    </ul>
+
+  </div>
+
+</nav>
+
+  <script>
+    // Immediately expand parent items to show the selected page.
+    $('.wm-current')
+      .parents('.wm-toc-li-nested').addClass('collapse in')
+      .prev('.wm-toc-opener').addClass('wm-toc-open');
+  </script>
+  <div class="wm-content-pane">
+    <div class="wm-article">
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+    
+      
+    
+
+  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
+    
+    <div class="wm-article-nav pull-right">
+      <a href="../lightweight-crm/" class="btn btn-xs btn-default pull-right">
+        Next
+        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      </a>
+      <a href="../lightweight-crm/" class="btn btn-xs btn-link">
+        Create your own CRM
+      </a>
+    </div>
+    
+    <div class="wm-article-nav">
+      <a href=".." class="btn btn-xs btn-default pull-left">
+        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+        Previous</a><a href=".." class="btn btn-xs btn-link">
+        Welcome to Grist
+      </a>
+    </div>
+    
+  </div>
+
+    
+
+    <div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La traduction proposée ici a été générée automatiquement par le modèle d&rsquo;intelligence artificielle GPT-4o. Il est probable qu&rsquo;elle contienne des imperfections.</p>
+<p>Mais la bonne nouvelle est que <a class="internal-link" href="https://github.com/gristlabs/grist-help/issues/new?template=10-help-translating.yml&amp;title=%5BGitLocalize%5D+Please+invite+me+to+the+translation+team" target="_blank">vous pouvez rejoindre la communauté de traduction pour améliorer le contenu fourni ici 👋</a>.</p>
+</div>
+<h1 id="questions-frequemment-posees">Questions Fréquemment Posées<a class="headerlink" href="#questions-frequemment-posees" title="Permanent link">#</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#questions-frequemment-posees">Questions Fréquemment Posées</a><ul>
+<li><a href="#comptes">Comptes</a><ul>
+<li><a href="#puis-je-ajouter-plusieurs-equipes-au-meme-compte-de-connexion-grist">Puis-je ajouter plusieurs équipes au même compte de connexion Grist ?</a></li>
+<li><a href="#puis-je-ajouter-plusieurs-comptes-de-connexion-a-grist">Puis-je ajouter plusieurs comptes de connexion à Grist ?</a></li>
+<li><a href="#comment-puis-je-mettre-a-jour-les-parametres-de-mon-profil">Comment puis-je mettre à jour les paramètres de mon profil ?</a></li>
+<li><a href="#comment-puis-je-changer-ladresse-e-mail-que-jutilise-pour-grist">Comment puis-je changer l&rsquo;adresse e-mail que j&rsquo;utilise pour Grist ?</a></li>
+<li><a href="#comment-puis-je-supprimer-mon-compte">Comment puis-je supprimer mon compte ?</a></li>
+</ul>
+</li>
+<li><a href="#plans">Plans</a><ul>
+<li><a href="#pourquoi-ai-je-plusieurs-sites">Pourquoi ai-je plusieurs sites ?</a></li>
+<li><a href="#comment-gerer-la-propriete-de-mon-espace-dequipe">Comment gérer la propriété de mon espace d&rsquo;équipe ?</a></li>
+<li><a href="#puis-je-modifier-le-nom-et-le-sous-domaine-de-mon-equipe">Puis-je modifier le nom et le sous-domaine de mon équipe ?</a></li>
+</ul>
+</li>
+<li><a href="#documents-et-donnees">Documents et données</a><ul>
+<li><a href="#puis-je-deplacer-des-documents-entre-les-sites">Puis-je déplacer des documents entre les sites ?</a></li>
+<li><a href="#combien-de-lignes-puis-je-avoir">Combien de lignes puis-je avoir ?</a></li>
+<li><a href="#grist-accepte-t-il-les-caracteres-non-anglais">Grist accepte-t-il les caractères non anglais ?</a></li>
+<li><a href="#comment-puis-je-additionner-le-total-dune-colonne">Comment puis-je additionner le total d&rsquo;une colonne ?</a></li>
+</ul>
+</li>
+<li><a href="#partage">Partage</a><ul>
+<li><a href="#quelle-est-la-difference-entre-un-membre-de-lequipe-et-un-invite">Quelle est la différence entre un membre de l&rsquo;équipe et un invité ?</a></li>
+<li><a href="#puis-je-uniquement-partager-des-documents-grist-avec-mon-equipe">Puis-je uniquement partager des documents Grist avec mon équipe ?</a></li>
+</ul>
+</li>
+<li><a href="#grist-et-votre-site-webapplication">Grist et votre site Web/application</a><ul>
+<li><a href="#puis-je-integrer-grist-dans-mon-site-web">Puis-je intégrer Grist dans mon site Web ?</a></li>
+<li><a href="#puis-je-utiliser-grist-comme-backend-de-mon-application-web">Puis-je utiliser Grist comme backend de mon application Web ?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p><br>
+<br></p>
+<hr />
+<p><br>
+<br></p>
+<h2 id="comptes">Comptes<a class="headerlink" href="#comptes" title="Permanent link">#</a></h2>
+<h3 id="puis-je-ajouter-plusieurs-equipes-au-meme-compte-de-connexion-grist">Puis-je ajouter plusieurs équipes au même compte de connexion Grist ?<a class="headerlink" href="#puis-je-ajouter-plusieurs-equipes-au-meme-compte-de-connexion-grist" title="Permanent link">#</a></h3>
+<p>Oui ! Vous pouvez créer plusieurs espaces d&rsquo;équipe. Chaque espace d&rsquo;équipe peut être sur le plan gratuit ou un plan payant. Chaque espace d&rsquo;équipe sur un plan payant est associé à son propre abonnement et est facturé séparément.</p>
+<ol>
+<li>
+<p><strong>Nouvel espace d&rsquo;équipe.</strong> Si vous souhaitez créer un nouvel espace d&rsquo;équipe, naviguez vers votre espace personnel à <a href="https://docs.getgrist.com/">docs.getgrist.com</a>, puis cliquez sur le nom du site en haut à gauche (@votre-nom) pour ouvrir une liste de sites. Cliquez sur &lsquo;+ Créer un nouvel espace d&rsquo;équipe&rsquo;. Dans la fenêtre contextuelle, sélectionnez le plan à utiliser.</p>
+</li>
+<li>
+<p><strong>Ajouter un compte à un espace d&rsquo;équipe.</strong> Vous pouvez posséder ou être membre de plusieurs espaces d&rsquo;équipe. Si vous avez plusieurs comptes de connexion Grist, vous pouvez également ajouter votre deuxième compte en tant que membre de l&rsquo;équipe. Lorsque vous êtes dans l&rsquo;espace d&rsquo;équipe que vous possédez, ouvrez le menu utilisateur et cliquez sur &lsquo;Gérer les utilisateurs&rsquo;.</p>
+</li>
+</ol>
+<p><strong>Le saviez-vous ?</strong></p>
+<p>Un seul espace d&rsquo;équipe peut bien fonctionner pour une organisation avec plusieurs équipes (ou sous-équipes). Vous pouvez utiliser des espaces de travail au sein d&rsquo;un espace d&rsquo;équipe, et <a href="../workspaces/#managing-access">gérer l&rsquo;accès à ceux-ci</a> pour créer des zones séparées pour différentes équipes.</p>
+<h3 id="puis-je-ajouter-plusieurs-comptes-de-connexion-a-grist">Puis-je ajouter plusieurs comptes de connexion à Grist ?<a class="headerlink" href="#puis-je-ajouter-plusieurs-comptes-de-connexion-a-grist" title="Permanent link">#</a></h3>
+<p>Oui ! Pour ajouter plusieurs comptes à Grist, ouvrez le <a href="../glossary/#user-menu">menu utilisateur</a> en cliquant sur l&rsquo;icône de profil en haut à droite de Grist, puis cliquez sur &lsquo;Ajouter un compte&rsquo;.</p>
+<p>Vous pouvez maintenant facilement passer d&rsquo;un compte à l&rsquo;autre, et d&rsquo;une équipe à l&rsquo;autre, depuis le menu utilisateur.</p>
+<h3 id="comment-puis-je-mettre-a-jour-les-parametres-de-mon-profil">Comment puis-je mettre à jour les paramètres de mon profil ?<a class="headerlink" href="#comment-puis-je-mettre-a-jour-les-parametres-de-mon-profil" title="Permanent link">#</a></h3>
+<p>Ouvrez le <a href="../glossary/#user-menu">menu utilisateur</a> en cliquant sur l&rsquo;icône de profil en haut à droite de Grist, puis sélectionnez &lsquo;Paramètres du profil&rsquo;.</p>
+<p>À partir de là, vous pouvez gérer le nom associé à votre compte, mettre à jour le thème de Grist en mode clair ou sombre, définir une langue et créer et gérer une clé API. Pour en savoir plus sur notre API, consultez <a href="../rest-api/#grist-api">Grist API</a>.</p>
+<p><strong>Souhaitez-vous aider à traduire Grist ?</strong></p>
+<p>Nous utilisons <a href="https://hosted.weblate.org/engage/grist/">Weblate</a> pour gérer les traductions et accueillons les traducteurs bénévoles ! Si vous souhaitez traduire Grist dans une nouvelle langue (merci !), faites-nous savoir quelle langue dans ce <a href="https://community.getgrist.com/t/translating-grist/2086">fil de discussion de la communauté</a>, et nous ajouterons la langue sur Weblate.</p>
+<h3 id="comment-puis-je-changer-ladresse-e-mail-que-jutilise-pour-grist">Comment puis-je changer l&rsquo;adresse e-mail que j&rsquo;utilise pour Grist ?<a class="headerlink" href="#comment-puis-je-changer-ladresse-e-mail-que-jutilise-pour-grist" title="Permanent link">#</a></h3>
+<p>Il n&rsquo;est pas possible de changer l&rsquo;e-mail associé à votre compte Grist. Cependant, il est possible de transférer la propriété des documents et des espaces d&rsquo;équipe entre deux comptes e-mail Grist que vous possédez. Cela changerait effectivement votre e-mail Grist. <a href="./#how-to-manage-ownership-of-my-team-site">Apprenez comment</a>.</p>
+<p>Il est possible de gérer plusieurs comptes dans Grist. Pour ajouter un autre compte, ouvrez le <a href="../glossary/#user-menu">menu utilisateur</a> en cliquant sur l&rsquo;icône de profil en haut à droite de Grist, puis cliquez sur &lsquo;Ajouter un compte&rsquo;.</p>
+<p>Vous pouvez maintenant facilement passer d&rsquo;un compte à l&rsquo;autre, et d&rsquo;une équipe à l&rsquo;autre, depuis le menu utilisateur.</p>
+<h3 id="comment-puis-je-supprimer-mon-compte">Comment puis-je supprimer mon compte ?<a class="headerlink" href="#comment-puis-je-supprimer-mon-compte" title="Permanent link">#</a></h3>
+<p>Vous pouvez supprimer votre compte dans &lsquo;Paramètres du profil&rsquo; en sélectionnant &lsquo;Supprimer le compte&rsquo; sous &lsquo;Confidentialité &amp; Données&rsquo;. Veuillez noter que cette action est permanente.</p>
+<p>Besoin de supprimer un espace d&rsquo;équipe ? En savoir plus <a href="../teams/#billing-account">ici</a>.</p>
+<hr />
+<h2 id="plans">Plans<a class="headerlink" href="#plans" title="Permanent link">#</a></h2>
+<h3 id="pourquoi-ai-je-plusieurs-sites">Pourquoi ai-je plusieurs sites ?<a class="headerlink" href="#pourquoi-ai-je-plusieurs-sites" title="Permanent link">#</a></h3>
+<p>Tous les utilisateurs de Grist ont accès à un espace personnel gratuit. L&rsquo;espace personnel est toujours nommé en commençant par &lsquo;@&rsquo; et est toujours situé à <a href="https://docs.getgrist.com/">docs.getgrist.com</a>. Chaque document dans cet espace peut être partagé avec jusqu&rsquo;à deux invités gratuitement. En savoir plus sur les plans gratuits sur notre <a href="https://www.getgrist.com/pricing/">page de tarification</a>.</p>
+<p>Les documents partagés avec vous depuis d&rsquo;autres comptes personnels seront affichés dans votre espace personnel dans des espaces de travail nommés avec &lsquo;@Nom&rsquo; pour indiquer le propriétaire de ce document.</p>
+<p>Vous pouvez naviguer entre votre <a href="../teams/#understanding-personal-sites">espace personnel</a> et <a href="../teams/">espaces d&rsquo;équipe</a> en cliquant dans le coin supérieur gauche pour ouvrir un menu déroulant des sites auxquels vous avez accès.</p>
+<p><center><em><img alt="Naviguer entre les sites" src="../images/faq/personal-and-team-site.png" /></em></center></p>
+<h3 id="comment-gerer-la-propriete-de-mon-espace-dequipe">Comment gérer la propriété de mon espace d&rsquo;équipe ?<a class="headerlink" href="#comment-gerer-la-propriete-de-mon-espace-dequipe" title="Permanent link">#</a></h3>
+<p><strong>Ajouter un deuxième propriétaire</strong></p>
+<ol>
+<li>
+<p>Ouvrez l&rsquo;espace d&rsquo;équipe auquel vous souhaitez ajouter un deuxième propriétaire.</p>
+</li>
+<li>
+<p>Cliquez sur &lsquo;Gérer les utilisateurs&rsquo; sous le <a href="../glossary/#user-menu">menu utilisateur</a> en cliquant sur l&rsquo;icône de profil en haut à droite de Grist.</p>
+</li>
+<li>
+<p>Ajoutez la nouvelle adresse e-mail en tant que Propriétaire, et cliquez sur Confirmer.</p>
+</li>
+<li>
+<p>Vous pouvez également aller à &lsquo;Compte de facturation&rsquo; (également sous le menu utilisateur) et ajouter le nouveau propriétaire en tant que Gestionnaire de facturation.</p>
+</li>
+</ol>
+<p><strong>Transférer la propriété</strong></p>
+<ol>
+<li>
+<p>Suivez les étapes 1 à 3 ci-dessus pour ajouter un deuxième propriétaire.</p>
+</li>
+<li>
+<p>Allez à &lsquo;Compte de facturation&rsquo; (également sous le menu utilisateur) et ajoutez le nouveau Propriétaire en tant que <a href="../team-sharing/#billing-permissions">Gestionnaire de facturation</a>.</p>
+</li>
+<li>
+<p>Le nouveau Propriétaire doit se connecter, ouvrir l&rsquo;espace d&rsquo;équipe, et visiter à nouveau les pages &lsquo;Gérer les utilisateurs&rsquo; et &lsquo;Compte de facturation&rsquo; pour supprimer le propriétaire d&rsquo;origine. Cela transférera essentiellement la propriété de l&rsquo;espace d&rsquo;équipe au nouveau compte.</p>
+</li>
+</ol>
+<p>Il n&rsquo;est pas possible d&rsquo;ajouter un deuxième propriétaire à, ou de transférer la propriété d&rsquo;un <a href="../teams/#understanding-personal-sites">compte personnel</a>.</p>
+<p><strong>Le saviez-vous ?</strong></p>
+<p>Si vous transférez la propriété d&rsquo;un espace d&rsquo;équipe entre deux comptes e-mail Grist que vous possédez, vous pouvez plus facilement transférer la propriété en vous connectant avec plusieurs comptes. Pour vous connecter avec un autre compte, ouvrez le menu utilisateur et cliquez sur &lsquo;Ajouter un compte&rsquo;. Vous pouvez maintenant facilement passer d&rsquo;un compte à l&rsquo;autre, et d&rsquo;une équipe à l&rsquo;autre, depuis le menu utilisateur. Suivez les étapes ci-dessus pour transférer la propriété d&rsquo;un compte à l&rsquo;autre.</p>
+<h3 id="puis-je-modifier-le-nom-et-le-sous-domaine-de-mon-equipe">Puis-je modifier le nom et le sous-domaine de mon équipe ?<a class="headerlink" href="#puis-je-modifier-le-nom-et-le-sous-domaine-de-mon-equipe" title="Permanent link">#</a></h3>
+<p>Vous pouvez modifier le nom de votre site et le sous-domaine depuis la page de facturation. Ouvrez le <a href="../glossary/#user-menu">menu utilisateur</a> en cliquant sur l&rsquo;icône de profil en haut à droite de Grist, puis cliquez sur <a href="../teams/#billing-account">&lsquo;Compte de facturation&rsquo;</a>.</p>
+<p><center><em><img alt="Accès public" src="../images/faq/edit-subdomain.png" /></em></center></p>
+<hr />
+<h2 id="documents-et-donnees">Documents et données<a class="headerlink" href="#documents-et-donnees" title="Permanent link">#</a></h2>
+<h3 id="puis-je-deplacer-des-documents-entre-les-sites">Puis-je déplacer des documents entre les sites ?<a class="headerlink" href="#puis-je-deplacer-des-documents-entre-les-sites" title="Permanent link">#</a></h3>
+<p>Oui ! Suivez ces étapes pour déplacer des documents entre les sites.</p>
+<ol>
+<li>
+<p>Ouvrez le document que vous souhaitez déplacer et cliquez sur l&rsquo;icône de partage (<span class="grist-icon" style="--icon: var(--icon-Share)"></span>), puis cliquez sur &lsquo;Dupliquer le document&rsquo; dans le menu.</p>
+</li>
+<li>
+<p>Sélectionnez le site (organisation) vers lequel vous souhaitez transférer le document.</p>
+</li>
+</ol>
+<p>Cela créera une copie, vous aurez donc toujours le document original dans votre site d&rsquo;origine. Vous pouvez toujours le supprimer.</p>
+<p>En savoir plus sur <a href="../copying-docs/">la copie de documents</a>.</p>
+<h3 id="combien-de-lignes-puis-je-avoir">Combien de lignes puis-je avoir ?<a class="headerlink" href="#combien-de-lignes-puis-je-avoir" title="Permanent link">#</a></h3>
+<p>En règle générale, Grist fonctionne mieux pour les documents de moins de 100 000 lignes. La limite réelle dépend également du nombre de tables, de colonnes et de la taille moyenne des données dans chaque cellule. Une façon de l&rsquo;estimer est de mesurer la taille des données lorsqu&rsquo;elles sont au format CSV : la limite est d&rsquo;environ 20 Mo dans ce format. Par exemple, un document avec 200 000 lignes et 12 colonnes numériques atteindrait cette limite.</p>
+<p>Les pièces jointes sont comptées séparément. Les pièces jointes plus les données dans un seul document sont limitées à 1 Go.</p>
+<p><a href="../limits/">En savoir plus sur les limites</a>.</p>
+<h3 id="grist-accepte-t-il-les-caracteres-non-anglais">Grist accepte-t-il les caractères non anglais ?<a class="headerlink" href="#grist-accepte-t-il-les-caracteres-non-anglais" title="Permanent link">#</a></h3>
+<p>Les caractères non anglais sont pris en charge dans les étiquettes de colonnes, mais pas dans les identifiants de colonnes, qui sont le nom Python de la colonne utilisé dans les formules. Lors de l&rsquo;importation d&rsquo;un fichier dans Grist, les caractères non anglais sont importés en tant que valeurs dans les cellules, mais ne sont pas importés dans les étiquettes de colonnes (alias en-têtes). Les étiquettes de colonnes sont approximées avec des caractères anglais. Vous pouvez renommer les étiquettes de colonnes pour inclure des caractères non anglais après l&rsquo;importation.</p>
+<p>Pour <a href="../col-types/#renaming-columns">modifier les étiquettes et les identifiants de colonnes</a> séparément, ouvrez le panneau de création et sélectionnez le menu de la colonne. Cliquez sur l&rsquo;icône de lien qui joint l&rsquo;étiquette à l&rsquo;identifiant pour activer la modification de l&rsquo;identifiant de la colonne. Bien que les caractères non anglais ne soient pas pris en charge, il est possible de modifier les identifiants pour les rendre plus clairs et conviviaux à utiliser dans les formules.</p>
+<p><center><em><img alt="Modification des étiquettes et des identifiants de colonnes" src="../images/faq/editing-col-label-id.png" /></em></center></p>
+<h3 id="comment-puis-je-additionner-le-total-dune-colonne">Comment puis-je additionner le total d&rsquo;une colonne ?<a class="headerlink" href="#comment-puis-je-additionner-le-total-dune-colonne" title="Permanent link">#</a></h3>
+<p>Pour résumer plusieurs enregistrements, vous avez besoin de <a href="../summary-tables/">tables de synthèse</a>.</p>
+<p>La principale différence entre Grist et les tableurs comme Excel ou Google Sheets est que Grist est une base de données, donc chaque ligne dans une grille représente un enregistrement (par exemple, une personne, une transaction bancaire, etc.). Puisqu&rsquo;une somme sur plusieurs enregistrements n&rsquo;est pas le même type d&rsquo;enregistrement, Grist propose de résumer les données sous forme de vue séparée, qui peut être modifiée pour calculer des données de synthèse encore plus puissantes.</p>
+<p>Par exemple, supposons que vous ayez une table de commandes de boutique en ligne appelée <code>Commandes</code> et que vous souhaitiez additionner les revenus des ventes de toutes les commandes. En haut du menu de gauche, cliquez sur le bouton &lsquo;Ajouter nouveau&rsquo; et sélectionnez &lsquo;Ajouter une page&rsquo; ou &lsquo;Ajouter une vue à la page&rsquo;. Dans le sélecteur de vue, sélectionnez la table <code>Commandes</code> puis cliquez sur l&rsquo;icône de somme (<span class="grist-icon" style="--icon: var(--icon-Pivot)"></span>) à côté. Ajoutez la page ou la vue à votre document. Fait ! Vous avez maintenant créé une table de synthèse qui, par défaut, compte tous les enregistrements dans la table <code>Commandes</code> et additionne toutes les colonnes <a href="../col-types/#numeric-columns">numériques</a> et <a href="../col-types/#integer-columns">entiers</a>, telles que le montant vendu dans chaque commande.</p>
+<p>Les tables de synthèse peuvent faire plus qu&rsquo;une simple somme des colonnes d&rsquo;une table. En quelques clics, vous pouvez résumer les commandes <em>par mois</em> pour calculer le nombre de commandes et le revenu total des ventes dans chaque mois pour lequel vous avez des données.</p>
+<p>Allez plus loin et supposons que vous ayez plusieurs boutiques en ligne. Avec Grist, vous pouvez enregistrer toutes les commandes de vente de toutes les boutiques et mois dans la même table. Ensuite, vous pouvez résumer par mois <em>et</em> par boutique.</p>
+<p>Lorsque vous ajoutez plus de mois (ou de boutiques !) à la table des commandes, la table de synthèse se mettra automatiquement à jour, ce qui est une autre différence clé avec les tableurs. Dans Excel, vous devriez étendre la plage de votre formule, ou ajouter plus de feuilles et modifier les formules chaque fois que vous ajoutez plus de commandes de vente, de mois ou de boutiques. Dans Grist, vous créez la table de synthèse une fois, et laissez Grist faire le travail futur pour vous.</p>
+<p>En plus de notre article sur les <a href="../summary-tables/">tables de synthèse</a>, nous avons un <a href="../examples/2021-06-timesheets/">tutoriel vidéo et un guide de suivi</a> qui fournit un exemple de création d&rsquo;un tableau de bord avec des tables de synthèse.</p>
+<hr />
+<h2 id="partage">Partage<a class="headerlink" href="#partage" title="Permanent link">#</a></h2>
+<h3 id="quelle-est-la-difference-entre-un-membre-de-lequipe-et-un-invite">Quelle est la différence entre un membre de l&rsquo;équipe et un invité ?<a class="headerlink" href="#quelle-est-la-difference-entre-un-membre-de-lequipe-et-un-invite" title="Permanent link">#</a></h3>
+<p>Les membres de l&rsquo;équipe ont tous accès à un <a href="../teams/">espace d&rsquo;équipe</a>, qui est situé à une URL avec un sous-domaine personnalisé, tel que <code>votre-équipe.getgrist.com</code>. Sur les plans payants, le nombre de membres de l&rsquo;équipe détermine le prix.</p>
+<p>Par défaut, les documents au sein d&rsquo;un espace d&rsquo;équipe peuvent être accessibles par tous les membres de l&rsquo;équipe. Ce défaut peut être modifié pour ne partager que certains <a href="../team-sharing/">documents</a> ou certains <a href="../workspaces/">espaces de travail</a> avec des membres spécifiques de l&rsquo;équipe.</p>
+<p>Les invités, en revanche, sont invités à des documents particuliers, mais ne sont pas ajoutés à votre équipe. Tous les documents dans Grist, y compris ceux sur les espaces personnels, sont autorisés jusqu&rsquo;à 2 invités gratuits, et n&rsquo;affectent pas le prix du plan.</p>
+<h3 id="puis-je-uniquement-partager-des-documents-grist-avec-mon-equipe">Puis-je uniquement partager des documents Grist avec mon équipe ?<a class="headerlink" href="#puis-je-uniquement-partager-des-documents-grist-avec-mon-equipe" title="Permanent link">#</a></h3>
+<p>Il existe de nombreuses façons de partager des données Grist avec des non-membres de l&rsquo;équipe.</p>
+<ol>
+<li><strong>Invités.</strong> Chaque document peut être partagé avec 2 invités (non-membres de l&rsquo;équipe) sans frais supplémentaires.</li>
+<li><strong>Partage de lien.</strong> Dans les paramètres de partage, il y a une option pour activer <a href="../sharing/#public-access-and-link-sharing">l&rsquo;accès public</a>. Le rôle d&rsquo;accès public peut être défini sur visualiseur ou éditeur. Toute personne ayant un lien peut voir (ou modifier) vos données. Ces vues ne seraient pas comptées dans le nombre d&rsquo;utilisateurs de votre plan. Le document est visible par toute personne ayant le lien, donc faites preuve de prudence lorsque vous travaillez avec des données sensibles.</li>
+</ol>
+<p><center><em><img alt="Accès public" src="../images/faq/link-sharing.png" /></em></center></p>
+<ol>
+<li>
+<p><strong>Partage de lien en lecture seule restreint.</strong> Avec le partage de lien en lecture seule, il est possible de restreindre davantage ce que les gens peuvent voir en utilisant les permissions avancées de Grist pour définir des paramètres d&rsquo;URL spécifiques appelés <a href="../access-rules/#link-keys">clés de lien</a> qui déterminent quelles tables, colonnes ou lignes sont affichées lorsqu&rsquo;un lien spécifique est partagé.</p>
+</li>
+<li>
+<p><strong>Intégration en lecture seule.</strong> Les <a href="../page-widgets/#pages">pages</a> Grist peuvent être intégrées dans des sites Web dans une iframe. <a href="../embedding/">Apprenez comment</a>.</p>
+</li>
+</ol>
+<hr />
+<h2 id="grist-et-votre-site-webapplication">Grist et votre site Web/application<a class="headerlink" href="#grist-et-votre-site-webapplication" title="Permanent link">#</a></h2>
+<h3 id="puis-je-integrer-grist-dans-mon-site-web">Puis-je intégrer Grist dans mon site Web ?<a class="headerlink" href="#puis-je-integrer-grist-dans-mon-site-web" title="Permanent link">#</a></h3>
+<p>Oui, il est possible d&rsquo;intégrer des <a href="../page-widgets/#pages">pages</a> Grist en tant que données en lecture seule dans un site Web dans une iframe.</p>
+<p><code>&lt;iframe src="https://templates.getgrist.com/6D8E2h2DQNwS/Task-Management/p/6?embed=true"&gt;&lt;/iframe&gt;</code></p>
+<p>Remplacez l&rsquo;URL écrite dans le code ci-dessus par l&rsquo;URL de la page Grist que vous souhaitez intégrer, suivie de <code>?embed=true</code> à la fin de l&rsquo;URL.</p>
+<p>En savoir plus sur <a href="../embedding/">l&rsquo;intégration de Grist</a>.</p>
+<h3 id="puis-je-utiliser-grist-comme-backend-de-mon-application-web">Puis-je utiliser Grist comme backend de mon application Web ?<a class="headerlink" href="#puis-je-utiliser-grist-comme-backend-de-mon-application-web" title="Permanent link">#</a></h3>
+<p>L&rsquo;utilisation de Grist comme solution backend directement pour un site Web ou une application Web n&rsquo;est pas encore prise en charge. Nous n&rsquo;avons pas encore de méthode d&rsquo;authentification pour ce cas d&rsquo;utilisation. La méthode de clé API n&rsquo;est généralement pas appropriée pour une utilisation Web, car la clé serait accessible à tout spectateur de la page Web, ce qui est généralement indésirable. Nous sommes intéressés à prendre en charge cela à l&rsquo;avenir et accueillons les idées et les commentaires dans notre <a href="https://community.getgrist.com/">forum communautaire</a>.</p>
+
+  <br>
+</div>
+
+<div class="feedback-box">
+  <div class="feedback-box-title">Give Feedback</div>
+  <div class="feedback-box-question">Was this article helpful?</div>
+  <div class="feedback-box-buttons">
+    <button class="feedback-box-button" data-rating="thumbsUp">&#x1F44D;</button>
+    <button class="feedback-box-button" data-rating="thumbsDown">&#x1F44E;</button>
+  </div>
+  <div class="feedback-box-response">
+    Thank you for letting us know!
+  </div>
+</div>
+
+<script>
+function initFeedbackButtons() {
+  const serverUrl = "https://docs.getgrist.com";
+  const feedbackBox = document.querySelector('.feedback-box');
+  const buttons = document.querySelectorAll('.feedback-box-button');
+  document.querySelector('.feedback-box-buttons').addEventListener('click', giveFeedback);
+
+  async function giveFeedback(event) {
+    const rating = event.target.dataset.rating;
+    if (!rating) { return; }
+    buttons.forEach(b => { b.disabled = true; });
+    try {
+      console.log("Sending rating to " + serverUrl + '/api/telemetry');
+      const resp = await window.fetch(serverUrl + '/api/telemetry', makePayload(rating));
+      if (!resp.ok) { throw new Error(resp.statusText); }
+    } catch (err) {
+      console.warn('Failed to report feedback', err);
+      document.querySelector('.feedback-box-response').textContent = String(err);
+    } finally {
+      buttons.forEach(b => { b.disabled = false; });
+      feedbackBox.classList.add('feedback-submitted');
+    }
+  }
+
+  function makePayload(rating) {
+    const url = window.location.href;
+    return {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'ratedHelpCenterArticle',
+        metadata: {full: {url, rating}},
+      }),
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    };
+  }
+}
+initFeedbackButtons();
+</script><footer class="col-md-12 wm-page-content">
+      <p>
+        <a href="https://github.com/gristlabs/grist-help/edit/master/docs/FAQ.md"><i class="fa fa-github"></i>
+Edit on GitHub</a>
+      </p>
+  <p>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-labelledby="video-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <div style="position:relative; padding-bottom:56.25%; margin-top: 32px;">
+          <iframe src="" allowfullscreen style="position:absolute; left:0; top:0; width:100%; height:100%"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
