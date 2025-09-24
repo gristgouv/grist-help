@@ -2,7 +2,7 @@ name: Publish Live
 on:
   push:
     branches:
-      - master
+      - test-deploy
 jobs:
   publish-live:
     runs-on: ubuntu-latest
